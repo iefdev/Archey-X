@@ -11,7 +11,7 @@ Simple bash script that displays the Apple logo and some basic information.
 
 ### Usage
 
-To load at start. Add in your [.bashrc][inst] _(or .bash_profile). Example:
+To load at start. Add in your [.bashrc][inst] (or .bash_profile). Example:
 
 ```
 # Load archey (if installed)
@@ -22,11 +22,13 @@ To load at start. Add in your [.bashrc][inst] _(or .bash_profile). Example:
 
 ![][sc]
 
-<small style="color: #555;">_* The picture has a slighlty pale tone since I'm using a semi transparent background in my Terminal_</small>
+<span style="font-size: small; color: #555;">_* The picture has a slighlty pale tone since I'm using a semi transparent background in my Terminal (my theme/prefs (“myTerm”) can be found in [dotfiles][mt])_</span>
 
 
 
 <!-- Markdown: Links & Images -->
 [inst]: https://github.com/iEFdev/dotfiles/blob/master/.bashrc#L87-L88
+
+[mt]: https://github.com/iEFdev/dotfiles
 
 [sc]: https://raw.githubusercontent.com/iEFdev/Archey-OS-X/master/screenshot.png "Screenshot of Archey"
