@@ -1,5 +1,5 @@
-Archey-OS-X
------------
+Archey :: OS X
+--------------
 
 Simple bash script that displays the Apple logo and some basic information.
 
@@ -23,6 +23,8 @@ To load at start. Add in your [.bashrc][inst] _(or .bash_profile). Example:
 ![][sc]
 
 <small style="color: #555;">_* The picture has a slighlty pale tone since I'm using a semi transparent background in my Terminal_</small>
+
+
 
 <!-- Markdown: Links & Images -->
 [inst]: https://github.com/iEFdev/dotfiles/blob/master/.bashrc#L87-L88
