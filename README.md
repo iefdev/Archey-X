@@ -5,12 +5,12 @@ Simple bash script that displays the Apple logo and some basic information.
 
 ---
 
-><span style="font-size: small; color: #555;">_Credits: This is a modified version of: "[archey-osx][jfa]" by [Josh Finnie][jfg], who made the orinial bash script. The name Archey is of course based on [Archey][dja], by [djmelek][djm]._</span>
+><span style="font-size: small; color: #555;">_Credits: This is a modified version of: "[archey-osx][jfa]" by [Josh Finnie][jfg], who made the original bash script. The name Archey is of course based on [Archey][dja], by [djmelek][djm]._</span>
 
 
 ### Install
 
-Copy the files to `/usr/local/bin` and give them execute permission.
+Copy the files to `/usr/local/bin`, and give them execute permission.
 
 ```
 sudo cp archey{,.s} /usr/local/bin
