@@ -84,7 +84,7 @@ EOF
 
 # Function _counter
 # 5.. 4.. 3.. 2.. 1..
-_counter() {
+function _counter() {
 	echo -n "Taking a screenshot in: "
 	for i in {5..1}.. '[Click!]'; do
 		echo -n "$i ";
