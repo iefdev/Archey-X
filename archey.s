@@ -1,7 +1,7 @@
 #!/bin/bash
 # ------------------------------------------------------------
 #
-# /usr/local/bin/archey
+# /usr/local/bin/archey.s
 #
 #
 # Plugin for Archey :: OS X
@@ -13,7 +13,7 @@
 #               archey.s     archey.s -w
 #
 # Author:       Eric F (iEFdev)
-# Copyright:	    (c) 2013, Eric F
+# Copyright:    (c) 2013, Eric F
 # Licence:      The MIT License (MIT)
 #
 
@@ -33,7 +33,7 @@ asDate=`date "+_%Y-%m-%d_at_%H.%M.%S"`;
 # ------------------------------------------------------------
 # Where to store the image
 
-# Force it with a handler ("f"), when the setting is set to 0?
+# Force it with a handler ("f"), when the setting is set to 0.
 if [[ $forceDir == 0 ]] && [[ $@ =~ [f] ]]; then forceDir=1; fi
 
 # First, get the user path to screenshots...
