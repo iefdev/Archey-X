@@ -1,20 +1,20 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # ------------------------------------------------------------
 #
-# /usr/local/bin/archey.s
+# /usr/local/bin/archey
 #
 #
-# Plugin for Archey :: OS X
+# Plugin for Archey::OS X
 #
-# Description:  Built to add a screenshot feature to Archey-OS X,
-#               but can run as a stand alone script.
+# Description:	Built to add a screenshot feature to Archey-OS X,
+#				but can run as a stand alone script.
 #
-# Usage:        archey -s    archey -sw
-#               archey.s     archey.s -w
+# Usage:		archey -s		archey -sw
+#				archey.s		archey.s -w
 #
-# Author:       Eric F (iEFdev)
-# Copyright:    (c) 2013, Eric F
-# Licence:      The MIT License (MIT)
+# Author:		Eric F (iEFdev)
+# Copyright:	(c) 2013, Eric F
+# Licence:		The MIT License (MIT)
 #
 
 
@@ -25,8 +25,8 @@ forceDir=0;         # Default: 0. Will force to use "our"
 
 asDir="$HOME/ArcheyScreenshots";
 asType='png';
-asPrefix='ArcheyOSX';
-asDate=`date "+_%Y-%m-%d_at_%H.%M.%S"`;
+asPrefix='Archey-OSX';
+asDate=`date "+_%F_at_%X" | sed 's/\:/\./g'`;
 
 
 # Directory

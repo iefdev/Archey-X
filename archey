@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # ------------------------------------------------------------
 #
 # /usr/local/bin/archey
@@ -6,18 +6,18 @@
 #
 # Archey :: OS X
 #
-# Description:    Tool to display system information.
-#                 Includes an option to take screenshots.
+# Description:	Tool to display system information.
+#				Includes an option to take screenshots.
 #
-# Version:        ...
-# Author:         Eric F (iEFdev)
-# Copyright:      (c) 2013 Eric F
-# Licence:        The MIT License (MIT)
+# Version:		...
+# Author:		Eric F (iEFdev)
+# Copyright:	(c) 2013 Eric F
+# Licence:		The MIT License (MIT)
 #
-# Author notes:   This is a modified version of: "archey-osx"
-#                 by Josh Finnie.
-#                 ↳ https://github.com/joshfinnie/archey-osx
-#                   ↳ http://joshfinnie.github.io/
+# Author notes:	This is a modified version of: "archey-osx"
+#				by Josh Finnie.
+#					↳ https://github.com/joshfinnie/archey-osx
+#					↳ http://joshfinnie.github.io/
 #
 
 
