@@ -6,15 +6,15 @@
 #
 # Plugin for Archey::OS X
 #
-# Description:	Built to add a screenshot feature to Archey-OS X,
-#				but can run as a stand alone script.
+# Description:  Built to add a screenshot feature to Archey-OS X,
+#               but can run as a stand alone script.
 #
-# Usage:		archey -s		archey -sw
-#				archey.s		archey.s -w
+# Usage:        archey -s       archey -sw
+#               archey.s        archey.s -w
 #
-# Author:		Eric F (iEFdev)
-# Copyright:	(c) 2013, Eric F
-# Licence:		The MIT License (MIT)
+# Author:       Eric F (iEFdev)
+# Copyright:    (c) 2013, Eric F
+# Licence:      The MIT License (MIT)
 #
 
 
