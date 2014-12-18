@@ -62,8 +62,8 @@ forceDir=0;         # Default: 0. Will force to use "our"
 
 asDir="$HOME/ArcheyScreenshots";
 asType='png';
-asPrefix='ArcheyOSX';
-asDate=`date "+_%Y-%m-%d_at_%H.%M.%S"`;
+asPrefix='Archey-OSX';
+asDate=`date "+_%F_at_%X" | sed 's/\:/\./g'`;
 ```
 
 There's also an `-f` to force the use of `ArcheyScreenshots`.
