@@ -9,9 +9,9 @@
 # Description:  Tool to display system information.
 #               Includes an option to take screenshots.
 #
-# Version:      ...
+# Version:      1.0.0
 # Author:       Eric F (iEFdev)
-# Copyright:    (c) 2013 Eric F
+# Copyright:    (c) 2015 Eric F
 # Licence:      The MIT License (MIT)
 #
 # Author notes: This is a modified version of: "archey-osx"
@@ -72,7 +72,7 @@ else
 fi
 
 # CPU (info)
-cpu=$(sysctl -n machdep.cpu.brand_string | sed -e 's/  */ /g');
+cpu=$(sysctl -n machdep.cpu.brand_string | sed -e 's/  */ /g' | sed 's/CPU\ //');
 
 
 # Memory section
@@ -96,7 +96,7 @@ memUsed=$((($memWired+$memActive+$memInactive)*4096/1024/1024));
 # Total free
 memTotalFree=$((($memFree+$memSpec)*4096/1024/1024));
 
-# [note] 
+# [note]
 # I's a little bit of a mess, and slightly confusing. Size of total memory ($memTotalRam) is easy to
 # get, but adding up what's used seems it's using MiB instead of MB. Haven't figured out
 # a way to solve it. Did try a few different settings, but any ideas/suggestions/improvements
@@ -114,13 +114,13 @@ function _disk() {
 
 	if [[ $diskWarning == 0 ]]; then
 
-		# Without colors... 
+		# Without colors...
 		disk=`df -Hl | head -2 | tail -1 | awk '{print $3"/"$5 " of " $2 " (" $4 " available) (" $1 ")"}'  | sed 's/\/dev\///g'`;
-	else	
+	else
 		# DiskWarning will show some red text when the space
 		# left on disk is below the setting.
 
-		# used size 
+		# used size
 		uSize=`df -Hl | head -2 | tail -1 | awk '{ print $3}'`;
 
 		# used size (%)
