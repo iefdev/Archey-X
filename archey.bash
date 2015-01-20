@@ -6,13 +6,13 @@
 #
 # Archey :: OS X
 #
-# Description:  Tool to display system information.
-#               Includes an option to take screenshots.
+# Description:  Tool (bash script) to display system information.
+#               Includes an option/plugin to take screenshots.
 #
 # Version:      1.0.0
 # Author:       Eric F (iEFdev)
 # Copyright:    (c) 2015 Eric F
-# Licence:      The MIT License (MIT)
+# Licence:      GNU General Public License v3
 #
 # Author notes: This is a modified version of: "archey-osx"
 #               by Josh Finnie.
@@ -108,7 +108,7 @@ ram=`echo -e "$r_c($memUsed MB)$e_c $g_c($memTotalFree MB)$e_c / $memTotalRam"`;
 
 # Function _disk()
 # ------------------------------------------------------------
-# Display: used/% of total (available) (disk)
+# Display: used/N% of total (N available) (disk)
 #
 function _disk() {
 
