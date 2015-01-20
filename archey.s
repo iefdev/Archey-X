@@ -4,24 +4,26 @@
 # /usr/local/bin/archey
 #
 #
-# Plugin for Archey::OS X
+# Plugin for Archey :: OS X
 #
 # Description:  Built to add a screenshot feature to Archey-OS X,
 #               but can run as a stand alone script.
 #
-# Usage:        archey -s       archey -sw
-#               archey.s        archey.s -w
+# Usage:
+# - with archey (bash)  archey -s       archey -sw
+# - as stand alone      archey.s        archey.s -w
 #
+# Version:      1.0.0
 # Author:       Eric F (iEFdev)
-# Copyright:    (c) 2013, Eric F
-# Licence:      The MIT License (MIT)
+# Copyright:    (c) 2015, Eric F
+# Licence:      GNU General Public License v3
 #
 
 
 # Settings
 # ------------------------------------------------------------
-forceDir=0;         # Default: 0. Will force to use "our"
-                    # directory rather than the normal one.
+forceDir=0;         # Default: 0. Set to 1 will force to use
+                    # "our" directory rather than the normal one.
 
 asDir="$HOME/ArcheyScreenshots";
 asType='png';
