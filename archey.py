@@ -186,6 +186,7 @@ class Uptime:
 		getUptime = Popen(['uptime'], stdout=PIPE).communicate()[0].decode('Utf-8').rstrip('\n')
 		uptime = re.compile(r'(, )(\d )(.*)').sub(r"", getUptime)
 		uptime = re.compile(r'(.*)up (.*)').sub(r"\2 ", uptime)
+		uptime = re.sub('  +', ' ', uptime)
 
 		self.key = 'Uptime'
 		self.value = uptime
