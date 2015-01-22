@@ -8,12 +8,13 @@ This one comes in 2 versions:
 - A Python version (`archey.py`)
 - and a bash script (`archey.bash`)
 
+_[#install][local-inst]_
  
 
 archey.py
 ---------
 
-This is a (forked) ported version of the original script: [Archey][dja], by [djmelek][djm]. Keeping the Arch logo, but differs a bit due to that it is OS X we're dealing with. Also, some information is displayed in the way I made them in the bash version (`archey.bash`) I made.
+This is a (forked) ported version of the original script: [Archey][dja], by [djmelek][djm]. Keeping the Arch logo, but differs a bit due to that it is OS X we're dealing with. Also, some information is displayed in the way I made them in the bash version (`archey.bash`).
 
 
 ### Screenshot
@@ -149,3 +150,5 @@ archey.s -w -f    // example
 
 [scrap_py]: https://raw.githubusercontent.com/iEFdev/Archey-OS-X/master/screenshot_py.png "Screenshot of Archey (python version)"
 [scrap_bash]: https://raw.githubusercontent.com/iEFdev/Archey-OS-X/master/screenshot_bash.png "Screenshot of Archey (bash version)"
+
+[local-inst]: #install "Install instructions"
