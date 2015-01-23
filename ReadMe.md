@@ -30,7 +30,7 @@ archey.bash
 
 This was the first script (I made) of the two. It's a modified version of: "[archey-osx][jfa]" by [Josh Finnie][jfg], who made the original bash script.
 
-To this one I also wrote the screenshot plugin _(see below)_, but that on can be used as a stand alone script.
+To this one I also wrote the screenshot plugin _(see below)_, but that one can be used as a stand alone script.
 
 
 ### Screenshot
@@ -69,13 +69,13 @@ Usage
 
 To load at start. Add in your [.bashrc][inst] _(or .bash_profile)_. Example:
 
-```
+```bash
 # Load archey (if installed)
 [[ `which archey` && $UID != 0 ]] && archey
 ```
 In top of the file there are 2 settings...
 
-```
+```bash
 diskWarning=1;             # bool
 diskWarningThreshold=20;   # % left on disk left
 ```
@@ -97,7 +97,7 @@ archey.s
 
 To use it with `archey` (bash version):
 
-```
+```bash
 archey -s		# screenshot ... countdown from 5 sec
 archey -sw		# w = window mode.
 ```
@@ -106,7 +106,7 @@ archey -sw		# w = window mode.
 
 As a stand alone script: _(the only option when using the python version of archey)_
 
-```
+```bash
 archey.s		# screenshot ... countdown from 5 sec
 archey -w		# w = window mode.
 ```
@@ -115,7 +115,7 @@ archey -w		# w = window mode.
 
 In top of the file there are a few settings:
 
-```
+```bash
 # Settings
 # ------------------------------------------------------------
 forceDir=0;         # Default: 0. Set to 1 will force to use
@@ -131,7 +131,7 @@ asDate=`date "+_%F_at_%X" | sed 's/\:/\./g'`;
 
 There's also an `-f` option to force the use of the folder: `ArcheyScreenshots`.
 
-```
+```bash
 archey.s -w -f    // example
 ```
 
