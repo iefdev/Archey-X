@@ -37,8 +37,8 @@
 
 # Settings
 # ------------------------------------------------------------
-# diskWarning            (default: 1) with green/red colors
-# diskWarningThreshold   (default: 20) % of diskspace left
+# diskWarning            default: 1
+# diskWarningThreshold   default: 20 (% of diskspace left)
 diskWarning = 1;
 diskWarningThreshold = 20;
 
@@ -95,10 +95,12 @@ deDict = {
 	'Finder': 'Finder'
 }
 
-# @todo: check up more on OS X window tiling programs. I think there are 3, 4 or more
+# @todo: check up it there are more window tiling programs for OS X.
 wmDict = {
-	'Xmonad': 'Xmonad',
-	'ShiftIt': 'ShiftIt'
+	'ShiftIt': 'ShiftIt',
+	'Slate': 'Slate',
+	'Spectacle': 'Spectacle',
+	'Xmonad': 'Xmonad'
 }
 
 logosDict = {brand: '''{color[1]}
@@ -152,6 +154,7 @@ class Output:
 
 class User:
 	def __init__(self):
+
 		self.key = 'User'
 		self.value = os.getenv('USER')
 
@@ -159,6 +162,7 @@ class User:
 class Hostname:
 	def __init__(self):
 		hostname = Popen(['uname', '-n'], stdout=PIPE).communicate()[0].decode('Utf-8').rstrip('\n')
+
 		self.key = 'Hostname'
 		self.value = hostname
 
@@ -179,6 +183,7 @@ class Distro:
 class Kernel:
 	def __init__(self):
 		kernel = Popen(['uname', '-srm'], stdout=PIPE).communicate()[0].decode('Utf-8').rstrip('\n')
+
 		self.key = 'Kernel'
 		self.value = kernel
 
@@ -187,7 +192,11 @@ class Uptime:
 	def __init__(self):
 		getUptime = Popen(['uptime'], stdout=PIPE).communicate()[0].decode('Utf-8').rstrip('\n')
 		uptime = re.compile(r'(, )(\d )(.*)').sub(r"", getUptime)
+<<<<<<< HEAD
 		uptime = re.compile(r'(.*)up (.*)').sub(r"\2 ", uptime)
+=======
+		uptime = re.compile(r'(.*)up(\s+)(.*)').sub(r"\3", uptime)
+>>>>>>> devel
 		uptime = re.sub('  +', ' ', uptime)
 
 		self.key = 'Uptime'
@@ -201,6 +210,7 @@ class WindowManager:
             if key in processes:
                 wm = wmDict[key]
                 break
+
         self.key = 'Window Manager'
         self.value = wm
 
@@ -208,9 +218,7 @@ class WindowManager:
 class DesktopEnvironment:
 	def __init__(self):
 		de = ''
-
 		for key in deDict.keys():
-
 			if key in processes:
 				de = deDict[key]
 				break
@@ -221,12 +229,14 @@ class DesktopEnvironment:
 
 class Shell:
     def __init__(self):
+
         self.key = 'Shell'
         self.value = os.getenv('SHELL')
 
 
 class Terminal:
     def __init__(self):
+
         self.key = 'Terminal'
         self.value = os.getenv('TERM')
 
@@ -234,7 +244,6 @@ class Terminal:
 class Packages:
     def __init__(self):
 		checkBrew = Popen(['which', 'brew'], stdout=PIPE).communicate()[0].decode('Utf-8').rstrip('\n')
-
 		p1 = Popen(['which', 'brew', '-l'], stdout=PIPE).communicate()[0].decode('Utf-8').rstrip('\n')
 		packages = len(p1.rstrip('\n').split('\n'))
 
@@ -250,6 +259,7 @@ class CPU:
 	def __init__(self):
 		cpuinfo = Popen(['sysctl', '-n', 'machdep.cpu.brand_string'], stdout=PIPE).communicate()[0].decode('Utf-8').rstrip('\n')
 		cpuinfo = re.sub('  +', ' ', cpuinfo.replace('CPU ', '').rstrip('\n'))
+
 		self.key = 'CPU'
 		self.value = cpuinfo
 
@@ -280,21 +290,14 @@ class RAM:
 		# Total free
 		memTotalFree = (int(memFree) + int(memSpeculative)) * int(4096) / int(1024) / int(1024)
 
-		usedpercent = ((float(memUsed) / int(memTotalRam * 10)))
-
-		# Red = used, Green = free
-		ucolor = 0
-		if diskWarning == 1 and usedpercent >= 80:
-			ucolor = 3
-
 		# [note]
 		# I's a little bit of a mess, and slightly confusing.
 		# Size of total memory (memTotalRam) is easy to get, but adding up what's
 		# used seems it's using MiB instead of MB. Haven't figured out a way to solve it.
 		# Did try a few different settings, but any ideas/suggestions/improvements are welcome.
 
-		# RAM:	(used) (free) / total
-		ramdisplay = '%s(%s MB) %s(%s MB)%s / %s GB' % (colorDict['Sensors'][ucolor], memUsed, colorDict['Sensors'][1], memTotalFree, colorDict['Clear'][0], memTotalRam)
+		# RAM:	(red=used) (green=free) / total
+		ramdisplay = '%s(%s MB) %s(%s MB)%s / %s GB' % (colorDict['Sensors'][0], memUsed, colorDict['Sensors'][1], memTotalFree, colorDict['Clear'][0], memTotalRam)
 
 		self.key = 'RAM'
 		self.value = ramdisplay
@@ -346,6 +349,7 @@ classes = {
 	'RAM': RAM,
 	'Disk': Disk
 }
+
 
 out = Output()
 for x in output:
