@@ -23,7 +23,8 @@
 #
 # Original author and copyright:
 #
-# 	Copyright 2010 Melik Manukyan <melik@archlinux.us>
+#	Copyright 2010 Melik Manukyan <melik@archlinux.us>
+#	Copyright 2010 David Vazgenovich Shakaryan <dvshakaryan@gmail.com>
 #
 #	ASCII art by Brett Bohnenkamper <kittykatt@silverirc.com>
 #	Changes Jerome Launay <jerome@projet-libre.org>
