@@ -46,19 +46,21 @@ Install
 
 Copy the file/version you want to `/usr/local/bin`, give it permission to execute.
 
-	# Example: Python version
-	sudo cp archey.py /usr/local/bin/archey
-	sudo chmod +x /usr/local/bin/archey
-
+```bash
+# Example: Python version
+sudo cp archey.py /usr/local/bin/archey
+sudo chmod +x /usr/local/bin/archey
+```
  
 ...or copy all the files/versions to `/usr/local/bin`, give them permission to execute, and make a symlink to the one you'd like to use.
 
-	sudo cp archey.{py,bash,s} /usr/local/bin
-	sudo chmod +x /usr/local/bin/archey.{py,bash,s}
+```bash
+sudo cp archey.{py,bash,s} /usr/local/bin
+sudo chmod +x /usr/local/bin/archey.{py,bash,s}
 
-	# Ex: symlink to python
-	sudo ln -s /usr/local/bin/archey{.py,}
-
+# Ex: symlink to python
+sudo ln -s /usr/local/bin/archey{.py,}
+```
 
 _(make sure `/usr/local/bin` is in your `PATH`)_
 
