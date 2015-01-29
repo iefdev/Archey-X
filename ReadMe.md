@@ -8,13 +8,12 @@ This one comes in 2 versions:
 - A Python version (`archey.py`)
 - and a bash script (`archey.bash`)
 
-_[#install][local-inst]_
  
 
 archey.py
 ---------
 
-This is a (forked) ported version of the original script: [Archey][dja], by [djmelek][djm]. Keeping the Arch logo, but differs a bit due to that it is OS X we're dealing with. Also, some information is displayed in the way I made them in the bash version (`archey.bash`).
+This is a (forked) ported version of the original script: [Archey][dja], by [djmelek][djm]. Keeping the Arch logo, but differs a bit due to that it is OS X we're dealing with. Also, some information is displayed in the way I made them in the bash version (`archey.bash`) I made.
 
 
 ### Screenshot
@@ -30,7 +29,7 @@ archey.bash
 
 This was the first script (I made) of the two. It's a modified version of: "[archey-osx][jfa]" by [Josh Finnie][jfg], who made the original bash script.
 
-To this one I also wrote the screenshot plugin _(see below)_, but that one can be used as a stand alone script.
+To this one I also wrote the screenshot plugin _(see below)_, but that on can be used as a stand alone script.
 
 
 ### Screenshot
@@ -46,21 +45,19 @@ Install
 
 Copy the file/version you want to `/usr/local/bin`, give it permission to execute.
 
-```bash
-# Example: Python version
-sudo cp archey.py /usr/local/bin/archey
-sudo chmod +x /usr/local/bin/archey
-```
+	# Example: Python version
+	sudo cp archey.py /usr/local/bin/archey
+	sudo chmod +x /usr/local/bin/archey
+
  
 ...or copy all the files/versions to `/usr/local/bin`, give them permission to execute, and make a symlink to the one you'd like to use.
 
-```bash
-sudo cp archey.{py,bash,s} /usr/local/bin
-sudo chmod +x /usr/local/bin/archey.{py,bash,s}
+	sudo cp archey.{py,bash,s} /usr/local/bin
+	sudo chmod +x /usr/local/bin/archey.{py,bash,s}
 
-# Ex: symlink to python
-sudo ln -s /usr/local/bin/archey{.py,}
-```
+	# Ex: symlink to python
+	sudo ln -s /usr/local/bin/archey{.py,}
+
 
 _(make sure `/usr/local/bin` is in your `PATH`)_
 
@@ -71,13 +68,13 @@ Usage
 
 To load at start. Add in your [.bashrc][inst] _(or .bash_profile)_. Example:
 
-```bash
+```
 # Load archey (if installed)
 [[ `which archey` && $UID != 0 ]] && archey
 ```
 In top of the file there are 2 settings...
 
-```bash
+```
 diskWarning=1;             # bool
 diskWarningThreshold=20;   # % left on disk left
 ```
@@ -99,7 +96,7 @@ archey.s
 
 To use it with `archey` (bash version):
 
-```bash
+```
 archey -s		# screenshot ... countdown from 5 sec
 archey -sw		# w = window mode.
 ```
@@ -108,7 +105,7 @@ archey -sw		# w = window mode.
 
 As a stand alone script: _(the only option when using the python version of archey)_
 
-```bash
+```
 archey.s		# screenshot ... countdown from 5 sec
 archey -w		# w = window mode.
 ```
@@ -117,7 +114,7 @@ archey -w		# w = window mode.
 
 In top of the file there are a few settings:
 
-```bash
+```
 # Settings
 # ------------------------------------------------------------
 forceDir=0;         # Default: 0. Set to 1 will force to use
@@ -133,7 +130,7 @@ asDate=`date "+_%F_at_%X" | sed 's/\:/\./g'`;
 
 There's also an `-f` option to force the use of the folder: `ArcheyScreenshots`.
 
-```bash
+```
 archey.s -w -f    // example
 ```
 
@@ -152,5 +149,3 @@ archey.s -w -f    // example
 
 [scrap_py]: https://raw.githubusercontent.com/iEFdev/Archey-OS-X/master/screenshot_py.png "Screenshot of Archey (python version)"
 [scrap_bash]: https://raw.githubusercontent.com/iEFdev/Archey-OS-X/master/screenshot_bash.png "Screenshot of Archey (bash version)"
-
-[local-inst]: #install "Install instructions"

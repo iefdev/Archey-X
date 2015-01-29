@@ -23,8 +23,7 @@
 #
 # Original author and copyright:
 #
-#	Copyright 2010 Melik Manukyan <melik@archlinux.us>
-#	Copyright 2010 David Vazgenovich Shakaryan <dvshakaryan@gmail.com>
+# 	Copyright 2010 Melik Manukyan <melik@archlinux.us>
 #
 #	ASCII art by Brett Bohnenkamper <kittykatt@silverirc.com>
 #	Changes Jerome Launay <jerome@projet-libre.org>
@@ -49,7 +48,6 @@ brand = 'OS X'
 
 
 # Import libraries
-
 import os, sys, subprocess, optparse, re, linecache
 from subprocess import Popen, PIPE
 from optparse import OptionParser
@@ -192,11 +190,7 @@ class Uptime:
 	def __init__(self):
 		getUptime = Popen(['uptime'], stdout=PIPE).communicate()[0].decode('Utf-8').rstrip('\n')
 		uptime = re.compile(r'(, )(\d )(.*)').sub(r"", getUptime)
-<<<<<<< HEAD
-		uptime = re.compile(r'(.*)up (.*)').sub(r"\2 ", uptime)
-=======
 		uptime = re.compile(r'(.*)up(\s+)(.*)').sub(r"\3", uptime)
->>>>>>> devel
 		uptime = re.sub('  +', ' ', uptime)
 
 		self.key = 'Uptime'
