@@ -21,7 +21,7 @@
 # This is a forked (ported) version of the original Archey by Melik Manukyan,
 # rewritten for OS X.
 #
-# Original author and copyright:
+# Original author(s) and copyright:
 #
 #	Copyright 2010 Melik Manukyan <melik@archlinux.us>
 #	Copyright 2010 David Vazgenovich Shakaryan <dvshakaryan@gmail.com>
