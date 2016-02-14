@@ -1,5 +1,4 @@
-Archey :: OS X
-==============
+# Archey :: OS X
 
 Archey is a simple tool to display system information.
 
@@ -8,10 +7,9 @@ This one comes in 2 versions:
 - A Python version (`archey.py`)
 - and a bash script (`archey.bash`)
 
- 
 
-archey.py
----------
+
+## archey.py
 
 This is a (forked) ported version of the original script: [Archey][dja], by [djmelek][djm]. Keeping the Arch logo, but differs a bit due to that it is OS X we're dealing with. Also, some information is displayed in the way I made them in the bash version (`archey.bash`) I made.
 
@@ -22,10 +20,9 @@ This is a (forked) ported version of the original script: [Archey][dja], by [djm
 
 <span style="font-size: small; color: #555;">_* The picture has a slighlty pale tone since I'm using a semi transparent background in my Terminal (my theme/prefs (“myTerm”) can be found in [dotfiles][mt])._</span>
 
- 
 
-archey.bash
------------
+
+## archey.bash
 
 This was the first script (I made) of the two. It's a modified version of: "[archey-osx][jfa]" by [Josh Finnie][jfg], who made the original bash script.
 
@@ -38,10 +35,9 @@ To this one I also wrote the screenshot plugin _(see below)_, but that on can be
 
 <span style="font-size: small; color: #555;">_* The picture has a slighlty pale tone since I'm using a semi transparent background in my Terminal (my theme/prefs (“myTerm”) can be found in [dotfiles][mt])._</span>
 
- 
 
-Install
--------
+
+## Install
 
 Copy the file/version you want to `/usr/local/bin`, give it permission to execute.
 
@@ -49,7 +45,7 @@ Copy the file/version you want to `/usr/local/bin`, give it permission to execut
 	sudo cp archey.py /usr/local/bin/archey
 	sudo chmod +x /usr/local/bin/archey
 
- 
+
 ...or copy all the files/versions to `/usr/local/bin`, give them permission to execute, and make a symlink to the one you'd like to use.
 
 	sudo cp archey.{py,bash,s} /usr/local/bin
@@ -61,10 +57,9 @@ Copy the file/version you want to `/usr/local/bin`, give it permission to execut
 
 _(make sure `/usr/local/bin` is in your `PATH`)_
 
- 
 
-Usage
------
+
+## Usage
 
 To load at start. Add in your [.bashrc][inst] _(or .bash_profile)_. Example:
 
@@ -86,11 +81,9 @@ _The disk warning is just a visual blinking warning when the disk space left is 
 
 In the **python** version... You can change the color scheme by changing the `brand` in top of the file. It says `OS X` _(default)_, but using the names of the other distributions listed in `colorDict` _(Fedora, Mint etc...)_ will use “their colors”. Though, it'll still show OS X in the information displayed.
 
+- - -
 
- 
-
-archey.s
---------
+# archey.s
 
 `archey.s` is a screenshot-plugin I made xtra to use with `archey.bash`, but can be used as a stand alone script as well. It has a 5 second count down _(5.. 4.. 3.. etc)_ which is useful when you need to make a screenshot but need to press a few keys at the same tim, for example.
 
@@ -134,7 +127,17 @@ There's also an `-f` option to force the use of the folder: `ArcheyScreenshots`.
 archey.s -w -f    // example
 ```
 
+- - -
 
+# Author notes
+
+**[2016-02-15]**
+
+“Archey :: OS X” will come in tags/releases now. `v0.4.0` is the first tag, like the version the script has.
+
+The script will be updated (soon) and I'm about to branch off the bash-version. That means, future updates/versions will only have the Python version, with the bash version in a separate branch - _for those who prefer that one_.
+
+ · Eric
 
 
 <!-- Markdown: Links & Images -->
