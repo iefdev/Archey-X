@@ -2,153 +2,115 @@
 
 Archey is a simple tool to display system information.
 
-This one comes in 2 versions:
 
-- A Python version (`archey.py`)
-- and a bash script (`archey.bash`)
+## archey
 
-
-
-## archey.py
-
-This is a (forked) ported version of the original script: [Archey][dja], by [djmelek][djm]. Keeping the Arch logo, but differs a bit due to that it is OS X we're dealing with. Also, some information is displayed in the way I made them in the bash version (`archey.bash`) I made.
+This is a (forked) ported version of the original script: [Archey][dja], by [djmelek][djm]. Keeping the **Arch** logo, but differs a bit due to that it is OS X we're dealing with. Also, some information is displayed in the way I made them in the bash version I initially made.
 
 
 ### Screenshot
 
-![][scrap_py]
+![][scrap]
 
-<span style="font-size: small; color: #555;">_* The picture has a slighlty pale tone since I'm using a semi transparent background in my Terminal (my theme/prefs (“myTerm”) can be found in [dotfiles][mt])._</span>
-
-
-
-## archey.bash
-
-This was the first script (I made) of the two. It's a modified version of: "[archey-osx][jfa]" by [Josh Finnie][jfg], who made the original bash script.
-
-To this one I also wrote the screenshot plugin _(see below)_, but that on can be used as a stand alone script.
-
-
-### Screenshot
-
-![][scrap_bash]
-
-<span style="font-size: small; color: #555;">_* The picture has a slighlty pale tone since I'm using a semi transparent background in my Terminal (my theme/prefs (“myTerm”) can be found in [dotfiles][mt])._</span>
+_Terminal theme: [myTerm][myterm]_
 
 
 
 ## Install
 
-Copy the file/version you want to `/usr/local/bin`, give it permission to execute.
+Copy the file to `/usr/local/bin`, and give it permission to execute.
 
-	# Example: Python version
-	sudo cp archey.py /usr/local/bin/archey
-	sudo chmod +x /usr/local/bin/archey
-
-
-...or copy all the files/versions to `/usr/local/bin`, give them permission to execute, and make a symlink to the one you'd like to use.
-
-	sudo cp archey.{py,bash,s} /usr/local/bin
-	sudo chmod +x /usr/local/bin/archey.{py,bash,s}
-
-	# Ex: symlink to python
-	sudo ln -s /usr/local/bin/archey{.py,}
+	sudo install -m 0755 archey /usr/local/bin
 
 
 _(make sure `/usr/local/bin` is in your `PATH`)_
 
 
+The “shebang” is set to `python3`. If you don't have Python 3.* you can just change it to `python` _(manually)..._
+
+	#!/usr/bin/env python3
+
+	#!/usr/bin/env python
+
+
+_...or using sed._
+
+	sed -i '' '/env python3$/s/3//' archey   # OS X sed
+	sed -i '/env python3$/s/3//' archey      # GNU sed
+
+
 
 ## Usage
 
-To load at start. Add in your [.bashrc][inst] _(or .bash_profile)_. Example:
+To load at start. Add in your [.bashrc][brc] _(or .bash_profile)_. Example:
 
 ```
 # Load archey (if installed)
 [[ `which archey` && $UID != 0 ]] && archey
 ```
-In top of the file there are 2 settings...
 
-```
-diskWarning=1;             # bool
-diskWarningThreshold=20;   # % left on disk left
-```
 
-_The disk warning is just a visual blinking warning when the disk space left is below <span style="color: #900;"> 20%</span>._ 
+_The (old) plugin: `archey.s` is gone, but you can get it from the `bash-version`
+ branch._
+
+
+
+## Settings
+
+In top of the file there are a few settings...
+
+
+### Disk
+
+	# Settings
+	# ------------------------------------------------------------
+	diskWarning = 1             # default: 1
+	diskWarningThreshold = 20   # default: 20 (% of diskspace left)
+
+
+The disk warning is just a visual blinking warning when the disk space left is below <span style="color: #900;"> 20%</span>.
 
 
 ### Colors
 
-In the **python** version... You can change the color scheme by changing the `brand` in top of the file. It says `OS X` _(default)_, but using the names of the other distributions listed in `colorDict` _(Fedora, Mint etc...)_ will use “their colors”. Though, it'll still show OS X in the information displayed.
+	# Custom color (match a name in in colorDict)
+	# Must have one with 'None' (defaults to Darwin)
+	brand = None
+	#brand = 'Arch Linux'	# Note: blue is almost purple in OS X
+	#brand = 'Darwin'		# OS X
+	#brand = 'Mint'
+	#brand = 'Fedora'
+	# ------------------------------------------------------------
+	# [End] Settings
+
+
+`brand = None` will default to Darwin. You only need to change `brand` if you want a different color scheme. Like “Arch Linux” is all blue, “Mint” is green/white, and “Fedora” is blue/white.
+
+_Note: The blue color in OS X is not that really good - almost purple'ish._
+
 
 - - -
 
-# archey.s
-
-`archey.s` is a screenshot-plugin I made xtra to use with `archey.bash`, but can be used as a stand alone script as well. It has a 5 second count down _(5.. 4.. 3.. etc)_ which is useful when you need to make a screenshot but need to press a few keys at the same tim, for example.
-
-To use it with `archey` (bash version):
-
-```
-archey -s		# screenshot ... countdown from 5 sec
-archey -sw		# w = window mode.
-```
-
- 
-
-As a stand alone script: _(the only option when using the python version of archey)_
-
-```
-archey.s		# screenshot ... countdown from 5 sec
-archey -w		# w = window mode.
-```
-
- 
-
-In top of the file there are a few settings:
-
-```
-# Settings
-# ------------------------------------------------------------
-forceDir=0;         # Default: 0. Set to 1 will force to use
-                    # "our" directory rather than the normal one.
-
-asDir="$HOME/ArcheyScreenshots";
-asType='png';
-asPrefix='Archey-OSX';
-asDate=`date "+_%F_at_%X" | sed 's/\:/\./g'`;
-```
-
- 
-
-There's also an `-f` option to force the use of the folder: `ArcheyScreenshots`.
-
-```
-archey.s -w -f    // example
-```
-
-- - -
 
 # Author notes
 
 **[2016-02-15]**
 
-“Archey :: OS X” will come in tags/releases now. `v0.4.0` is the first tag, like the version the script has.
+“Archey :: OS X” will come in tags/releases now. `v0.4.0` was the first tag.
 
-The script will be updated (soon) and I'm about to branch off the bash-version. That means, future updates/versions will only have the Python version, with the bash version in a separate branch - _for those who prefer that one_.
+Not going to list all changes here, but a few notes… The new version have a bit more code, but _cleaner_, hopefully. I've removed some redundant code and added a “`Utils`” class. Also added the “math” library to trucate the decimals. Had som issues with those when displaying RAM. The script is working with both `python` (2.7) and `python3`. There's also a simple version option. `archey --version` made with `optparse` _(incl the standard: `-h` and `--help`)_.
+
+Archey will detect `Darwin` by `uname -s`, so “brand” is only for coloring the output, and the `logosDict` was moved to the end to pick the strings from the script instead. Some conditional `if`'s have been added _(... \*might\* be hinting about something)_.
 
  · Eric
 
 
 <!-- Markdown: Links & Images -->
-[inst]: https://github.com/iEFdev/dotfiles/blob/master/osx/.bashrc#L132-133
-
-[mt]: https://github.com/iEFdev/dotfiles/tree/master/myTerm
-[jfa]: https://github.com/joshfinnie/archey-osx
-[jfg]: http://joshfinnie.github.io/
+[brc]: https://github.com/iEFdev/dotfiles/blob/master/osx/.bashrc#L155-L156
 
 [dja]: https://github.com/djmelik/archey
 [djm]: https://github.com/djmelik
 
-[scrap_py]: https://raw.githubusercontent.com/iEFdev/Archey-OS-X/master/screenshot_py.png "Screenshot of Archey (python version)"
-[scrap_bash]: https://raw.githubusercontent.com/iEFdev/Archey-OS-X/master/screenshot_bash.png "Screenshot of Archey (bash version)"
+[scrap]: https://raw.githubusercontent.com/iEFdev/Archey-OS-X/master/screenshot.png "Screenshot of Archey :: OS X"
+[myterm]: https://github.com/iEFdev/dotfiles/tree/master/myTerm "My Terminal theme"
+[jy]: https://github.com/iEFdev/junkyard "iEFdev/Junkyard"
