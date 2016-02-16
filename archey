@@ -54,11 +54,17 @@ brand = None
 ### Don't edit below #########################################
 
 # Import libraries
-import os, sys, subprocess, optparse, re, linecache, math
+import linecache
+import math
+import optparse
+import os
+import re
+import subprocess
+import sys
+
 from subprocess import Popen, PIPE
 from optparse import OptionParser
 from getpass import getuser
-from time import ctime, sleep
 
 
 # --version
@@ -282,34 +288,28 @@ class CPU:
 class RAM:
 	def __init__(self):
 		if Utils().xSystem() == 'Darwin':
+			# Installed RAM
 			memSize = Utils().xPopen(['sysctl', '-n', 'hw.memsize'])
 			memTotalRam = int(memSize) / int(1024) / int(1048576)
 
-			vmStat = Utils().xPopen(['vm_stat'])
-			vmStat = re.sub('  +', ' ', vmStat.replace('.', '').rstrip('\n'))
-
-			# Using vm_stat to get all the memory
-			memFree = vmStat.splitlines()[1].split()[2]
-			memActive = vmStat.splitlines()[2].split()[2]
-			memInactive = vmStat.splitlines()[3].split()[2]
-			memSpeculative = vmStat.splitlines()[4].split()[2]
-			memWired = vmStat.splitlines()[5].split()[3]
+			# Get all memory data
+			vmStat = Utils().xPopen(['vm_stat']).replace('.', '')
+			vmStat = re.sub(':[\s]+', ' ', vmStat.replace('Pages ', '')).split('\n')	#.rstrip('\n')
+			mem = { }
+			for row in range(1,len(vmStat)-7):
+				row = vmStat[row].replace('down', '').splitlines()[0].strip().split()
+				mem[(row[0])] = int(row[1]) * int(4000)
+			# [note] Using 4000 instead of 4096 makes it sum up exactly as
+			# in Activity Monitor, including the use of “math.ceil()”.
 
 			# Used and free memory
-			# These 3 are matching "1234M used" in: top (and Activity Monitor)
-			memUsed = (int(memWired) + int(memActive) + int(memInactive)) * int(4096) / int(1048576)
-			memTotalFree = (int(memFree) + int(memSpeculative)) * int(4096) / int(1048576)
-
-			# [note]
-			# I's a little bit of a mess, and slightly confusing.
-			# Size of total memory (memTotalRam) is easy to get, but adding up what's
-			# used seems it's using MiB instead of MB. Haven't figured out a way to solve it.
-			# Did try a few different settings, but any ideas/suggestions/improvements are welcome.
+			memUsed = int(math.ceil((mem['wired'] + mem['active'] + mem['inactive']) / int(1048576) / 10.0) * 10)
+			memTotalFree = int(math.ceil((mem['free'] + mem['speculative']) / int(1048576) / 10.0) * 10)
 		else:
 			memTotalRam = memUsed = memTotalFree = '-'
 
 		# RAM: (red=used) (green=free) / total
-		ramdisplay = '%s(%s MB) %s(%s MB)%s / %s GB' % (colorDict['Sensors'][0], math.trunc(memUsed), colorDict['Sensors'][1], math.trunc(memTotalFree), colorDict['Clear'][0], memTotalRam)
+		ramdisplay = '%s(%s MB) %s(%s MB)%s / %s GB' % (colorDict['Sensors'][0], memUsed, colorDict['Sensors'][1], memTotalFree, colorDict['Clear'][0], memTotalRam)
 
 		self.key = 'RAM'
 		self.value = ramdisplay
