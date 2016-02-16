@@ -61,11 +61,12 @@ import os
 import re
 import subprocess
 import sys
+import socket
 
 from subprocess import Popen, PIPE
 from optparse import OptionParser
 from getpass import getuser
-
+from socket import gethostname
 
 # --version
 parser = optparse.OptionParser(usage='%prog [ --version | -h | --help ]', version='%prog: ' + Version + '\n' + Copyright + '\n')
@@ -93,6 +94,7 @@ colorDict = {
 	'Mint': ['\x1b[0;32m', '\x1b[1;37m'],
 	'Crunchbang': ['\x1b[0;37m', '\x1b[1;37m'],
 	'Fedora': ['\x1b[0;34m', '\x1b[1;37m'],
+
 	# Sensors: [<red>, <yellow>, <green>, <blinking red>]
 	'Sensors': ['\x1b[0;31m', '\x1b[0;32m', '\x1b[0;33m', '\x1b[5;31m'],
 	'Clear': ['\x1b[0m']
@@ -124,8 +126,7 @@ class Utils:
 
 	# What system are we on (aka detect Darwin/OS X)
 	def xSystem(self):
-
-		self.brand = self.xPopen(['uname', '-s'])
+		self.brand = sys.platform.capitalize()
 		return self.brand
 
 	# Processes... to detect DE/MWM
@@ -165,16 +166,14 @@ class Output(Utils):
 
 class User:
 	def __init__(self):
-
 		self.key = 'User'
-		self.value = os.getenv('USER')
+		self.value = getuser()
 
 
 class Hostname:
 	def __init__(self):
-
 		self.key = 'Hostname'
-		self.value = Utils().xPopen(['uname', '-n'])
+		self.value = socket.gethostname()
 
 
 class Distro:
@@ -195,7 +194,8 @@ class Distro:
 class Kernel:
 	def __init__(self):
 		if Utils().xSystem() == 'Darwin':
-			kernel = Utils().xPopen(['uname', '-srm'])
+			kernel = '%1s %2s %3s ' % (os.uname()[0], os.uname()[2], os.uname()[4])
+			#kernel = re.sub('.*:+', '', os.uname()[3]).strip('REL.*') # xnu-123... etc
 		else:
 			kernel = Utils().xPopen(['uname', '-r'])
 
@@ -294,8 +294,8 @@ class RAM:
 
 			# Get all memory data
 			vmStat = Utils().xPopen(['vm_stat']).replace('.', '')
-			vmStat = re.sub(':[\s]+', ' ', vmStat.replace('Pages ', '')).split('\n')	#.rstrip('\n')
-			mem = { }
+			vmStat = re.sub(':[\s]+', ' ', vmStat.replace('Pages ', '')).split('\n')
+			mem = {}
 			for row in range(1,len(vmStat)-7):
 				row = vmStat[row].replace('down', '').splitlines()[0].strip().split()
 				mem[(row[0])] = int(row[1]) * int(4000)
