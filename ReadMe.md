@@ -94,13 +94,13 @@ _Note: The blue color in OS X is not that really good - almost purple'ish._
 
 # Author notes
 
-**[2016-02-15]**
+**[2016-02-17]**
 
-“Archey :: OS X” will come in tags/releases now. `v0.4.0` was the first tag.
+“Archey :: OS X” will come in tags/releases now, and this is the “dev” version _(eg v1.2.3-yymmdd-git)_. You should use the releases.
 
-Not going to list all changes here, but a few notes… The new version have a bit more code, but _cleaner_, hopefully. I've removed some redundant code and added a “`Utils`” class. Also added the “math” library to trucate the decimals. Had som issues with those when displaying RAM. The script is working with both `python` (2.7) and `python3`. There's also a simple version option. `archey --version` made with `optparse` _(incl the standard: `-h` and `--help`)_.
+I started a wiki... Not much there at the moment, but I'd guess a few pages will show up there later.
 
-Archey will detect `Darwin` by `uname -s`, so “brand” is only for coloring the output, and the `logosDict` was moved to the end to pick the strings from the script instead. Some conditional `if`'s have been added _(... \*might\* be hinting about something)_.
+If you have any feedback, suggestions? Please, send an email or a tweet.
 
  · Eric
 

@@ -9,8 +9,8 @@
 # Description:  Archey is a simple system information tool
 #               written in Python.
 #
-Version =       'v0.5.0 (Feb 15, 2016)';   # February 15, 2016 - 05:00:10
-Copyright =     'Copyright (c) 2014-2016 Eric F';
+Version =       'v0.5.0-20160217-git (Feb 17, 2016)'    # February 17, 2016 - 05:00:10
+Copyright =     'Copyright (c) 2014-2016 Eric F'
 #
 # Licence:      GNU General Public License v3
 #
@@ -43,8 +43,8 @@ diskWarningThreshold = 20   # default: 20 (% of diskspace left)
 # Custom color (match a name in in colorDict)
 # Must have one with 'None' (defaults to Darwin)
 brand = None
-#brand = 'Arch Linux'	# Note: blue is almost purple in OS X
-#brand = 'Darwin'		# OS X
+#brand = 'Arch Linux'       # Note: blue is almost purple in OS X
+#brand = 'Darwin'           # OS X
 #brand = 'Mint'
 #brand = 'Fedora'
 # ------------------------------------------------------------
@@ -100,9 +100,9 @@ colorDict = {
 	'Clear': ['\x1b[0m']
 }
 
-deDict = {
-	'Finder': 'Finder'
-}
+
+deDict = { 'Finder': 'Finder' }
+
 
 # @todo: check up it there are more window tiling programs for OS X.
 wmDict = {
@@ -111,8 +111,6 @@ wmDict = {
 	'Spectacle': 'Spectacle',
 	'Xmonad': 'Xmonad'
 }
-
-# "logosDict = { ... }" is moved to bottom, to get the colors selected from script
 
 
 # Classes
@@ -158,7 +156,7 @@ class Output(Utils):
 			sys.exit(1)
 
 	def append(self, display):
-			self.results.append('%s%s: %s%s' % (colorDict[self.color][1], display.key, colorDict['Clear'][0], display.value))
+		self.results.append('%s%s: %s%s' % (colorDict[self.color][1], display.key, colorDict['Clear'][0], display.value))
 
 	def output(self):
 		print(logosDict[self.distro].format(color = colorDict[self.color], results = self.results))
@@ -240,14 +238,12 @@ class DesktopEnvironment:
 
 class Shell:
 	def __init__(self):
-
 		self.key = 'Shell'
 		self.value = os.getenv('SHELL')
 
 
 class Terminal:
 	def __init__(self):
-
 		self.key = 'Terminal'
 		self.value = os.getenv('TERM')
 
@@ -282,9 +278,8 @@ class CPU:
 
 
 # Memory information
-# ------------------------------------------------------------
 # Display: (used = red) (free = green) total
-#
+# ------------------------------------------------------------
 class RAM:
 	def __init__(self):
 		if Utils().xSystem() == 'Darwin':
@@ -316,9 +311,8 @@ class RAM:
 
 
 # Disk information
-# ------------------------------------------------------------
 # Display: used/N% of total (N available) (disk)
-#
+# ------------------------------------------------------------
 class Disk:
 	def __init__(self):
 		if Utils().xSystem() == 'Darwin':
@@ -393,7 +387,7 @@ logosDict = { out.distro: '''{color[1]}
 }
 
 
-# In case you want the Apple instead. Comment the 2 lines: """
+# Alternative logo, for those who want the Apple instead.
 # Default is the Linux Arch logo, since that IS the progr name
 # ------------------------------------------------------------
 if out.distro == 'Darwin' and brand == 'Apple':
