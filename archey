@@ -9,7 +9,7 @@
 # Description:  Archey is a simple system information tool
 #               written in Python.
 #
-Version =       'v0.5.0-20160218-git (Feb 18, 2016)'    # February 18, 2016 - 03:00:40
+Version =       'v0.5.0-20160218-git (Feb 18, 2016)'    # February 18, 2016 - 19:38:50
 Copyright =     'Copyright (c) 2014-2016 Eric F'
 #
 # Licence:      GNU General Public License v3
@@ -107,12 +107,18 @@ colorDict = {
 deDict = { 'Finder': 'Finder' }
 
 
-# @todo: check up it there are more window tiling programs for OS X.
 wmDict = {
 	'ShiftIt': 'ShiftIt',
 	'Slate': 'Slate',
 	'Spectacle': 'Spectacle',
 	'Xmonad': 'Xmonad'
+}
+
+
+osxDict = {
+	'10.5': 'Leopard', '10.6': 'Snow Leopard', '10.7': 'Lion',
+	'10.8': 'Mountain Lion', '10.9': 'Mavericks', '10.10': 'Yosemite',
+	'10.11': 'El Capitan'
 }
 
 
@@ -149,7 +155,7 @@ class Output(Utils):
 		# Allow to chose color scheme from variable: brand
 		self.color = brand
 		if brand is None or brand not in colorDict:
-			self.color = self.brand
+			self.color = self.distro    # self.brand
 
 	def __detectDistro(self):
 		if self.xSystem():
@@ -179,11 +185,13 @@ class Hostname:
 class Distro:
 	def __init__(self):
 		if Utils().xSystem() == 'Darwin':
-			distro = '%s %s (%s)' % (
-				Utils().xPopen(['sw_vers', '-productName']),
-				Utils().xPopen(['sw_vers', '-productVersion']),
-				Utils().xPopen(['sw_vers', '-buildVersion'])
-			)
+			getVers = Utils().xPopen(['sw_vers', '-productVersion'])
+			osxName = '(%1s)' % Utils().xPopen(['sw_vers', '-buildVersion'])
+			for fname in osxDict:
+				if fname == getVers[:-2]:
+					osxName = osxDict[fname]
+					break
+			distro = '%1s %2s %3s' % (Utils().xPopen(['sw_vers', '-productName']), getVers, osxName)
 		else:
 			distro = Utils().xSystem()
 
