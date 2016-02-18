@@ -106,7 +106,7 @@ If you have any feedback, suggestions? Please, send an email or a tweet.
 
 
 <!-- Markdown: Links & Images -->
-[brc]: https://github.com/iEFdev/dotfiles/blob/master/osx/.bashrc#L155-L156
+[brc]: https://github.com/iEFdev/dotfiles/blob/master/osx/.bashrc#L67-L68
 
 [dja]: https://github.com/djmelik/archey
 [djm]: https://github.com/djmelik
