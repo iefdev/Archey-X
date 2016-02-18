@@ -9,7 +9,7 @@
 # Description:  Archey is a simple system information tool
 #               written in Python.
 #
-Version =       'v0.5.0-20160217-git (Feb 17, 2016)'    # February 17, 2016 - 05:00:10
+Version =       'v0.5.0-20160218-git (Feb 18, 2016)'    # February 18, 2016 - 03:00:40
 Copyright =     'Copyright (c) 2014-2016 Eric F'
 #
 # Licence:      GNU General Public License v3
@@ -62,11 +62,14 @@ import re
 import subprocess
 import sys
 import socket
+import time
 
-from subprocess import Popen, PIPE
-from optparse import OptionParser
+from datetime import timedelta
 from getpass import getuser
+from optparse import OptionParser
 from socket import gethostname
+from subprocess import Popen, PIPE
+
 
 # --version
 parser = optparse.OptionParser(usage='%prog [ --version | -h | --help ]', version='%prog: ' + Version + '\n' + Copyright + '\n')
@@ -118,7 +121,6 @@ wmDict = {
 class Utils:
 	# Popen func
 	def xPopen(self, cmd):
-
 		getCmd = Popen(cmd, stdout=PIPE).communicate()[0].decode('utf-8').rstrip('\n')
 		return getCmd
 
@@ -203,13 +205,15 @@ class Kernel:
 
 class Uptime:
 	def __init__(self):
-		getUptime = Utils().xPopen(['uptime'])
-		uptime = re.compile(r'(, )(\d )(.*)').sub(r"", getUptime)
-		uptime = re.compile(r'(.*)up(\s+)(.*)').sub(r"\3", uptime)
-		uptime = re.sub('  +', ' ', uptime)
+		if Utils().xSystem() == 'Darwin':
+			boottime = Utils().xPopen(['sysctl', '-n', 'kern.boottime'])
+			boottime = int('%1s' % str(tuple(boottime.split())[3])[:-1])
+			boottime = int(str(time.time() - boottime).split('.')[0])
+		else:
+			boottime = int(open('/proc/uptime').read().split('.')[0])
 
 		self.key = 'Uptime'
-		self.value = uptime
+		self.value = str(timedelta(seconds = boottime))[:-3]
 
 
 class WindowManager(Utils):
