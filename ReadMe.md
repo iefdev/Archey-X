@@ -12,6 +12,8 @@ This is a (forked) ported version of the original script: [Archey][dja], by [djm
 
 ![][scrap]
 
+A few more Screenshots can be found in the [Wiki][scraps].
+
 _Terminal theme: [myTerm][myterm]_
 
 
@@ -112,5 +114,6 @@ If you have any feedback, suggestions? Please, send an email or a tweet.
 [djm]: https://github.com/djmelik
 
 [scrap]: https://raw.githubusercontent.com/iEFdev/Archey-OS-X/master/screenshot.png "Screenshot of Archey :: OS X"
+[scraps]: https://github.com/iEFdev/Archey-OS-X/wiki/Screenshots "More Screenshots"
 [myterm]: https://github.com/iEFdev/dotfiles/tree/master/myTerm "My Terminal theme"
 [jy]: https://github.com/iEFdev/junkyard "iEFdev/Junkyard"
