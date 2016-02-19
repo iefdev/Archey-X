@@ -9,7 +9,7 @@
 # Description:  Archey is a simple system information tool
 #               written in Python.
 #
-Version =       'v0.5.0-20160219-git (Feb 19, 2016)'    # February 19, 2016 - 13:17:45
+Version =       'v0.5.0-20160219-git (Feb 19, 2016)'    # February 19, 2016 - 17:57:10
 Copyright =     'Copyright (c) 2014-2016 Eric F'
 #
 # Licence:      GNU General Public License v3
@@ -108,9 +108,10 @@ deDict = { 'Finder': 'Finder' }
 
 
 wmDict = {
-	'ShiftIt': 'ShiftIt',
-	'Slate': 'Slate',
-	'Spectacle': 'Spectacle',
+	'Cinch': 'Cinch', 'Factory': 'Factory', 'Mizage': 'Mizage',
+	'Moom': 'Moom', 'Optimal Layout': 'Optimal Layout',
+	'ShiftIt': 'ShiftIt', 'SizeUp': 'SizeUp', 'Slate': 'Slate',
+	'Slicer': 'Slicer', 'Spectacle': 'Spectacle', 'TylerWM': 'TylerWM',
 	'Xmonad': 'Xmonad'
 }
 
@@ -226,7 +227,7 @@ class Uptime:
 
 class WindowManager(Utils):
 	def __init__(self):
-		wm = ''
+		wm = 'Quartz'	# the default wm in OS X
 		for key in wmDict.keys():
 			if key in Utils().xProcess():
 				wm = wmDict[key]
@@ -262,16 +263,20 @@ class Terminal:
 
 class Packages():
 	def __init__(self):
+		packages = None
 		if Utils().xSystem() == 'Darwin':
-			checkBrew = Utils().xPopen(['which', 'brew'])
-			p1 = Utils().xPopen(['which', 'brew', '-l'])
-			packages = len(p1.rstrip('\n').split('\n'))
+			if Utils().xPopen(['which', 'brew']):
+				packages = len(Utils().xPopen(['brew', 'list']).rstrip('\n').split('\n'))
+			if Utils().xPopen(['which', 'port']):
+				packages = (packages + len(Utils().xPopen(['port', 'installed']).rstrip('\n').split('\n')))
+			if Utils().xPopen(['which', 'fink']):
+				packages = (packages + len(Utils().xPopen(['fink', 'list', '-i']).rstrip('\n').split('\n')))
 		else:
-			checkBrew = None
+			packages = None
 
 		self.key = 'Packages'
 
-		if checkBrew:
+		if packages is not None:
 			self.value = packages
 		else:
 			self.value = 'n/a'
