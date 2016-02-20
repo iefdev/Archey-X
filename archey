@@ -9,7 +9,7 @@
 # Description:  Archey is a simple system information tool
 #               written in Python.
 #
-Version =       'v0.5.0-20160220-git (Feb 20, 2016)'    # February 20, 2016 - 17:44:25
+Version =       'v0.5.0-20160221-git (Feb 21, 2016)'    # February 21, 2016 - 01:40:30
 Copyright =     'Copyright (c) 2014-2016 Eric F'
 #
 # Licence:      GNU General Public License v3
@@ -54,18 +54,17 @@ brand = None
 ### Don't edit below #########################################
 
 # Import libraries
-import math
 import os
 import re
 import sys
-import time
 
 from datetime import timedelta
 from getpass import getuser
+from math import ceil
 from optparse import OptionParser
 from socket import gethostname
 from subprocess import check_output, PIPE, Popen
-
+from time import time
 
 # --version
 parser = OptionParser(usage='%prog [ --version | -h | --help ]', version='%prog: ' + Version + '\n' + Copyright + '\n')
@@ -214,7 +213,7 @@ class Uptime:
 		if Utils().xSystem() == 'Darwin':
 			boottime = Utils().xPopen(['sysctl', '-n', 'kern.boottime'])
 			boottime = int('%1s' % str(tuple(boottime.split())[3])[:-1])
-			boottime = int(str(time.time() - boottime).split('.')[0])
+			boottime = int(str(time() - boottime).split('.')[0])
 		else:
 			boottime = int(open('/proc/uptime').read().split('.')[0])
 
@@ -309,16 +308,16 @@ class RAM:
 				row = vmStat[row].replace('down', '').splitlines()[0].strip().split()
 				mem[(row[0])] = int(row[1]) * int(4000)
 			# [note] Using 4000 instead of 4096 makes it sum up exactly as
-			# in Activity Monitor, including the use of “math.ceil()”.
+			# in Activity Monitor, including the use of “ceil()”.
 
 			# Used and free memory
-			memUsed = int(math.ceil((mem['wired'] + mem['active'] + mem['inactive']) / int(1048576) / 10.0) * 10)
-			memTotalFree = int(math.ceil((mem['free'] + mem['speculative']) / int(1048576) / 10.0) * 10)
+			memUsed = int(ceil((mem['wired'] + mem['active'] + mem['inactive']) / int(1048576) / 10.0) * 10)
+			memTotalFree = int(ceil((mem['free'] + mem['speculative']) / int(1048576) / 10.0) * 10)
 		else:
 			memTotalRam = memUsed = memTotalFree = '-'
 
 		# RAM: (red=used) (green=free) / total
-		ramdisplay = '%s(%s MB) %s(%s MB)%s / %s GB' % (colorDict['Sensors'][0], memUsed, colorDict['Sensors'][1], memTotalFree, colorDict['Clear'][0], memTotalRam)
+		ramdisplay = '%s(%sMB) %s(%sMB)%s / %sGB' % (colorDict['Sensors'][0], memUsed, colorDict['Sensors'][1], memTotalFree, colorDict['Clear'][0], memTotalRam)
 
 		self.key = 'RAM'
 		self.value = ramdisplay
@@ -351,7 +350,7 @@ class Disk:
 		if diskWarning == 1 and leftpercent <= int(diskWarningThreshold):
 			diskcolor = 3
 
-		disk = '%s/%s%s%s of %s (%s available) (%s)' % (used, colorDict['Sensors'][diskcolor], capacity, colorDict['Clear'][0], size, available, disknr)
+		disk = '%sB/%s%s%s of %sB (%sB available) (%s)' % (used, colorDict['Sensors'][diskcolor], capacity, colorDict['Clear'][0], size, available, disknr)
 
 		self.key = 'Disk'
 		self.value = disk
