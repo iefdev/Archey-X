@@ -9,7 +9,7 @@
 # Description:  Archey is a simple system information tool
 #               written in Python.
 #
-Version =       'v0.5.0-20160220-git (Feb 20, 2016)'    # February 19, 2016 - 01:12:25
+Version =       'v0.5.0-20160220-git (Feb 20, 2016)'    # February 20, 2016 - 17:44:25
 Copyright =     'Copyright (c) 2014-2016 Eric F'
 #
 # Licence:      GNU General Public License v3
@@ -54,25 +54,21 @@ brand = None
 ### Don't edit below #########################################
 
 # Import libraries
-import linecache
 import math
-import optparse
 import os
 import re
-import subprocess
 import sys
-import socket
 import time
 
 from datetime import timedelta
 from getpass import getuser
 from optparse import OptionParser
 from socket import gethostname
-from subprocess import Popen, PIPE
+from subprocess import check_output, PIPE, Popen
 
 
 # --version
-parser = optparse.OptionParser(usage='%prog [ --version | -h | --help ]', version='%prog: ' + Version + '\n' + Copyright + '\n')
+parser = OptionParser(usage='%prog [ --version | -h | --help ]', version='%prog: ' + Version + '\n' + Copyright + '\n')
 parser.parse_args()
 
 
@@ -140,7 +136,7 @@ class Utils:
 	# Processes... to detect DE/MWM
 	def xProcess(self):
 		if self.xSystem() == 'Darwin':
-			self.processes = str(subprocess.check_output(('ps', '-u', getuser(), '-o', 'comm')).decode('utf-8').split('/')).replace('\\n', '').rstrip('\n')
+			self.processes = str(check_output(('ps', '-u', getuser(), '-o', 'comm')).decode('utf-8').split('/')).replace('\\n', '').rstrip('\n')
 		else:
 			self.processes = None
 
@@ -181,7 +177,7 @@ class User:
 class Hostname:
 	def __init__(self):
 		self.key = 'Hostname'
-		self.value = socket.gethostname()
+		self.value = gethostname()
 
 
 class Distro:
