@@ -4,7 +4,17 @@ Changes that have been made between the versions.
 
 - - -
 
-> **Latest version:** v0.5.0
+> **Latest version:** v0.6.0
+
+
+### Changes since: v0.5.0
+
+-	New additions in wmDict. “Quartz” will be displayed as default, and any other will be picked up if installed.
+-	Macports and Fink was added to Packages, ~~and 'pkgutil' for OS X programs (installer)~~. The combined number of all will be displayed.
+-	New feat: Fancy Names. Displaying version names instead of build number _(with a fallback to buildnumber if not in dict)_.
+-	Rewrote the Uptime class, using the built in timedelta to format the code.
+-	Reduced the usage of Popen, and using the built in libraries instead (username, hostname etc).
+-	Better output of RAM. Used/free sumup exactly as Activiy Monitor now (was a small diff before).
 
 
 
