@@ -259,7 +259,7 @@ class Terminal:
 
 class Packages():
 	def __init__(self):
-		packages = None
+		packages = ''
 		if Utils().xSystem() == 'Darwin':
 			# pkgutil will list all installed program made with the installer,
 			# at least something to show if not having a pkg manager.
