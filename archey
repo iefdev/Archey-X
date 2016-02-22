@@ -9,7 +9,7 @@
 # Description:  Archey is a simple system information tool
 #               written in Python.
 #
-Version =       'v0.5.0-20160221-git (Feb 21, 2016)'    # February 21, 2016 - 01:40:30
+Version =       'v0.6.0 (Feb 22, 2016)'    # February 22, 2016 - 10:50:40
 Copyright =     'Copyright (c) 2014-2016 Eric F'
 #
 # Licence:      GNU General Public License v3
@@ -263,8 +263,9 @@ class Packages():
 		if Utils().xSystem() == 'Darwin':
 			# pkgutil will list all installed program made with the installer,
 			# at least something to show if not having a pkg manager.
-			if Utils().xPopen(['which', 'pkgutil']):
-				packages = Utils().xPopen(['pkgutil', '--pkgs'])
+			# (waiting with this one for now, uncomment if you want)
+			#if Utils().xPopen(['which', 'pkgutil']):
+			#	packages = Utils().xPopen(['pkgutil', '--pkgs'])
 			if Utils().xPopen(['which', 'brew']):
 				packages = (packages + Utils().xPopen(['brew', 'list']))
 			if Utils().xPopen(['which', 'port']):
