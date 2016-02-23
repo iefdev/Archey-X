@@ -9,29 +9,26 @@
 # Description:  Archey is a simple system information tool
 #               written in Python.
 #
-Version =       'v0.6.0 (Feb 22, 2016)'    # February 22, 2016 - 10:50:40
+Version =       'v0.6.0-20160223-git (Feb 23, 2016)'    # February 23, 2016 - 11:13:35
 Copyright =     'Copyright (c) 2014-2016 Eric F'
 #
-# Licence:      GNU General Public License v3
-#
+# Licence:      Distributed under GPLv3+: GNU General Public
+#               License v3 or later. See LICENSE or
+#               <http://www.gnu.org/licenses/gpl.txt>
+#               for the full license text.
 #
 # Author notes:
 # ------------------------------------------------------------
-#
 # This is a forked (ported) version of the original Archey
 # by Melik Manukyan, rewritten for OS X.
 #
 # Original author(s) and copyright:
-#
-#   Copyright 2010 Melik Manukyan <melik@archlinux.us>
-#   Copyright 2010 David Vazgenovich Shakaryan <dvshakaryan@gmail.com>
+#   (c) 2010 Melik Manukyan <melik@archlinux.us>
+#   (c) 2010 David Vazgenovich Shakaryan <dvshakaryan@gmail.com>
 #
 #   ASCII art by Brett Bohnenkamper <kittykatt@silverirc.com>
 #   Changes Jerome Launay <jerome@projet-libre.org>
 #   Fedora support by YeOK <yeok@henpen.org>
-#
-# Distributed under the terms of the GNU General Public License v3.
-# See LICENSE or http://www.gnu.org/licenses/gpl.txt for the full license text.
 #
 
 
@@ -53,20 +50,20 @@ brand = None
 
 ### Don't edit below #########################################
 
-# Import libraries
-import os
-import re
-import sys
-
+# Import libraries/resources
 from datetime import timedelta
 from getpass import getuser
 from math import ceil
 from optparse import OptionParser
+from os import getenv, uname
+from re import sub
 from socket import gethostname
 from subprocess import check_output, PIPE, Popen
+from sys import exit, platform
 from time import time
 
-# --version
+
+# -h and --version
 parser = OptionParser(usage='%prog [ --version | -h | --help ]', version='%prog: ' + Version + '\n' + Copyright + '\n')
 parser.parse_args()
 
@@ -129,7 +126,7 @@ class Utils:
 
 	# What system are we on (aka detect Darwin/OS X)
 	def xSystem(self):
-		self.brand = sys.platform.capitalize()
+		self.brand = platform.capitalize()
 		return self.brand
 
 	# Processes... to detect DE/MWM
@@ -158,7 +155,7 @@ class Output(Utils):
 		if self.xSystem():
 			return self.xSystem()
 		else:
-			sys.exit(1)
+			exit(1)
 
 	def append(self, display):
 		self.results.append('%s%s: %s%s' % (colorDict[self.color][1], display.key, colorDict['Clear'][0], display.value))
@@ -199,8 +196,8 @@ class Distro:
 class Kernel:
 	def __init__(self):
 		if Utils().xSystem() == 'Darwin':
-			kernel = '%1s %2s %3s ' % (os.uname()[0], os.uname()[2], os.uname()[4])
-			#kernel = re.sub('.*:+', '', os.uname()[3]).strip('REL.*') # xnu-123... etc
+			kernel = '%1s %2s %3s ' % (uname().sysname, uname().release, uname().machine)
+			#kernel = sub('.*:+', '', uname()version).strip('REL.*') # xnu-123... etc
 		else:
 			kernel = Utils().xPopen(['uname', '-r'])
 
@@ -248,24 +245,19 @@ class DesktopEnvironment:
 class Shell:
 	def __init__(self):
 		self.key = 'Shell'
-		self.value = os.getenv('SHELL')
+		self.value = getenv('SHELL')
 
 
 class Terminal:
 	def __init__(self):
 		self.key = 'Terminal'
-		self.value = os.getenv('TERM')
+		self.value = getenv('TERM')
 
 
 class Packages():
 	def __init__(self):
 		packages = ''
 		if Utils().xSystem() == 'Darwin':
-			# pkgutil will list all installed program made with the installer,
-			# at least something to show if not having a pkg manager.
-			# (waiting with this one for now, uncomment if you want)
-			#if Utils().xPopen(['which', 'pkgutil']):
-			#	packages = Utils().xPopen(['pkgutil', '--pkgs'])
 			if Utils().xPopen(['which', 'brew']):
 				packages = (packages + Utils().xPopen(['brew', 'list']))
 			if Utils().xPopen(['which', 'port']):
@@ -283,7 +275,7 @@ class CPU:
 	def __init__(self):
 		if Utils().xSystem() == 'Darwin':
 			cpuinfo = Utils().xPopen(['sysctl', '-n', 'machdep.cpu.brand_string'])
-			cpuinfo = re.sub('  +', ' ', cpuinfo.replace('CPU ', '').rstrip('\n'))
+			cpuinfo = sub('  +', ' ', cpuinfo.replace('CPU ', '').rstrip('\n'))
 		else:
 			cpuinfo = 'n/a'
 
@@ -303,7 +295,7 @@ class RAM:
 
 			# Get all memory data
 			vmStat = Utils().xPopen(['vm_stat']).replace('.', '')
-			vmStat = re.sub(':[\s]+', ' ', vmStat.replace('Pages ', '')).split('\n')
+			vmStat = sub(':[\s]+', ' ', vmStat.replace('Pages ', '')).split('\n')
 			mem = {}
 			for row in range(1,len(vmStat)-7):
 				row = vmStat[row].replace('down', '').splitlines()[0].strip().split()
