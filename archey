@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------
 #
 # /usr/local/bin/archey
@@ -9,7 +10,7 @@
 # Description:  Archey is a simple system information tool
 #               written in Python.
 #
-Version =       'v0.6.0-20160223-git (Feb 23, 2016)'    # February 23, 2016 - 11:13:35
+Version =       'v0.6.0-20160303-git (March 3, 2016)'    # March 3, 2016 - 14:56:50
 Copyright =     'Copyright (c) 2014-2016 Eric F'
 #
 # Licence:      Distributed under GPLv3+: GNU General Public
@@ -52,6 +53,7 @@ brand = None
 
 # Import libraries/resources
 from datetime import timedelta
+from distutils.spawn import find_executable as fExec
 from getpass import getuser
 from math import ceil
 from optparse import OptionParser
@@ -88,7 +90,7 @@ colorDict = {
 	'Debian': ['\x1b[0;31m', '\x1b[1;31m'],
 	'Fedora': ['\x1b[0;34m', '\x1b[1;37m'],
 	'Gentoo': ['\x1b[0;37m', '\x1b[1;35m'],
-	'Mint': ['\x1b[0;32m', '\x1b[1;37m'],
+	'LinuxMint': ['\x1b[0;32m', '\x1b[1;37m'],
 	'Ubuntu': ['\x1b[0;31m', '\x1b[1;31m', '\x1b[0;33m'],
 
 	# Sensors: [<red>, <yellow>, <green>, <blinking red>]
@@ -132,7 +134,7 @@ class Utils:
 	# Processes... to detect DE/MWM
 	def xProcess(self):
 		if self.xSystem() == 'Darwin':
-			self.processes = str(check_output(('ps', '-u', getuser(), '-o', 'comm')).decode('utf-8').split('/')).replace('\\n', '').rstrip('\n')
+			self.processes = str(check_output(('ps', '-u', getuser(), '-o', 'comm')).decode('utf8').split('/')).replace('\\n', '').rstrip('\n')
 		else:
 			self.processes = None
 
@@ -196,7 +198,7 @@ class Distro:
 class Kernel:
 	def __init__(self):
 		if Utils().xSystem() == 'Darwin':
-			kernel = '%1s %2s %3s ' % (uname().sysname, uname().release, uname().machine)
+			kernel = '%1s %2s %3s ' % (uname()[0], uname()[2], uname()[4])
 			#kernel = sub('.*:+', '', uname()version).strip('REL.*') # xnu-123... etc
 		else:
 			kernel = Utils().xPopen(['uname', '-r'])
@@ -258,11 +260,11 @@ class Packages():
 	def __init__(self):
 		packages = ''
 		if Utils().xSystem() == 'Darwin':
-			if Utils().xPopen(['which', 'brew']):
+			if fExec('brew'):
 				packages = (packages + Utils().xPopen(['brew', 'list']))
-			if Utils().xPopen(['which', 'port']):
+			if fExec('port'):
 				packages = (packages + Utils().xPopen(['port', 'installed']))
-			if Utils().xPopen(['which', 'fink']):
+			if fExec('fink'):
 				packages = (packages + Utils().xPopen(['fink', 'list', '-i']))
 		else:
 			packages = 'n/a'
