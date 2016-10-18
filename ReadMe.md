@@ -44,11 +44,21 @@ _...or using sed._
 
 ## Usage
 
+    archey
+
 To load at start. Add in your [.bashrc][brc] _(or .bash_profile)_. Example:
 
 ```
 # Load archey (if installed)
-[[ `which archey` && $UID != 0 ]] && archey
+[[ `type archey 2> /dev/null` && $UID != 0 ]] && archey
+```
+
+When using `scp` over the network and logging into amachin with `archey` loading up... It _might_ cause an error about output. To avoid that issue, use this instead:
+
+```
+# Load archey (if installed)
+# If not running interactively, don't do anything
+[[ ! -z "$PS1" && `type archey 2> /dev/null` && $UID != 0 ]] && archey
 ```
 
 
