@@ -4,12 +4,32 @@ Changes that have been made between the versions.
 
 - - -
 
-> **Latest version:** v0.6.1 _(Last version before merging `neXtgen`)_
+> **Latest version:** v0.7.0-beta
+
+### Changes since: `v0.6.1` (Nov 21, 2016)
+
+-	Replaced `optparse` (deprecated) with `argparse`.
+-   Code has been rn with pylint. Only 1 report left, and that's the filename - which I intend to keep.
+-   Optimized/refactored some code
+-   Removed `platform.linux_distribution()`. It's deprecated
+    and flagged for removal, so...
+-   A new function to detect distro name and full distro name. No using `/etc/{{os,lsb}-release,issue}` and `lsb_release [-si|-sd]`. In that way everything can take place in on function.
+-   A new function to parse the release files
+-   New (xtra) dict - separating distros and colors, to 1 color for multiple dists
+-   RAM and Disk output is formatted a bit different
+-   Changed the %-levels for disk-colors
+-   Added `simfs` and `tmpfs` as mentioned here:
+    - <https://github.com/djmelik/archey/pull/38>
+    - <https://github.com/djmelik/archey/issues/39>
+
+
+> Note: v0.6.1 = last version of Archey-OS-X. Next version is “Archey X” (X compatible)
 
 
 ### Changes since: v0.6.0
 -	Misc cleaning, detabbing, and small fixes
 -	Added 10.12 Sierra.
+-   _Note: v0.6.1 was the last version that is OS X-only._
 
 
 ### Changes since: v0.5.0
