@@ -46,14 +46,14 @@ _...or using sed._
 
     archey
 
-To load at start:
+To load at start - add to your `~/.bashrc`:
 
 ```bash
 # Load archey (if installed)
 [[ `type archey 2> /dev/null` && $UID != 0 ]] && archey
 ```
 
-When using `scp` over the network and logging into amachin with `archey` loading up... It _might_ cause an error about output. To avoid that issue, use this instead:
+When using `scp` over the network and logging into a machine with `archey` loading up... It _might_ cause an error about output. To avoid that issue, use this instead:
 
 ```bash
 # Load archey (if installed)
