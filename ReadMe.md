@@ -46,19 +46,19 @@ _...or using sed._
 
     archey
 
-To load at start. Add in your [.bashrc][brc] _(or .bash_profile)_. Example:
+To load at start:
 
-```
+```bash
 # Load archey (if installed)
 [[ `type archey 2> /dev/null` && $UID != 0 ]] && archey
 ```
 
 When using `scp` over the network and logging into amachin with `archey` loading up... It _might_ cause an error about output. To avoid that issue, use this instead:
 
-```
+```bash
 # Load archey (if installed)
 # If not running interactively, don't do anything
-[[ ! -z "$PS1" && `type archey 2> /dev/null` && $UID != 0 ]] && archey
+[[ -n "$PS1" && `type archey 2> /dev/null` && $UID != 0 ]] && archey
 ```
 
 
@@ -74,27 +74,29 @@ In top of the file there are a few settings...
 
 ### Disk
 
-	# Settings
-	# ------------------------------------------------------------
-	diskWarning = 1             # default: 1
-	diskWarningThreshold = 20   # default: 20 (% of diskspace left)
-
+```python
+# Settings
+# ------------------------------------------------------------
+diskWarning = 1             # default: 1
+diskWarningThreshold = 20   # default: 20 (% of diskspace left)
+```
 
 The disk warning is just a visual blinking warning when the disk space left is below <span style="color: #900;"> 20%</span>.
 
 
 ### Colors
 
-	# Custom color (match a name in in colorDict)
-	# Must have one with 'None' (defaults to Darwin)
-	brand = None
-	#brand = 'Arch Linux'	# Note: blue is almost purple in OS X
-	#brand = 'Darwin'		# OS X
-	#brand = 'Mint'
-	#brand = 'Fedora'
-	# ------------------------------------------------------------
-	# [End] Settings
-
+```python
+# Custom color (match a name in in colorDict)
+# Must have one with 'None' (defaults to Darwin)
+brand = None
+#brand = 'Arch Linux'	# Note: blue is almost purple in OS X
+#brand = 'Darwin'		# OS X
+#brand = 'Mint'
+#brand = 'Fedora'
+# ------------------------------------------------------------
+# [End] Settings
+```
 
 `brand = None` will default to Darwin. You only need to change `brand` if you want a different color scheme. Like “Arch Linux” is all blue, “Mint” is green/white, and “Fedora” is blue/white.
 
@@ -105,6 +107,11 @@ _Note: The blue color in OS X is not that really good - almost purple'ish._
 
 
 # Author notes
+
+**[2016-11-21]**
+
+I'll soon rename this repo to: “Archey X”, since it will be X-compatible. A few more tests first. _You can try it in the [neXtgen][ng] branch._
+
 
 **[2016-02-17]**
 
@@ -118,11 +125,10 @@ If you have any feedback, suggestions? Please, send an email or a tweet.
 
 
 <!-- Markdown: Links & Images -->
-[brc]: https://github.com/iEFdev/dotfiles/blob/master/osx/.bashrc#L67-L68
-
 [dja]: https://github.com/djmelik/archey
 [djm]: https://github.com/djmelik
 
+[ng]: https://github.com/iEFdev/Archey-OS-X/tree/neXtgen "Archey X"
 [scrap]: https://raw.githubusercontent.com/iEFdev/Archey-OS-X/master/screenshot.png "Screenshot of Archey :: OS X"
 [scraps]: https://github.com/iEFdev/Archey-OS-X/wiki/Screenshots "More Screenshots"
 [myterm]: https://github.com/iEFdev/dotfiles/tree/master/myTerm "My Terminal theme"
