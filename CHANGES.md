@@ -4,7 +4,12 @@ Changes that have been made between the versions.
 
 - - -
 
-> **Latest version:** v0.6.0
+> **Latest version:** v0.6.1 _(Last version before merging `neXtgen`)_
+
+
+### Changes since: v0.6.0
+-	Misc cleaning, detabbing, and small fixes
+-	Added 10.12 Sierra.
 
 
 ### Changes since: v0.5.0
