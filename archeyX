@@ -1,371 +1,512 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# ------------------------------------------------------------
-#
-# /usr/local/bin/archey
-#
-# Archey :: OS X
-#
-# Description:  Archey is a simple system information tool
-#               written in Python.
-#
-Version =       'v0.6.1-20161121-git (Nov 21, 2016)'  # 05:47:25
-Copyright =     'Copyright (c) 2014-2016 Eric F'
-#
-# Licence:      Distributed under GPLv3+: GNU General Public
-#               License v3 or later. See LICENSE or
-#               <http://www.gnu.org/licenses/gpl.txt>
-#               for the full license text.
-#
-# Author notes:
-# ------------------------------------------------------------
-# This is a forked (ported) version of the original Archey
-# by Melik Manukyan, rewritten for OS X.
-#
-# Original author(s) and copyright:
-#   (c) 2010 Melik Manukyan <melik@archlinux.us>
-#   (c) 2010 David Vazgenovich Shakaryan <dvshakaryan@gmail.com>
-#
-#   ASCII art by Brett Bohnenkamper <kittykatt@silverirc.com>
-#   Changes Jerome Launay <jerome@projet-libre.org>
-#   Fedora support by YeOK <yeok@henpen.org>
-#
 
-# Settings
-# ------------------------------------------------------------
-diskWarning = 1             # default: 1
-diskWarningThreshold = 20   # default: 20 (% of diskspace left)
+"""/usr/local/bin/archeyX
 
-# Custom color (match a name in in colorDict)
-# Must have one with 'None' (defaults to Darwin)
-brand = None
-#brand = 'Arch Linux'       # Note: blue is almost purple in OS X
-#brand = 'Darwin'           # OS X
-#brand = 'Mint'
-#brand = 'Fedora'
-# ------------------------------------------------------------
-# [End] Settings
+Description:
+   Archey X is a simple system information tool written in Python.
 
-### Don't edit below #########################################
+Licence:
+  Distributed under GPLv3+: GNU General Public License v3 or later.
+  See LICENSE or <http://www.gnu.org/licenses/gpl.txt> for the full license text.
+
+Author notes:
+  This is a forked (and ported) version of the original Archey by Melik Manukyan.
+  It's made to be cross platform and able to auto detect different distros.
+
+Original author(s) and copyright:
+  (c) 2010 Melik Manukyan <melik@archlinux.us>
+  (c) 2010 David Vazgenovich Shakaryan <dvshakaryan@gmail.com>
+
+  ASCII art by Brett Bohnenkamper <kittykatt@silverirc.com>
+  Changes Jerome Launay <jerome@projet-libre.org>
+  Fedora support by YeOK <yeok@henpen.org>
+"""
 
 # Import libraries/resources
-from datetime import timedelta
+from argparse import ArgumentParser, RawDescriptionHelpFormatter
+from datetime import datetime, timedelta
 from distutils.spawn import find_executable as fExec
 from getpass import getuser
+from itertools import chain
 from math import ceil
-from optparse import OptionParser
-from os import getenv, uname
-from re import sub
+from os import getenv, path, uname
+from re import sub, compile as comp
 from socket import gethostname
 from subprocess import check_output, PIPE, Popen
-from sys import exit, platform
+from sys import platform
 from time import time
 
-# -h and --version
-parser = OptionParser(usage='%prog [ --version | -h | --help ]', version='%prog: ' + Version + '\n' + Copyright + '\n')
-parser.parse_args()
+
+# Version: use --help and --version
+VERSION = 'v0.X-20161121-beta (Nov 21, 2016)' # 03:05:40
+COPYRIGHT = 'Copyright (c) {0} Eric F'.format(datetime.now().year)
+
+# Settings
+DISK_WARNING = 1                # default: 1
+DISK_WARNING_THRESHOLD = 20     # default: 20 (% of diskspace left)
+
+# Custom color (match a name in in COLOR_DICT)
+# You can manually change color here by adding a new line with 'brand'.
+BRAND = None                    # Must have one with 'None' (don't change)
+#BRAND = 'Arch Linux'
+#BRAND = 'Darwin'                # OS X
 
 
-# Output
+# Dictionaries and lists
 # ------------------------------------------------------------
-output = [
-    'User', 'Hostname',
-    'Distro', 'Kernel', 'Uptime',
-    'WindowManager', 'DesktopEnvironment',
-    'Shell', 'Terminal', 'Packages',
-    'CPU', 'RAM', 'Disk'
-]
-
-
-# Dictionaries
-# ------------------------------------------------------------
-colorDict = {
-    'Arch Linux': ['\x1b[0;34m', '\x1b[1;34m'],
-    'Crunchbang': ['\x1b[0;37m', '\x1b[1;37m'],
-    'Darwin': ['\x1b[0;36m', '\x1b[1;36m'],
-    'Debian': ['\x1b[0;31m', '\x1b[1;31m'],
-    'Fedora': ['\x1b[0;34m', '\x1b[1;37m'],
-    'Gentoo': ['\x1b[0;37m', '\x1b[1;35m'],
-    'LinuxMint': ['\x1b[0;32m', '\x1b[1;37m'],
-    'Ubuntu': ['\x1b[0;31m', '\x1b[1;31m', '\x1b[0;33m'],
+COLOR_DICT = {   # (@todo: simplify with 1 line/color)
+    'color00': ['\x1b[0;33m', '\x1b[1;37m'],    # default/fallback (yellow/white)
+    'color01': ['\x1b[0;34m', '\x1b[1;34m'],    # Arch (blue/blue)
+    'color02': ['\x1b[0;37m', '\x1b[1;30m'],    # Crunchbang (grey/grey)
+    'color03': ['\x1b[0;36m', '\x1b[1;36m'],    # Darwin, Mac OS X (cyan/cyan)
+    'color04': ['\x1b[0;34m', '\x1b[1;37m'],    # Fedora (blue/white)
+    'color05': ['\x1b[0;31m', '\x1b[1;31m'],    # Debian, *buntu, RHEL (red/red)
+    'color06': ['\x1b[0;37m', '\x1b[1;35m'],    # Gentoo (white/purple)
+    'color07': ['\x1b[0;32m', '\x1b[1;37m'],    # Mint (white/green)
+    'color08': ['\x1b[0;32m', '\x1b[1;30m'],    # SLES (grey/green)
+    'color09': ['\x1b[0;32m', '\x1b[1;32m'],    # OpenSuse (green/green)
 
     # Sensors: [<red>, <yellow>, <green>, <blinking red>]
     'Sensors': ['\x1b[0;31m', '\x1b[0;32m', '\x1b[0;33m', '\x1b[5;31m'],
     'Clear': ['\x1b[0m']
 }
 
-deDict = { 'Finder': 'Finder' }
-
-wmDict = {
-    'Cinch': 'Cinch', 'Factory': 'Factory', 'Mizage': 'Mizage',
-    'Moom': 'Moom', 'Optimal Layout': 'Optimal Layout',
-    'ShiftIt': 'ShiftIt', 'SizeUp': 'SizeUp', 'Slate': 'Slate',
-    'Slicer': 'Slicer', 'Spectacle': 'Spectacle', 'TylerWM': 'TylerWM',
-    'Xmonad': 'Xmonad'
+DIST_DICT = {
+    'GNU/Linux': 'color00',
+    'Arch Linux': 'color01',
+    'Crunchbang': 'color02',
+    'Darwin': 'color03', 'Mac OS X': 'color03',
+    'Fedora': 'color04',
+    'RHEL': 'color05', 'Debian': 'color05', 'Ubuntu': 'color05',
+    'Gentoo': 'color06',
+    'LinuxMint': 'color07',
+    'SLES': 'color08',
+    'OpenSUSE': 'color09',
 }
 
-osxDict = {
+DE_DICT = {
+    'cinnamon-sessio': 'Cinnamon', 'Finder': 'Finder', 'gnome-session': 'GNOME',
+    'ksmserver': 'KDE', 'lxsession': 'LXDE', 'mate-session': 'MATE',
+    'xfce4-session': 'Xfce'
+}
+
+WM_DICT = {
+    'awesome': 'Awesome', 'beryl': 'Beryl', 'blackbox': 'Blackbox',
+    'compiz': 'Compiz', 'dwm': 'DWM', 'enlightenment': 'Enlightenment',
+    'fluxbox': 'Fluxbox', 'fvwm': 'FVWM', 'herbstluftwm': 'herbstluftwm',
+    'i3': 'i3', 'icewm': 'IceWM', 'kwin': 'KWin',
+    'metacity': 'Metacity', 'musca': 'Musca', 'nemo': 'Nemo',
+    'openbox': 'Openbox', 'pekwm': 'PekWM', 'ratpoison': 'ratpoison',
+    'scrotwm': 'ScrotWM', 'wmaker': 'Window Maker', 'wmfs': 'Wmfs',
+    'wmii': 'wmii', 'xfwm4': 'Xfwm', 'xmonad': 'xmonad',
+
+    # OS X/macOS
+    'Cinch': 'Cinch', 'Factory': 'Factory', 'Mizage': 'Mizage',
+    'Moom': 'Moom', 'Optimal Layout': 'Optimal Layout', 'ShiftIt': 'ShiftIt',
+    'SizeUp': 'SizeUp', 'Slate': 'Slate', 'Slicer': 'Slicer',
+    'Spectacle': 'Spectacle', 'TylerWM': 'TylerWM', 'Xmonad': 'Xmonad'
+}
+
+OSX_DICT = {
     '10.5': 'Leopard', '10.6': 'Snow Leopard', '10.7': 'Lion',
     '10.8': 'Mountain Lion', '10.9': 'Mavericks', '10.10': 'Yosemite',
     '10.11': 'El Capitan', '10.12': 'Sierra'
 }
 
+PM_DICT = {
+    'pacman': ['-Q'], 'emerge': ['-ep', 'world'], 'zypper': ['search', '--installed-only'],
+    'dnf': ['list', 'installed'], 'yum': ['list', 'installed'],  'dpkg': ['--get-selections'],
+
+    # OS X/macOS
+    'port': ['installed'], 'fink': ['list', '-i'], 'brew': ['list']
+}
+
+LABELS = [
+    'User', 'Hostname', 'Distro', 'Kernel', 'Uptime',  'WindowManager',
+    'DesktopEnvironment', 'Shell', 'Terminal', 'Packages', 'CPU', 'RAM', 'Disk'
+]
+
+FS_LIST = [  # List of filesystemes to be included in 'df'
+    'ext4', 'ext3', 'ext2', 'reiserfs', 'jfs', 'ntfs', 'fat32',
+    'btrfs', 'fuseblk', 'xfs', 'zfs', 'simfs', 'tempfs',
+]
+
+
+# Options
+# ------------------------------------------------------------
+__version__ = '%(prog)s {0}\n{1}\n '.format(VERSION, COPYRIGHT)
+PARSER = ArgumentParser(formatter_class=RawDescriptionHelpFormatter)
+PARSER.add_argument('-V', '--version', action='version', version=__version__)
+
+if __name__ == "__main__":
+    ARGS = PARSER.parse_args()
+
 
 # Classes
 # ------------------------------------------------------------
 class Utils:
-    # Popen func
-    def xPopen(self, cmd):
-        getCmd = Popen(cmd, stdout=PIPE).communicate()[0].decode('utf-8').rstrip('\n')
-        return getCmd
+    """Misc functions/tools"""
 
-    # What system are we on (aka detect Darwin/OS X)
-    def xSystem(self):
-        self.brand = platform.capitalize()
-        return self.brand
+    @classmethod
+    def x_popen(cls, cmd):
+        """x_popen - less code and easier to use"""
+        get_cmd = Popen(cmd, stdout=PIPE).communicate()[0].decode('utf-8').rstrip('\n')
+        return get_cmd
 
-    # Processes... to detect DE/MWM
-    def xProcess(self):
-        if self.xSystem() == 'Darwin':
-            self.processes = str(check_output(('ps', '-u', getuser(), '-o', 'comm')).decode('utf8').split('/')).replace('\\n', '').rstrip('\n')
+    def x_system(self):
+        """x_system - Linux, Darwin etc"""
+        brand = self.capitilize_name(platform)
+        pform = brand.replace('2', '').strip()
+        return (pform, 'Linux')[pform == '']        # If empty, return Linux
+
+    def x_process(self):
+        """x_process - get the processes to find name of WM/DE"""
+        if self.x_system() == 'Darwin':
+            return str(check_output(('ps', '-u', getuser(), '-o',
+                                     'comm')).decode('utf-8').split('/')).replace('\\n', '')
+        elif self.x_system() == 'Linux':
+            return str(check_output(('ps', '-u', getuser(), '-o', 'comm',
+                                     '--no-headers')).decode('utf8')).rstrip('\n').split('\n')
         else:
-            self.processes = None
+            return None
 
-        return self.processes
+    @classmethod
+    def capitilize_name(cls, text):
+        """capitilize_name - fooBar becomes FooBar and not Foobar"""
+        txt = comp(r'\s+').sub(' ', text).strip()
+        text = ' '.join(word[0].upper() + word[1:] for word in txt.split(' '))
+        return text
+
+    # read_release_files(<file>, <search>[, <split char>])
+    @classmethod
+    def read_release_files(cls, file, search, char='\"'):
+        """read_release_files - reading misc release files"""
+        try:
+            file = open(file, 'r')
+            with file as lines:
+                for rel in lines:
+                    if search in rel.lower():
+                        search = rel.strip().split(char)[1]
+                        break
+            return search.replace('\"', '')
+        except (TypeError, NameError):
+            pass
+        finally:
+            if file is not None:
+                file.close()
 
 
 class Output(Utils):
+    """Function and tools for the Output"""
     results = []
-    results.extend(['']*(18-len(output)))
+    results.extend([''] * (18-len(LABELS)))
 
     def __init__(self):
-        self.distro = self.__detectDistro()
+        self.distro = self.x_distro('name')
+        # Fallback for missing entry in COLOR_DICT
+        if self.distro not in DIST_DICT:
+            self.distro = 'GNU/Linux'
 
-        # Allow to chose color scheme from variable: brand
-        self.color = brand
-        if brand is None or brand not in colorDict:
-            self.color = self.distro    # self.brand
+        if BRAND not in DIST_DICT:
+            self.color = DIST_DICT[self.distro]
+            return
 
-    def __detectDistro(self):
-        if self.xSystem():
-            return self.xSystem()
-        else:
-            exit(1)
+        self.brand = (BRAND, self.distro)[BRAND is None]
+        self.color = DIST_DICT[self.brand]
+
+    def x_distro(self, name):
+        """x_distro: determing what distro is being used, both name and full name
+        platform.linux_distribution() is not used. It's deprecated and flagged for removal
+        """
+        distro_name = distro_full = ''
+        if self.x_system() == 'Darwin':
+            get_name = self.x_popen(['sw_vers', '-productName'])
+            get_version = self.x_popen(['sw_vers', '-productVersion'])
+            osx_name = self.x_popen(['sw_vers', '-buildVersion'])
+
+            if get_version[:-2] in OSX_DICT and not OSX_DICT[get_version[:-2]] is None:
+                osx_name = OSX_DICT[get_version[:-2]]
+
+            distro_name = self.x_system()
+            distro_full = '{0} {1} ({2})'.format(get_name, get_version, osx_name)
+
+        # (*BSD... Hopefully at some point)
+        #elif x_system == 'FreeBSD' or 'OpenBSD':
+        #    distro = distro_full = self.x_system()
+
+        elif self.x_system() == 'Linux':
+            os_release_file = '/etc/os-release'
+            os_release_file_in_lib = '/usr/lib/os-release'
+            lsb_release_file = '/etc/lsb-release'
+            issue_file = '/etc/issue'
+
+            if path.exists(os_release_file):
+                distro_name = self.read_release_files(os_release_file, 'name')
+                distro_full = self.read_release_files(os_release_file, 'pretty')
+            if path.exists(os_release_file_in_lib):     # in case of missing symlink
+                distro_name = self.read_release_files(os_release_file_in_lib, 'name')
+                distro_full = self.read_release_files(os_release_file_in_lib, 'pretty')
+            elif path.exists(lsb_release_file):
+                distro_name = self.read_release_files(lsb_release_file, 'id', '=')
+                distro_full = self.read_release_files(lsb_release_file, 'desc', '=')
+            elif fExec('lsb_release'):
+                distro_name = self.x_popen(['lsb_release', '-si'])
+                distro_full = self.x_popen(['lsb_release', '-sd'])
+            elif path.exists(issue_file):
+                try:
+                    issue = open(issue_file, 'r')
+                    i = issue.readline()
+                    distro_name = sub('Red', 'RHEL', i.split(' ')[0].rstrip())
+                    distro_full = i.split(' \\')[0].rstrip()
+                except (ValueError, NameError):
+                    pass
+                finally:
+                    issue.close()
+
+        distro_full = sub('Red Hat', 'RHEL', distro_full)
+        distro_full = sub('S[Uu]SE', 'SLES', distro_full)
+
+        x_distro_names = {'name': distro_name, 'full': distro_full}
+        return sub('release |GNU/|Linux |Enterprise |Server ', '', x_distro_names[name])
 
     def append(self, display):
-        self.results.append('%s%s: %s%s' % (colorDict[self.color][1], display.key, colorDict['Clear'][0], display.value))
+        """append: preparing the output"""
+        self.results.append('{0}{1}: {2}{3}'.format(COLOR_DICT[self.color][1], display.key,
+                                                    COLOR_DICT['Clear'][0], display.value))
 
     def output(self):
-        print(logosDict[self.distro].format(color = colorDict[self.color], results = self.results))
+        """output: matching name/colors"""
+        print(LOGOS_DICT[self.distro].format(color=COLOR_DICT[self.color], results=self.results))
 
 
-class User:
+class User(Utils):
+    """Get the username"""
     def __init__(self):
         self.key = 'User'
         self.value = getuser()
 
 
-class Hostname:
+class Hostname(Utils):
+    """Get the hostname"""
     def __init__(self):
         self.key = 'Hostname'
         self.value = gethostname()
 
 
-class Distro:
+class Distro(Output, Utils):
+    """Display the Distro name"""
     def __init__(self):
-        if Utils().xSystem() == 'Darwin':
-            getVers = Utils().xPopen(['sw_vers', '-productVersion'])
-            osxName = '(%1s)' % Utils().xPopen(['sw_vers', '-buildVersion'])
-            for fname in osxDict:
-                if fname == getVers[:-2]:
-                    osxName = osxDict[fname]
-                    break
-            distro = '%1s %2s %3s' % (Utils().xPopen(['sw_vers', '-productName']), getVers, osxName)
-        else:
-            distro = Utils().xSystem()
-
         self.key = 'Distro'
-        self.value = distro
+        self.value = self.x_distro('full')
+        super().__init__()
 
 
-class Kernel:
+class Kernel(Utils):
+    """Get the kernel name"""
     def __init__(self):
-        if Utils().xSystem() == 'Darwin':
-            kernel = '%1s %2s %3s ' % (uname()[0], uname()[2], uname()[4])
-            #kernel = sub('.*:+', '', uname()version).strip('REL.*') # xnu-123... etc
+        if self.x_system() == 'Darwin':
+            # Darwin 11.x.x (x86_64)
+            kernel = '{0} {1} {2}'.format(uname()[0], uname()[2], uname()[4])
+            #kernel = sub('.*:+', '', uname()[3]).strip('REL.*')  # xnu-123...
         else:
-            kernel = Utils().xPopen(['uname', '-r'])
+            kernel = self.x_popen(['uname', '-r'])
 
         self.key = 'Kernel'
         self.value = kernel
 
 
-class Uptime:
+class Uptime(Utils):
+    """Uptime: N day(s), HH:MM"""
     def __init__(self):
-        if Utils().xSystem() == 'Darwin':
-            boottime = Utils().xPopen(['sysctl', '-n', 'kern.boottime'])
-            boottime = int('%1s' % str(tuple(boottime.split())[3])[:-1])
-            boottime = int(str(time() - boottime).split('.')[0])
+        if self.x_system() == 'Darwin':
+            boot_time = self.x_popen(['sysctl', '-n', 'kern.boottime'])
+            boot_time = boot_time.split()[3][:-1]
+            boot_time = int(round(time())) - int(boot_time)
         else:
-            boottime = int(open('/proc/uptime').read().split('.')[0])
+            boot_time = open('/proc/uptime').read().split('.')[0]
 
         self.key = 'Uptime'
-        self.value = str(timedelta(seconds = boottime))[:-3]
+        self.value = '{0}'.format(timedelta(seconds=int(boot_time)))[:-3]
 
 
 class WindowManager(Utils):
+    """Get the name of the Window Manager"""
     def __init__(self):
-        wm = 'Quartz'   # the default wm in OS X
-        for key in wmDict.keys():
-            if key in Utils().xProcess():
-                wm = wmDict[key]
+        window_manager = ''
+        if self.x_system() == 'Darwin':
+            window_manager = 'Quartz'   # the default wm in OS X
+
+        for key in WM_DICT:
+            if key in self.x_process():
+                window_manager = WM_DICT[key]
                 break
 
         self.key = 'Window Manager'
-        self.value = wm
+        self.value = window_manager
 
 
-class DesktopEnvironment:
+class DesktopEnvironment(Utils):
+    """Get Desktop Environment"""
     def __init__(self):
-        de = ''
-        for key in deDict.keys():
-            if key in Utils().xProcess():
-                de = deDict[key]
+        desktop_enviroment = ''
+        for key in DE_DICT:
+            if key in self.x_process():
+                desktop_enviroment = DE_DICT[key]
                 break
 
         self.key = 'Desktop Environment'
-        self.value = de
+        self.value = desktop_enviroment
 
 
-class Shell:
+class Shell(Utils):
+    """Shell name"""
     def __init__(self):
         self.key = 'Shell'
         self.value = getenv('SHELL')
 
 
-class Terminal:
+class Terminal(Utils):
+    """Terminal name"""
     def __init__(self):
         self.key = 'Terminal'
         self.value = getenv('TERM')
 
 
-class Packages():
+class Packages(Utils):
+    """Get the number of installed packages"""
     def __init__(self):
         packages = ''
-        if Utils().xSystem() == 'Darwin':
-            if fExec('brew'):
-                packages = (packages + Utils().xPopen(['brew', 'list']))
-            if fExec('port'):
-                packages = (packages + Utils().xPopen(['port', 'installed']))
-            if fExec('fink'):
-                packages = (packages + Utils().xPopen(['fink', 'list', '-i']))
-        else:
-            packages = 'n/a'
+        for pman in PM_DICT:
+            if fExec(pman):
+                PM_DICT[pman].insert(0, pman)
+                if packages != '':
+                    packages = packages + '\n' + self.x_popen(PM_DICT[pman])
+                else:
+                    packages = self.x_popen(PM_DICT[pman]).rstrip('\n')
+
+        packages = (len(packages.rstrip('\n').split('\n')), 'n/a')[packages == '']
 
         self.key = 'Packages'
-        self.value = len(packages.rstrip('\n').split('\n'))
+        self.value = packages
 
 
-class CPU:
+class CPU(Utils):
+    """Display the CPU information"""
     def __init__(self):
-        if Utils().xSystem() == 'Darwin':
-            cpuinfo = Utils().xPopen(['sysctl', '-n', 'machdep.cpu.brand_string'])
-            cpuinfo = sub('  +', ' ', cpuinfo.replace('CPU ', '').rstrip('\n'))
-        else:
-            cpuinfo = 'n/a'
+        cpu_info = 'n/a'
+        if self.x_system() == 'Linux':
+            cpu = open('/proc/cpu_info')
+            file = cpu.readlines()
+            cpu_info = sub('  +', ' ', file[4])
+            cpu.close()
+        elif self.x_system() == 'Darwin':
+            cpu_info = self.x_popen(['sysctl', '-n', 'machdep.cpu.brand_string'])
+            cpu_info = sub('  +', ' ', cpu_info)
 
         self.key = 'CPU'
-        self.value = cpuinfo
+        self.value = sub('model name\t: |CPU ', '', cpu_info).strip()
 
 
-# Memory information
-# Display: (used = red) (free = green) total
-# ------------------------------------------------------------
-class RAM:
+class RAM(Utils):
+    """Calculate the RAM usage and format to display"""
     def __init__(self):
-        if Utils().xSystem() == 'Darwin':
+        if self.x_system() == 'Linux':
+            raminfo = self.x_popen(['free', '-m', '--si']).split('\n')
+            ram = ''.join(filter(comp('M').search, raminfo)).split()
+            mem_total_ram = round(float(ram[1]) / 1000, 2)
+            mem_used = int(ram[2])
+            mem_total_free = int(ram[3]) + int(ram[5])
+            # If < 3.3.10, we need to add som parts
+            if self.x_popen(['free', '-V'])[-5:] <= '3.3.9':
+                mem_used = mem_used - int(ram[5]) - int(ram[6])
+                mem_total_free = mem_total_free + int(ram[6])
+        elif self.x_system() == 'Darwin':
             # Installed RAM
-            memSize = Utils().xPopen(['sysctl', '-n', 'hw.memsize'])
-            memTotalRam = int(memSize) / int(1024) / int(1048576)
+            mem_size = self.x_popen(['sysctl', '-n', 'hw.memsize'])
+            mem_total_ram = int(mem_size) / int(1024) / int(1048576)
 
             # Get all memory data
-            vmStat = Utils().xPopen(['vm_stat']).replace('.', '')
-            vmStat = sub(':[\s]+', ' ', vmStat.replace('Pages ', '')).split('\n')
+            get_memory = self.x_popen(['vm_stat']).replace('.', '')
+            get_memory = sub(r':[\s]+', ' ', get_memory.replace('Pages ', '')).split('\n')
             mem = {}
-            for row in range(1,len(vmStat)-7):
-                row = vmStat[row].replace('down', '').splitlines()[0].strip().split()
+            for row in range(1, len(get_memory)-7):
+                row = get_memory[row].replace('down', '').splitlines()[0].strip().split()
                 mem[(row[0])] = int(row[1]) * int(4000)
             # [note] Using 4000 instead of 4096 makes it sum up exactly as
             # in Activity Monitor, including the use of “ceil()”.
 
             # Used and free memory
-            memUsed = int(ceil((mem['wired'] + mem['active'] + mem['inactive']) / int(1048576) / 10.0) * 10)
-            memTotalFree = int(ceil((mem['free'] + mem['speculative']) / int(1048576) / 10.0) * 10)
+            mem_used = int(ceil((mem['wired'] + mem['active']
+                                 + mem['inactive']) / int(1048576) / 10.0) * 10)
+            mem_total_free = int(ceil((mem['free']
+                                       + mem['speculative']) / int(1048576) / 10.0) * 10)
         else:
-            memTotalRam = memUsed = memTotalFree = '-'
+            mem_total_ram = mem_used = mem_total_free = '-'
 
-        # RAM: (red=used) (green=free) / total
-        ramdisplay = '%s(%sMB) %s(%sMB)%s / %sGB' % (colorDict['Sensors'][0], memUsed, colorDict['Sensors'][1], memTotalFree, colorDict['Clear'][0], memTotalRam)
+        ram_display = '{1}{3}MB{0}, {2}{4}MB{0} of {5}GB'
+        ram_display = ram_display.format(
+            COLOR_DICT['Clear'][0], COLOR_DICT['Sensors'][0], COLOR_DICT['Sensors'][1],
+            mem_used, mem_total_free, mem_total_ram
+        )
 
         self.key = 'RAM'
-        self.value = ramdisplay
+        self.value = ram_display    # RAM: usedMB, freeMB of totalGB
 
 
-# Disk information
-# Display: used/N% of total (N available) (disk)
-# ------------------------------------------------------------
-class Disk:
+class Disk(Utils):
+    """Calculate the disk usage and format to display"""
     def __init__(self):
-        if Utils().xSystem() == 'Darwin':
-            p1 = Utils().xPopen(['df', '-lH'])
-            total = p1.splitlines()[1]
-            used = total.split()[2]
-            size = total.split()[1]
-            available = total.split()[3]
-            capacity = total.split()[4]
-            disknr = total.split()[0].replace('/dev/', '')
-            usedpercent = int(capacity.replace('%', ''))
-            leftpercent = (100 - int(usedpercent))
-        else:
-            usedpercent = leftpercent = used = capacity = size = available = disknr = '-'
+        if self.x_system() == 'Linux':
+            df_cmd = ['df', '-HlPT', '--total']
+            filesystems = tuple(zip(('-t',) * len(FS_LIST), FS_LIST))
+            pass1 = self.x_popen(list(chain(df_cmd, *filesystems)))
+            pass2 = self.x_popen(['df', '/boot']).splitlines()[1].split()[0]
+            total = pass1.splitlines()[-1].split()
+            # disk_vars: used, capacity, size, available, disknr
+            disk_vars = (total[3], total[5], total[2], total[4], pass2.replace('/dev/', ''))
+        elif self.x_system() == 'Darwin':
+            pass1 = self.x_popen(['df', '-Hl'])
+            total = pass1.splitlines()[1].split()
+            # disk_vars: used, capacity, size, available, disknr
+            disk_vars = (total[2], total[4], total[1], total[3], total[0].replace('/dev/', ''))
 
-        if usedpercent <= 33:
-            diskcolor = 1
-        if usedpercent > 33 and usedpercent < 67:
-            diskcolor = 2
-        if usedpercent >= 67:
-            diskcolor = 0
-        if diskWarning == 1 and leftpercent <= int(diskWarningThreshold):
-            diskcolor = 3
+        used_percent = left_percent = '-'
+        used_percent = total[4].replace('%', '')
+        left_percent = (100 - int(used_percent))
 
-        disk = '%sB/%s%s%s of %sB (%sB available) (%s)' % (used, colorDict['Sensors'][diskcolor], capacity, colorDict['Clear'][0], size, available, disknr)
+        if used_percent <= '50':    # using str to avoid str -> int errs (pylint)
+            disk_color = 1
+        if used_percent > '50' and used_percent < '80':
+            disk_color = 2
+        if used_percent >= '80':
+            disk_color = 0
+        if DISK_WARNING == 1 and left_percent <= int(DISK_WARNING_THRESHOLD):
+            disk_color = 3
+
+        disk_display = '{1}{2}B{0} ({3}) of {4}B, {5}B available ({6})'
+        disk_display = disk_display.format(
+            COLOR_DICT['Clear'][0], COLOR_DICT['Sensors'][disk_color],
+            # used (capacity) of size, available (disknr)
+            disk_vars[0], disk_vars[1], disk_vars[2], disk_vars[3], disk_vars[4]
+        )
 
         self.key = 'Disk'
-        self.value = disk
+        self.value = disk_display   # Display: used (%) of total, N available (disk)
 
 
-classes = {
-    'User': User,
-    'Hostname': Hostname,
-    'Distro': Distro,
-    'Kernel': Kernel,
-    'Uptime': Uptime,
-    'WindowManager': WindowManager,
-    'DesktopEnvironment': DesktopEnvironment,
-    'Shell': Shell,
-    'Terminal': Terminal,
-    'Packages': Packages,
-    'CPU': CPU,
-    'RAM': RAM,
-    'Disk': Disk
+CLASSES = {
+    'User': User, 'Hostname': Hostname,
+    'Distro': Distro, 'Kernel': Kernel, 'Uptime': Uptime,
+    'WindowManager': WindowManager, 'DesktopEnvironment': DesktopEnvironment,
+    'Shell': Shell, 'Terminal': Terminal, 'Packages': Packages,
+    'CPU': CPU, 'RAM': RAM, 'Disk': Disk
 }
 
-
 # Start output
-out = Output()
+OUT = Output()
 
-
-logosDict = { out.distro: '''
+LOGOS_DICT = {OUT.distro: '''
 {color[1]}               +                {results[0]}
 {color[1]}               #                {results[1]}
 {color[1]}              ###               {results[2]}
@@ -385,14 +526,11 @@ logosDict = { out.distro: '''
 {color[0]}  ##'                     '##   {results[16]}
 {color[0]} #'                         `#  {results[17]}
 \x1b[0m'''
-}
+             }
 
-
-# Alternative logo, for those who want the Apple instead.
-# Default is the Linux Arch logo, since that IS the progr name
-# ------------------------------------------------------------
-if out.distro == 'Darwin' and brand == 'Apple':
-    logosDict = { out.distro: '''
+# (OSX/macOS only) see --help
+if OUT.distro == 'Darwin' and BRAND == 'Apple':
+    LOGOS_DICT = {OUT.distro: '''
 {color[1]}                     ##         {results[0]}
 {color[1]}                  #####         {results[1]}
 {color[1]}                 #####          {results[2]}
@@ -412,14 +550,13 @@ if out.distro == 'Darwin' and brand == 'Apple':
 {color[0]}      ##################        {results[16]}
 {color[0]}        ####      ####          {results[17]}
 \x1b[0m'''
-    }
-
+                 }
 
 # Display output
 if __name__ == "__main__":
-    for x in output:
-        out.append(classes[x]())
-    out.output()
+    for x in LABELS:
+        OUT.append(CLASSES[x]())
+    OUT.output()
     exit(0)
 else:
     exit(1)
