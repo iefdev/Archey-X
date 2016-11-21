@@ -23,7 +23,7 @@ Changes that have been made between the versions.
     - <https://github.com/djmelik/archey/issues/39>
 
 
-> Note: v0.6.1 = last version of Archey-OS-X. Next version is “Archey X” (X compatible)
+> **Note:** v0.6.1 = last version of Archey-OS-X. _Next version is “Archey X” (X compatible)_
 
 
 ### Changes since: v0.6.0
