@@ -8,6 +8,7 @@ Changes that have been made between the versions.
 
 ### Changes since: `v0.6.1` (Nov 21, 2016)
 
+-	Fixed better compare of floats in version nr (`free`).
 -	Replaced `optparse` (deprecated) with `argparse`.
 -   Code has been rn with pylint. Only 1 report left, and that's the filename - which I intend to keep.
 -   Optimized/refactored some code
