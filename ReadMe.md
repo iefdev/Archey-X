@@ -98,6 +98,16 @@ BRAND = None                    # Must have one with 'None' (don't change)
 You only need to add (a new line with) `BRAND` if you want a different color scheme. A way to _hard-code_ the color if your distribution is not listed in `DIST_DICT`.
 
 
+
+## Tested distros
+
+- [ ] Arch Linux
+- [x] Darwin/OS X
+- [x] Debian Jessie 8.3 (“may” work with other, like Mint, *buntu. `dpkg`)
+- [x] Fedora 23 (“may” work with CentOS and Red Hat. `dnf|yum`)
+
+
+
 ## Author notes
 
 -	**[2016-11-21]**
