@@ -27,6 +27,7 @@ Original author(s) and copyright:
 from argparse import ArgumentParser, RawDescriptionHelpFormatter
 from datetime import datetime, timedelta
 from distutils.spawn import find_executable as fExec
+from distutils.version import StrictVersion as vcomp
 from getpass import getuser
 from itertools import chain
 from math import ceil
@@ -39,7 +40,7 @@ from time import time
 
 
 # Version: use --help and --version
-VERSION = 'v0.7.0-20161122-beta (Nov 22, 2016)' # 08:54:50
+VERSION = 'v0.7-20161122-beta (Nov 22, 2016)' # 13:28:05
 COPYRIGHT = 'Copyright (c) {0} Eric F'.format(datetime.now().year)
 
 # Settings
@@ -180,14 +181,14 @@ class Utils:
 
     # read_release_files(<file>, <search>[, <split char>])
     @classmethod
-    def read_release_files(cls, file, search, char='\"'):
+    def read_release_files(cls, file, search):
         """read_release_files - reading misc release files"""
         try:
             file = open(file, 'r')
             with file as lines:
                 for rel in lines:
                     if match(search, rel.lower()):
-                        search = rel.strip().split(char)[1]
+                        search = rel.replace('"', '').strip().split('=')[1]
                         break
             return search.replace('\"', '')
         except (TypeError, NameError):
@@ -244,12 +245,12 @@ class Output(Utils):
             if path.exists(os_release_file):
                 distro_name = self.read_release_files(os_release_file, 'name')
                 distro_full = self.read_release_files(os_release_file, 'pretty')
-            elif path.exists(os_release_file_in_lib):    # in case of missing symlink
+            elif path.exists(os_release_file_in_lib):     # in case of missing symlink
                 distro_name = self.read_release_files(os_release_file_in_lib, 'name')
                 distro_full = self.read_release_files(os_release_file_in_lib, 'pretty')
             elif path.exists(lsb_release_file):
-                distro_name = self.read_release_files(lsb_release_file, 'id', '=')
-                distro_full = self.read_release_files(lsb_release_file, 'desc', '=')
+                distro_name = self.read_release_files(lsb_release_file, 'distrib_id')
+                distro_full = self.read_release_files(lsb_release_file, 'distrib_description')
             elif fExec('lsb_release'):
                 distro_name = self.x_popen(['lsb_release', '-si'])
                 distro_full = self.x_popen(['lsb_release', '-sd'])
@@ -377,6 +378,11 @@ class Packages(Utils):
     """Get the number of installed packages"""
     def __init__(self):
         packages = ''
+        if fExec('dnf') and fExec('yum'):  # eg. if Fedora, skip yum
+            del PM_DICT['yum']
+        elif fExec('yum'):
+            del PM_DICT['dnf']
+
         for pman in PM_DICT:
             if fExec(pman):
                 PM_DICT[pman].insert(0, pman)
@@ -417,8 +423,8 @@ class RAM(Utils):
             mem_total_ram = round(float(ram[1]) / 1000, 2)
             mem_used = int(ram[2])
             mem_total_free = int(ram[3]) + int(ram[5])
-            # If < 3.3.10, we need to add som parts
-            if self.x_popen(['free', '-V'])[-5:] <= '3.3.9':
+            # If < 3.3.10, we need to add some parts
+            if vcomp(self.x_popen(['free', '-V']).split()[-1]) <= vcomp('3.3.9'):
                 mem_used = mem_used - int(ram[5]) - int(ram[6])
                 mem_total_free = mem_total_free + int(ram[6])
         elif self.x_system() == 'Darwin':
