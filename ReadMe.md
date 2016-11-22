@@ -10,10 +10,12 @@ This is a (forked) ported version of the original script: [Archey][dja], by [djm
 ### Screenshots
 
 ![][scrap]
+
 _v0.7.0-beta on OS X. (Terminal theme: [myTerm][myterm].)_
 
 
 ![][x2]
+
 _v0.X-beta (from early version) of Fedora and Debian in Vagrant boxes._
 
 A few more Screenshots can be found in the [Wiki][scraps].
