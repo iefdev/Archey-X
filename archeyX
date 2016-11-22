@@ -31,7 +31,7 @@ from getpass import getuser
 from itertools import chain
 from math import ceil
 from os import getenv, path, uname
-from re import sub, compile as comp
+from re import sub, match, compile as comp
 from socket import gethostname
 from subprocess import check_output, PIPE, Popen
 from sys import platform
@@ -39,7 +39,7 @@ from time import time
 
 
 # Version: use --help and --version
-VERSION = 'v0.7.0-20161121-beta (Nov 21, 2016)' # 13:31:15
+VERSION = 'v0.7.0-20161122-beta (Nov 22, 2016)' # 08:54:50
 COPYRIGHT = 'Copyright (c) {0} Eric F'.format(datetime.now().year)
 
 # Settings
@@ -186,7 +186,7 @@ class Utils:
             file = open(file, 'r')
             with file as lines:
                 for rel in lines:
-                    if search in rel.lower():
+                    if match(search, rel.lower()):
                         search = rel.strip().split(char)[1]
                         break
             return search.replace('\"', '')
@@ -203,7 +203,7 @@ class Output(Utils):
     results.extend([''] * (18-len(LABELS)))
 
     def __init__(self):
-        self.distro = self.x_distro('name')
+        self.distro = self.x_distro('name').rstrip()
         # Fallback for missing entry in COLOR_DICT
         if self.distro not in DIST_DICT:
             self.distro = 'GNU/Linux'
@@ -244,7 +244,7 @@ class Output(Utils):
             if path.exists(os_release_file):
                 distro_name = self.read_release_files(os_release_file, 'name')
                 distro_full = self.read_release_files(os_release_file, 'pretty')
-            if path.exists(os_release_file_in_lib):     # in case of missing symlink
+            elif path.exists(os_release_file_in_lib):    # in case of missing symlink
                 distro_name = self.read_release_files(os_release_file_in_lib, 'name')
                 distro_full = self.read_release_files(os_release_file_in_lib, 'pretty')
             elif path.exists(lsb_release_file):
@@ -268,7 +268,7 @@ class Output(Utils):
         distro_full = sub('S[Uu]SE', 'SLES', distro_full)
 
         x_distro_names = {'name': distro_name, 'full': distro_full}
-        return sub('release |GNU/|Linux |Enterprise |Server ', '', x_distro_names[name])
+        return sub('release | GNU/Linux|Linux |Enterprise |Server ', '', x_distro_names[name])
 
     def append(self, display):
         """append: preparing the output"""
@@ -396,7 +396,7 @@ class CPU(Utils):
     def __init__(self):
         cpu_info = 'n/a'
         if self.x_system() == 'Linux':
-            cpu = open('/proc/cpu_info')
+            cpu = open('/proc/cpuinfo')
             file = cpu.readlines()
             cpu_info = sub('  +', ' ', file[4])
             cpu.close()
@@ -463,16 +463,18 @@ class Disk(Utils):
             pass1 = self.x_popen(list(chain(df_cmd, *filesystems)))
             pass2 = self.x_popen(['df', '/boot']).splitlines()[1].split()[0]
             total = pass1.splitlines()[-1].split()
+            capacity = total[5]
             # disk_vars: used, capacity, size, available, disknr
-            disk_vars = (total[3], total[5], total[2], total[4], pass2.replace('/dev/', ''))
+            disk_vars = (total[3], capacity, total[2], total[4], pass2.replace('/dev/', ''))
         elif self.x_system() == 'Darwin':
             pass1 = self.x_popen(['df', '-Hl'])
             total = pass1.splitlines()[1].split()
+            capacity = total[4]
             # disk_vars: used, capacity, size, available, disknr
-            disk_vars = (total[2], total[4], total[1], total[3], total[0].replace('/dev/', ''))
+            disk_vars = (total[2], capacity, total[1], total[3], total[0].replace('/dev/', ''))
 
         used_percent = left_percent = '-'
-        used_percent = total[4].replace('%', '')
+        used_percent = capacity.replace('%', '')
         left_percent = (100 - int(used_percent))
 
         if used_percent <= '50':    # using str to avoid str -> int errs (pylint)
