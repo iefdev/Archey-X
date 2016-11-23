@@ -2,6 +2,8 @@
 
 Changes that have been made between the versions.
 
+- [ ] _todo: move this file to Wiki: Changelog._
+
 - - -
 
 > **Latest version:** v0.7.0-beta
