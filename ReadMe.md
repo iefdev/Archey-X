@@ -4,7 +4,7 @@ Archey X is a simple tool to display system information.
 
 - - -
 
-This is a forked/ported version of the original script: djmelik/Archey, by [djmelek][djm]. It was first made as a bash script version for OS X. Later on the original `archey` script was ported to OS X. Now it's been re-worked to be X compatible with both OS X and misc GNU/Linux distributions - hence the name: _Archey **X**_.
+This is a forked/ported version of the original script: [Archey][dja], by [djmelek][djm]. It was first made as a bash script version for OS X. Later on the original `archey` script was ported to OS X. Now it's been re-worked to be X compatible with both OS X and misc GNU/Linux distributions - hence the name: _Archey **X**_.
 
 
 ### Screenshots
@@ -42,7 +42,7 @@ _Optional: add a symlink:_
 
 	#!/usr/bin/env python
 
-You will also need to comment or remove the line with: _(~[L302][super])_
+You will also need to comment or remove the line with: _(~ [L303][super])_
 
 ```python
 super().__init__()
@@ -129,8 +129,9 @@ If you have any feedback, suggestions? Please, send an email or a tweet.
 
 
 <!-- Markdown: Links & Images -->
-[super]: https://github.com/iEFdev/Archey-X/blob/master/archeyX#L302
+[super]: https://github.com/iEFdev/Archey-X/blob/master/archeyX#L303
 
+[dja]: https://github.com/djmelik/archey
 [djm]: https://github.com/djmelik
 
 [scrap]: https://raw.githubusercontent.com/iEFdev/Archey-X/master/screenshot.png "Screenshot of Archey X"
