@@ -4,7 +4,7 @@ Archey X is a simple tool to display system information.
 
 - - -
 
-This is a (forked) ported version of the original script: [Archey][dja], by [djmelek][djm]. It was first made as a bash script version for OS X. Later on the original `archey` script was ported to OS X. Now it's been re-worked to be X compatible with both OS X and misc GNU/Linux distributions - hence the name: _Archey **X**_.
+This is a forked/ported version of the original script: djmelik/Archey, by [djmelek][djm]. It was first made as a bash script version for OS X. Later on the original `archey` script was ported to OS X. Now it's been re-worked to be X compatible with both OS X and misc GNU/Linux distributions - hence the name: _Archey **X**_.
 
 
 ### Screenshots
@@ -18,7 +18,7 @@ _v0.7.0-beta on OS X. (Terminal theme: [myTerm][myterm].)_
 
 _v0.X-beta (from early version) of Fedora and Debian in Vagrant boxes._
 
-A few more Screenshots can be found in the [Wiki][scraps].
+A few more Screenshots can be found in the [Wiki …»][scraps].
 
 
 ## Install
@@ -62,7 +62,7 @@ To load at start. Add to your `.bashrc` _(or `.bash_profile`)_:
 [[ `type archeyX 2> /dev/null` && $UID != 0 ]] && archeyX
 ```
 
-When using `scp` over the network and logging into amachin with `archeyX` loading up... It _might_ cause an error about output. To avoid that issue, use this instead:
+When using `scp` over the network and logging into a machine with `archeyX` loading up... It _might_ cause an error about output. To avoid that issue, use this instead:
 
 ```bash
 # Load archey (if installed)
@@ -75,8 +75,7 @@ When using `scp` over the network and logging into amachin with `archeyX` loadin
 
 In top of the file there are a few settings...
 
-
-### Disk
+#### Disk
 
 ```python
 # Settings
@@ -84,10 +83,9 @@ DISK_WARNING = 1                # default: 1
 DISK_WARNING_THRESHOLD = 20     # default: 20 (% of diskspace left)
 ```
 
-The disk warning is just a visual blinking warning when the disk space left is below <span style="color: #900;"> 20%</span>.
+The disk warning is just a visual blinking warning when the disk space left is below _20%_.
 
-
-### Colors
+#### Colors
 
 ```python
 # Custom color (match a name in in COLOR_DICT)
@@ -100,7 +98,6 @@ BRAND = None                    # Must have one with 'None' (don't change)
 You only need to add (a new line with) `BRAND` if you want a different color scheme. A way to _hard-code_ the color if your distribution is not listed in `DIST_DICT`.
 
 
-
 ## Tested distros
 
 - [ ] Arch Linux
@@ -109,19 +106,11 @@ You only need to add (a new line with) `BRAND` if you want a different color sch
 - [x] Fedora 23 (“may” work with CentOS and Red Hat. `dnf|yum`)
 
 
-
 ## Author notes
 
--	**[2016-11-21]**
+-	**[2016-11-23]**
 
 	This repo has been renamed from: “Archey :: OS X” -> “Archey X”, since it will be X-compatible. Initial version(s) will be `v0.7.0-YYYMMDD-beta` until it's been tested/verified more to work with _N_ distributions.
-
-
--	**[2016-02-17]**
-
-	“Archey :: OS X” will come in tags/releases now, and this is the “dev” version _(eg v1.2.3-yymmdd-git)_. You should use the releases.
-
-	I started a wiki... Not much there at the moment, but I'd guess a few pages will show up there later.
 
 
 If you have any feedback, suggestions? Please, send an email or a tweet.
@@ -133,21 +122,20 @@ If you have any feedback, suggestions? Please, send an email or a tweet.
 ## Contributing
 
 1. Fork it (<https://github.com/iEFdev/Archey-X/fork>)
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
+2. Create your feature branch (`git checkout -b feature/foo-bar`)
+3. Commit your changes (`git commit -am 'Add some fooBar'`)
+4. Push to the branch (`git push origin feature/foo-bar`)
 5. Create a new Pull Request
 
 
 <!-- Markdown: Links & Images -->
 [super]: https://github.com/iEFdev/Archey-X/blob/master/archeyX#L302
 
-[dja]: https://github.com/djmelik/archey
 [djm]: https://github.com/djmelik
 
 [scrap]: https://raw.githubusercontent.com/iEFdev/Archey-X/master/screenshot.png "Screenshot of Archey X"
 [scraps]: https://github.com/iEFdev/Archey-X/wiki/Screenshots "More Screenshots"
-[x2]: https://raw.githubusercontent.com/iEFdev/Archey-X/master/screenshot_x2.png "Screenshot(s) of Archey X"
+[x2]: https://github.com/iEFdev/Archey-X/wiki/_Images/screenshot_x2.png "Screenshot(s) of Archey X"
 
 [myterm]: https://github.com/iEFdev/dotfiles/tree/master/myTerm "My Terminal theme"
 [jy]: https://github.com/iEFdev/junkyard "iEFdev/Junkyard"
