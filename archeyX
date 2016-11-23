@@ -40,7 +40,7 @@ from time import time
 
 
 # Version: use --help and --version
-VERSION = 'v0.7-20161122-beta (Nov 22, 2016)' # 13:28:05
+VERSION = 'v0.7-20161123-beta (Nov 23, 2016)' # 04:32:30
 COPYRIGHT = 'Copyright (c) {0} Eric F'.format(datetime.now().year)
 
 # Settings
