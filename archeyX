@@ -8,10 +8,10 @@ Description:
 
 Licence:
   Distributed under GPLv3+: GNU General Public License v3 or later.
-  See LICENSE or <http://www.gnu.org/licenses/gpl.txt> for the full license text.
+  See LICENSE or <https://www.gnu.org/licenses/gpl-3.0.html> for the full license text.
 
 Author notes:
-  This is a forked (and ported) version of the original Archey by Melik Manukyan.
+  This is a is a forked/ported version of the original script: Archey, by Melik Manukyan.
   It's made to be cross platform and able to auto detect different distros.
 
 Original author(s) and copyright:
@@ -40,11 +40,11 @@ from time import time
 
 
 # Version: use --help and --version
-VERSION = 'v0.7-20161123-beta (Nov 23, 2016)' # 04:32:30
+VERSION = 'v0.7-20161124-beta (Nov 24, 2016)' # 05:55:00
 COPYRIGHT = 'Copyright (c) {0} Eric F'.format(datetime.now().year)
 
 # Settings
-DISK_WARNING = 1                # default: 1
+DISK_WARNING = 1                # default: 1  (set 0 to disable)
 DISK_WARNING_THRESHOLD = 20     # default: 20 (% of diskspace left)
 
 # Custom color (match a name in in COLOR_DICT)
