@@ -9,46 +9,25 @@ This is a forked/ported version of the original script: [Archey][dja], by [djmel
 
 ### Screenshots
 
+v0.7.0-beta on OS X. (Terminal theme: [myTerm][myterm].)
+
 ![][scrap]
 
-_v0.7.0-beta on OS X. (Terminal theme: [myTerm][myterm].)_
 
+v0.X-beta _(early version)_ of Fedora and Debian in Vagrant boxes.
 
 ![][x2]
 
-_v0.X-beta (from early version) of Fedora and Debian in Vagrant boxes._
-
-A few more Screenshots can be found in the [Wiki …»][scraps].
+_A few more Screenshots can be found in the [Wiki …»][scraps]._
 
 
-## Install
+## Installation
 
 Copy the file to `/usr/local/bin`, and give it permission to execute.
 
 	sudo install -m 0755 archeyX /usr/local/bin
 
 _(make sure `/usr/local/bin` is in your `PATH`)_
-
-_Optional: add a symlink:_
-
-	(cd /usr/local/bin && sudo ln -s archey{X,})
-
-
-## Python 3
-
-“Archey X” is written and tested with `pylint (1.6.4)` with `python3 (3.5.2)`. If you don't have Python 3.* - you need to change the _shebang_ to `python`...
-
-	#!/usr/bin/env python3
-
-	#!/usr/bin/env python
-
-You will also need to comment or remove the line with: _(~ [L303][super])_
-
-```python
-super().__init__()
-```
-
-_(`pylint` wanted me to add that.)_
 
 
 ## Usage
@@ -62,7 +41,7 @@ To load at start. Add to your `.bashrc` _(or `.bash_profile`)_:
 [[ `type archeyX 2> /dev/null` && $UID != 0 ]] && archeyX
 ```
 
-When using `scp` over the network and logging into a machine with `archeyX` loading up... It _might_ cause an error about output. To avoid that issue, use this instead:
+**Note:** When using `scp` over the network and logging into a machine with `archeyX` loading up... It _might_ cause an error about output. To avoid that issue, use this instead:
 
 ```bash
 # Load archey (if installed)
@@ -71,31 +50,14 @@ When using `scp` over the network and logging into a machine with `archeyX` load
 ```
 
 
-## Settings
+## Settings and Colors
 
-In top of the file there are a few settings...
+See [Settings and Colors][prefs] in the Wiki
 
-#### Disk
 
-```python
-# Settings
-DISK_WARNING = 1                # default: 1
-DISK_WARNING_THRESHOLD = 20     # default: 20 (% of diskspace left)
-```
+## Python 3
 
-The disk warning is just a visual blinking warning when the disk space left is below _20%_.
-
-#### Colors
-
-```python
-# Custom color (match a name in in COLOR_DICT)
-# You can manually change color here by adding a new line with 'brand'.
-BRAND = None                    # Must have one with 'None' (don't change)
-#BRAND = 'Arch Linux'
-#BRAND = 'Darwin'                # OS X
-```
-
-You only need to add (a new line with) `BRAND` if you want a different color scheme. A way to _hard-code_ the color if your distribution is not listed in `DIST_DICT`.
+“Archey X” is written and tested with `pylint (1.6.4)`, with `python3 (3.5.2)`. If you don't have Python 3.* —  you _(really)_ should upgrade. But, there is a _work-around_ in the [FAQ][py2].
 
 
 ## Tested distros
@@ -104,6 +66,20 @@ You only need to add (a new line with) `BRAND` if you want a different color sch
 - [x] Darwin/OS X
 - [x] Debian Jessie 8.3 (“may” work with other, like Mint, *buntu. `dpkg`)
 - [x] Fedora 23 (“may” work with CentOS and Red Hat. `dnf|yum`)
+
+
+## Credits and copright
+
+See [Credits][credits] in the Wiki
+
+
+## Contributing
+
+1. Fork it (<https://github.com/iEFdev/Archey-X/fork>)
+2. Create your feature branch (`git checkout -b feature/foo-bar`)
+3. Commit your changes (`git commit -am 'Add some fooBar'`)
+4. Push to the branch (`git push origin feature/foo-bar`)
+5. Create a new Pull Request
 
 
 ## Author notes
@@ -119,24 +95,15 @@ If you have any feedback, suggestions? Please, send an email or a tweet.
 · Eric
 
 
-## Contributing
-
-1. Fork it (<https://github.com/iEFdev/Archey-X/fork>)
-2. Create your feature branch (`git checkout -b feature/foo-bar`)
-3. Commit your changes (`git commit -am 'Add some fooBar'`)
-4. Push to the branch (`git push origin feature/foo-bar`)
-5. Create a new Pull Request
-
-
 <!-- Markdown: Links & Images -->
 [super]: https://github.com/iEFdev/Archey-X/blob/master/archeyX#L303
-
-[dja]: https://github.com/djmelik/archey
-[djm]: https://github.com/djmelik
-
+[dja]: https://github.com/djmelik/archey "Archey"
+[djm]: https://github.com/djmelik "Melik Manukyan"
 [scrap]: https://raw.githubusercontent.com/iEFdev/Archey-X/master/screenshot.png "Screenshot of Archey X"
 [scraps]: https://github.com/iEFdev/Archey-X/wiki/Screenshots "More Screenshots"
 [x2]: https://github.com/iEFdev/Archey-X/wiki/_Images/screenshot_x2.png "Screenshot(s) of Archey X"
-
 [myterm]: https://github.com/iEFdev/dotfiles/tree/master/myTerm "My Terminal theme"
 [jy]: https://github.com/iEFdev/junkyard "iEFdev/Junkyard"
+[py2]: https://github.com/iEFdev/Archey-X/wiki/FAQ#q-can-i-use-python-2 "Python 2 :: FAQ"
+[credits]: https://github.com/iEFdev/Archey-X/wiki/Credits "Credits and copyright"
+[prefs]: https://github.com/iEFdev/Archey-X/wiki/Settings-and-Colors "Settings and Colors"
