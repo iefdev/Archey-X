@@ -1,3 +1,6 @@
+![][masterBadge] [![GitHub release][latestBadge]][latest]
+
+
 # Archey X
 
 Archey X is a simple tool to display system information.
@@ -84,18 +87,16 @@ See [Credits][credits] in the Wiki
 
 ## Author notes
 
--	**[2016-11-23]**
-
-	This repo has been renamed from: “Archey :: OS X” -> “Archey X”, since it will be X-compatible. Initial version(s) will be `v0.7.0-YYYMMDD-beta` until it's been tested/verified more to work with _N_ distributions.
-
+-	**[2016-11-23]** This repo has been renamed from: “Archey :: OS X” -> “Archey X”, since it will be X-compatible. Initial version(s) will be `v0.7.0-YYYMMDD-beta` until it's been tested/verified more to work with _N_ distributions.
 
 If you have any feedback, suggestions? Please, send an email or a tweet.
 
-
 · Eric
 
-
 <!-- Markdown: Links & Images -->
+[masterBadge]: https://img.shields.io/badge/master-v0.7.0--beta-778899.svg?style=plastic
+[latestBadge]: https://img.shields.io/github/release/iEFdev/Archey-X.svg?style=plastic
+[latest]: https://github.com/iEFdev/Archey-X/releases/latest "Lateset release"
 [super]: https://github.com/iEFdev/Archey-X/blob/master/archeyX#L303
 [dja]: https://github.com/djmelik/archey "Archey"
 [djm]: https://github.com/djmelik "Melik Manukyan"
