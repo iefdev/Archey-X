@@ -7,7 +7,7 @@ Archey X is a simple tool to display system information.
 
 - - -
 
-This is a forked/ported version of the original script: [Archey][dja], by [djmelek][djm]. It was first made as a bash script version for OS X. Later on the original `archey` script was ported to OS X. Now it's been re-worked to be X compatible with both OS X and misc GNU/Linux distributions - hence the name: _Archey **X**_.
+This is a forked/ported version of the original script: [Archey][dja], by [djmelek][djm] - made to be X compatible with both OS X and misc GNU/Linux distributions - hence the name: Archey **X**. _(Previously an OS X port of Archey.)_ […»][about]
 
 
 ### Screenshots
@@ -70,6 +70,7 @@ See [Settings and Colors][prefs] in the Wiki
 - [x] Debian Jessie 8.3 (“may” work with other, like Mint, *buntu. `dpkg`)
 - [x] Fedora 23 (“may” work with CentOS and Red Hat. `dnf|yum`)
 
+_Please, report working distributions [here][iss1]._
 
 ## Credits and copright
 
@@ -87,7 +88,7 @@ See [Credits][credits] in the Wiki
 
 ## Author notes
 
--	**[2016-11-23]** This repo has been renamed from: “Archey :: OS X” -> “Archey X”, since it will be X-compatible. Initial version(s) will be `v0.7.0-YYYMMDD-beta` until it's been tested/verified more to work with _N_ distributions.
+-	**[2016-11-23]** This repo has been renamed from: “Archey :: OS X” -> “Archey X”, since it will be X-compatible. Initial version(s) will be `v0.7.0-YYYYMMDD-beta` until it's been tested/verified more to work with _N_ distributions.
 
 If you have any feedback, suggestions? Please, send an email or a tweet.
 
@@ -96,7 +97,7 @@ If you have any feedback, suggestions? Please, send an email or a tweet.
 <!-- Markdown: Links & Images -->
 [masterBadge]: https://img.shields.io/badge/master-v0.7.0--beta-778899.svg?style=plastic
 [latestBadge]: https://img.shields.io/github/release/iEFdev/Archey-X.svg?style=plastic
-[latest]: https://github.com/iEFdev/Archey-X/releases/latest "Lateset release"
+[latest]: https://github.com/iEFdev/Archey-X/releases/latest "Latest release"
 [super]: https://github.com/iEFdev/Archey-X/blob/master/archeyX#L303
 [dja]: https://github.com/djmelik/archey "Archey"
 [djm]: https://github.com/djmelik "Melik Manukyan"
@@ -106,5 +107,7 @@ If you have any feedback, suggestions? Please, send an email or a tweet.
 [myterm]: https://github.com/iEFdev/dotfiles/tree/master/myTerm "My Terminal theme"
 [jy]: https://github.com/iEFdev/junkyard "iEFdev/Junkyard"
 [py2]: https://github.com/iEFdev/Archey-X/wiki/FAQ#q-can-i-use-python-2 "Python 2 :: FAQ"
+[about]: https://github.com/iEFdev/Archey-X/wiki/About "About Archey X"
 [credits]: https://github.com/iEFdev/Archey-X/wiki/Credits "Credits and copyright"
 [prefs]: https://github.com/iEFdev/Archey-X/wiki/Settings-and-Colors "Settings and Colors"
+[iss1]: https://github.com/iEFdev/Archey-X/issues/1#issue-191799189 "Verify distributions"
