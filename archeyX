@@ -67,6 +67,7 @@ COLOR_DICT = {   # (@todo: simplify with 1 line/color)
     'color07': ['\x1b[0;32m', '\x1b[1;37m'],    # Mint (white/green)
     'color08': ['\x1b[0;32m', '\x1b[1;30m'],    # SLES (grey/green)
     'color09': ['\x1b[0;32m', '\x1b[1;32m'],    # OpenSuse (green/green)
+    'color10': ['\x1b[0;34m', '\x1b[1;32m'],    # CentOS (blue/green)
 
     # Sensors: [<red>, <yellow>, <green>, <blinking red>]
     'Sensors': ['\x1b[0;31m', '\x1b[0;32m', '\x1b[0;33m', '\x1b[5;31m'],
@@ -84,6 +85,7 @@ DIST_DICT = {
     'LinuxMint': 'color07',
     'SLES': 'color08',
     'OpenSUSE': 'color09',
+    'CentOS': 'color10',
 }
 
 DE_DICT = {
