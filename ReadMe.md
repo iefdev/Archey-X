@@ -104,7 +104,7 @@ If you have any feedback, suggestions? Please, send an email or a tweet.
 [scrap]: https://raw.githubusercontent.com/iEFdev/Archey-X/master/screenshot.png "Screenshot of Archey X"
 [scraps]: https://github.com/iEFdev/Archey-X/wiki/Screenshots "More Screenshots"
 [x2]: https://github.com/iEFdev/Archey-X/wiki/_Images/screenshot_x2.png "Screenshot(s) of Archey X"
-[myterm]: https://github.com/iEFdev/dotfiles/tree/master/myTerm "My Terminal theme"
+[myterm]: https://github.com/iEFdev/myTerm "My Terminal theme"
 [jy]: https://github.com/iEFdev/junkyard "iEFdev/Junkyard"
 [py2]: https://github.com/iEFdev/Archey-X/wiki/FAQ#q-can-i-use-python-2 "Python 2 :: FAQ"
 [about]: https://github.com/iEFdev/Archey-X/wiki/About "About Archey X"
