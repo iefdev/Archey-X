@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.6
 # -*- coding: utf-8 -*-
 
 """/usr/local/bin/archeyX
@@ -35,13 +35,18 @@ from os import getenv, path, uname
 from re import sub, match, compile as comp
 from socket import gethostname
 from subprocess import check_output, PIPE, Popen
-from sys import platform
+from sys import platform, version_info
 from time import time
 
+# Inform about python3.6
+PYTHON_VERSION = '{0}.{1}'.format(version_info.major, version_info.minor)
+if PYTHON_VERSION < '3.6':
+    exit('Archey X requires Python 3.6+\nYour version is: Python {0}\n'
+         'Please upgrade...'.format(PYTHON_VERSION))
 
 # Version: use --help and --version
-VERSION = 'v0.7-20161124-beta (Nov 24, 2016)' # 05:55:00
-COPYRIGHT = 'Copyright (c) {0} Eric F'.format(datetime.now().year)
+VERSION = 'v0.7-20170430-beta (April 30, 2017)' # 15:07:21
+COPYRIGHT = f'Copyright (c) {datetime.now().year} Eric F'
 
 # Settings
 DISK_WARNING = 1                # default: 1  (set 0 to disable)
@@ -138,7 +143,7 @@ FS_LIST = [  # List of filesystemes to be included in 'df'
 
 # Options
 # ------------------------------------------------------------
-__version__ = '%(prog)s {0}\n{1}\n '.format(VERSION, COPYRIGHT)
+__version__ = f'%(prog)s {VERSION}\n{COPYRIGHT}\n '
 PARSER = ArgumentParser(formatter_class=RawDescriptionHelpFormatter)
 PARSER.add_argument('-V', '--version', action='version', version=__version__)
 
@@ -232,7 +237,7 @@ class Output(Utils):
                 osx_name = OSX_DICT[get_version[:-2]]
 
             distro_name = self.x_system()
-            distro_full = '{0} {1} ({2})'.format(get_name, get_version, osx_name)
+            distro_full = f'{get_name} {get_version} ({osx_name})'
 
         # (*BSD... Hopefully at some point)
         #elif x_system == 'FreeBSD' or 'OpenBSD':
@@ -270,13 +275,13 @@ class Output(Utils):
         distro_full = sub('Red Hat', 'RHEL', distro_full)
         distro_full = sub('S[Uu]SE', 'SLES', distro_full)
 
-        x_distro_names = {'name': distro_name, 'full': distro_full}
+        x_distro_names = { 'name': distro_name, 'full': distro_full }
         return sub('release | GNU/Linux|Linux |Enterprise |Server ', '', x_distro_names[name])
 
     def append(self, display):
         """append: preparing the output"""
-        self.results.append('{0}{1}: {2}{3}'.format(COLOR_DICT[self.color][1], display.key,
-                                                    COLOR_DICT['Clear'][0], display.value))
+        self.results.append(f'{COLOR_DICT[self.color][1]}{display.key}: '
+                            f'{COLOR_DICT["Clear"][0]}{display.value}')
 
     def output(self):
         """output: matching name/colors"""
@@ -286,22 +291,19 @@ class Output(Utils):
 class User(Utils):
     """Get the username"""
     def __init__(self):
-        self.key = 'User'
-        self.value = getuser()
+        self.key, self.value = 'User', getuser()
 
 
 class Hostname(Utils):
     """Get the hostname"""
     def __init__(self):
-        self.key = 'Hostname'
-        self.value = gethostname()
+        self.key, self.value = 'Hostname', gethostname()
 
 
 class Distro(Output, Utils):
     """Display the Distro name"""
     def __init__(self):
-        self.key = 'Distro'
-        self.value = self.x_distro('full')
+        self.key, self.value = 'Distro', self.x_distro('full')
         super().__init__()
 
 
@@ -310,13 +312,12 @@ class Kernel(Utils):
     def __init__(self):
         if self.x_system() == 'Darwin':
             # Darwin 11.x.x (x86_64)
-            kernel = '{0} {1} {2}'.format(uname()[0], uname()[2], uname()[4])
+            kernel = f'{uname()[0]} {uname()[2]} {uname()[4]}'
             #kernel = sub('.*:+', '', uname()[3]).strip('REL.*')  # xnu-123...
         else:
             kernel = self.x_popen(['uname', '-r'])
 
-        self.key = 'Kernel'
-        self.value = kernel
+        self.key, self.value = 'Kernel', kernel
 
 
 class Uptime(Utils):
@@ -329,8 +330,8 @@ class Uptime(Utils):
         else:
             boot_time = open('/proc/uptime').read().split('.')[0]
 
-        self.key = 'Uptime'
-        self.value = '{0}'.format(timedelta(seconds=int(boot_time)))[:-3]
+        uptime = f'{timedelta(seconds=int(boot_time))}'[:-3]
+        self.key, self.value = 'Uptime', uptime
 
 
 class WindowManager(Utils):
@@ -345,8 +346,7 @@ class WindowManager(Utils):
                 window_manager = WM_DICT[key]
                 break
 
-        self.key = 'Window Manager'
-        self.value = window_manager
+        self.key, self.value = 'Window Manager', window_manager
 
 
 class DesktopEnvironment(Utils):
@@ -358,22 +358,19 @@ class DesktopEnvironment(Utils):
                 desktop_enviroment = DE_DICT[key]
                 break
 
-        self.key = 'Desktop Environment'
-        self.value = desktop_enviroment
+        self.key, self.value = 'Desktop Environment', desktop_enviroment
 
 
 class Shell(Utils):
     """Shell name"""
     def __init__(self):
-        self.key = 'Shell'
-        self.value = getenv('SHELL')
+        self.key, self.value = 'Shell', getenv('SHELL')
 
 
 class Terminal(Utils):
     """Terminal name"""
     def __init__(self):
-        self.key = 'Terminal'
-        self.value = getenv('TERM')
+        self.key, self.value = 'Terminal', getenv('TERM')
 
 
 class Packages(Utils):
@@ -395,8 +392,7 @@ class Packages(Utils):
 
         packages = (len(packages.rstrip('\n').split('\n')), 'n/a')[packages == '']
 
-        self.key = 'Packages'
-        self.value = packages
+        self.key, self.value = 'Packages', packages
 
 
 class CPU(Utils):
@@ -412,8 +408,7 @@ class CPU(Utils):
             cpu_info = self.x_popen(['sysctl', '-n', 'machdep.cpu.brand_string'])
             cpu_info = sub('  +', ' ', cpu_info)
 
-        self.key = 'CPU'
-        self.value = sub('model name\t: |CPU ', '', cpu_info).strip()
+        self.key, self.value = 'CPU', sub('model name\t: |CPU ', '', cpu_info).strip()
 
 
 class RAM(Utils):
@@ -452,14 +447,13 @@ class RAM(Utils):
         else:
             mem_total_ram = mem_used = mem_total_free = '-'
 
-        ram_display = '{1}{3}MB{0}, {2}{4}MB{0} of {5}GB'
-        ram_display = ram_display.format(
-            COLOR_DICT['Clear'][0], COLOR_DICT['Sensors'][0], COLOR_DICT['Sensors'][1],
-            mem_used, mem_total_free, mem_total_ram
-        )
+        ram_values = r_v = (COLOR_DICT['Clear'][0], COLOR_DICT['Sensors'][0],
+                            COLOR_DICT['Sensors'][1], mem_used,
+                            mem_total_free, mem_total_ram)
+        ram_display = f'{r_v[1]}{r_v[3]}MB{r_v[0]}, {r_v[2]}{r_v[4]}MB{r_v[0]} of {r_v[5]}GB'
 
-        self.key = 'RAM'
-        self.value = ram_display    # RAM: usedMB, freeMB of totalGB
+        # RAM: usedMB, freeMB of totalGB
+        self.key, self.value = 'RAM', ram_display
 
 
 class Disk(Utils):
@@ -494,15 +488,15 @@ class Disk(Utils):
         if DISK_WARNING == 1 and left_percent <= int(DISK_WARNING_THRESHOLD):
             disk_color = 3
 
-        disk_display = '{1}{2}B{0} ({3}) of {4}B, {5}B available ({6})'
-        disk_display = disk_display.format(
-            COLOR_DICT['Clear'][0], COLOR_DICT['Sensors'][disk_color],
-            # used (capacity) of size, available (disknr)
-            disk_vars[0], disk_vars[1], disk_vars[2], disk_vars[3], disk_vars[4]
-        )
+        # disk_values
+        d_v = (COLOR_DICT['Clear'][0], COLOR_DICT['Sensors'][disk_color],
+               # used (capacity) of size, available (disknr)
+               disk_vars[0], disk_vars[1], disk_vars[2], disk_vars[3], disk_vars[4])
+        disk_display = f'{d_v[1]}{d_v[2]}B{d_v[0]} ({d_v[3]}) of {d_v[4]}B, '
+        disk_display += f'{d_v[5]}B available ({d_v[6]})'
 
-        self.key = 'Disk'
-        self.value = disk_display   # Display: used (%) of total, N available (disk)
+        # Display: used (%) of total, N available (disk)
+        self.key, self.value = 'Disk', disk_display
 
 
 CLASSES = {
@@ -516,7 +510,7 @@ CLASSES = {
 # Start output
 OUT = Output()
 
-LOGOS_DICT = {OUT.distro: '''
+LOGOS_DICT = { OUT.distro: '''
 {color[1]}               +                {results[0]}
 {color[1]}               #                {results[1]}
 {color[1]}              ###               {results[2]}
@@ -540,7 +534,7 @@ LOGOS_DICT = {OUT.distro: '''
 
 # (OSX/macOS only) see --help
 if OUT.distro == 'Darwin' and BRAND == 'Apple':
-    LOGOS_DICT = {OUT.distro: '''
+    LOGOS_DICT = { OUT.distro: '''
 {color[1]}                     ##         {results[0]}
 {color[1]}                  #####         {results[1]}
 {color[1]}                 #####          {results[2]}
