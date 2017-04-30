@@ -1,11 +1,8 @@
-![][masterBadge] [![GitHub release][latestBadge]][latest]
-
-
 # Archey X
 
-Archey X is a simple tool to display system information.
+> Archey X is a simple tool to display system information.
 
-- - -
+![][masterBadge] [![GitHub release][latestBadge]][latest]
 
 This is a forked/ported version of the original script: [Archey][dja], by [djmelek][djm] - made to be X compatible with both OS X and misc GNU/Linux distributions - hence the name: Archey **X**. _(Previously an OS X port of Archey.)_ […»][about]
 
@@ -58,11 +55,6 @@ To load at start. Add to your `.bashrc` _(or `.bash_profile`)_:
 See [Settings and Colors][prefs] in the Wiki
 
 
-## Python 3
-
-“Archey X” is written and tested with `pylint (1.6.4)`, with `python3 (3.5.2)`. If you don't have Python 3.* —  you _(really)_ should upgrade. But, there is a _work-around_ in the [FAQ][py2].
-
-
 ## Tested distros
 
 - [ ] Arch Linux
@@ -71,6 +63,7 @@ See [Settings and Colors][prefs] in the Wiki
 - [x] Fedora 23 (“may” work with CentOS and Red Hat. `dnf|yum`)
 
 _Please, report working distributions [here][iss1]._
+
 
 ## Credits and copright
 
@@ -88,6 +81,7 @@ See [Credits][credits] in the Wiki
 
 ## Author notes
 
+-	**[2017-04-30]** From now, Arxhey X is using Python 3.6+. The “shebang” is changed, and there'se a version check to ask you to upgrade, if you don't have 3.6. So, please upgrade if needed. Thanks!
 -	**[2016-11-23]** This repo has been renamed from: “Archey :: OS X” -> “Archey X”, since it will be X-compatible. Initial version(s) will be `v0.7.0-YYYYMMDD-beta` until it's been tested/verified more to work with _N_ distributions.
 
 If you have any feedback, suggestions? Please, send an email or a tweet.
@@ -95,7 +89,7 @@ If you have any feedback, suggestions? Please, send an email or a tweet.
 · Eric
 
 <!-- Markdown: Links & Images -->
-[masterBadge]: https://img.shields.io/badge/master-v0.7.0--beta-778899.svg?style=plastic
+[masterBadge]: https://img.shields.io/badge/master-v0.7--beta-778899.svg?style=plastic
 [latestBadge]: https://img.shields.io/github/release/iEFdev/Archey-X.svg?style=plastic
 [latest]: https://github.com/iEFdev/Archey-X/releases/latest "Latest release"
 [super]: https://github.com/iEFdev/Archey-X/blob/master/archeyX#L303
@@ -106,7 +100,6 @@ If you have any feedback, suggestions? Please, send an email or a tweet.
 [x2]: https://github.com/iEFdev/Archey-X/wiki/_Images/screenshot_x2.png "Screenshot(s) of Archey X"
 [myterm]: https://github.com/iEFdev/myTerm "My Terminal theme"
 [jy]: https://github.com/iEFdev/junkyard "iEFdev/Junkyard"
-[py2]: https://github.com/iEFdev/Archey-X/wiki/FAQ#q-can-i-use-python-2 "Python 2 :: FAQ"
 [about]: https://github.com/iEFdev/Archey-X/wiki/About "About Archey X"
 [credits]: https://github.com/iEFdev/Archey-X/wiki/Credits "Credits and copyright"
 [prefs]: https://github.com/iEFdev/Archey-X/wiki/Settings-and-Colors "Settings and Colors"

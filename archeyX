@@ -45,7 +45,7 @@ if PYTHON_VERSION < '3.6':
          'Please upgrade...'.format(PYTHON_VERSION))
 
 # Version: use --help and --version
-VERSION = 'v0.7-20170430-beta (April 30, 2017)' # 15:07:21
+VERSION = 'v0.7.0-20170430-beta (April 30, 2017)' # 18:21:40
 COPYRIGHT = f'Copyright (c) {datetime.now().year} Eric F'
 
 # Settings
@@ -146,9 +146,21 @@ FS_LIST = [  # List of filesystemes to be included in 'df'
 __version__ = f'%(prog)s {VERSION}\n{COPYRIGHT}\n '
 PARSER = ArgumentParser(formatter_class=RawDescriptionHelpFormatter)
 PARSER.add_argument('-V', '--version', action='version', version=__version__)
+PARSER.add_argument('-b', '--brand', dest='brand', default=None, nargs=1, type=str,
+                    help='''You can pass in a Brand/distro name for another color.
+                    The name must exist in DIST_DICT (eg. Fedora, Debian etc.)''')
+
+MACOS = PARSER.add_argument_group('OS X/Darwin (only)')
+MACOS.add_argument('-a', '--apple', dest='apple', action='store_true',
+                   help='''If your system is Darwin you can pass `-a' to
+                   display the Apple instead. (A left-over from the bash-script.)''')
 
 if __name__ == "__main__":
     ARGS = PARSER.parse_args()
+    if ARGS.brand and ARGS.brand[0] in DIST_DICT:
+        BRAND = ARGS.brand[0]
+    elif ARGS.apple is True:
+        BRAND = 'Apple'
 
 
 # Classes
