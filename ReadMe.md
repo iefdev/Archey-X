@@ -37,14 +37,14 @@ _(make sure `/usr/local/bin` is in your `PATH`)_
 To load at start. Add to your `.bashrc` _(or `.bash_profile`)_:
 
 ```bash
-# Load archey (if installed)
+# Load archeyX (if installed)
 [[ `type archeyX 2> /dev/null` && $UID != 0 ]] && archeyX
 ```
 
 **Note:** When using `scp` over the network and logging into a machine with `archeyX` loading up... It _might_ cause an error about output. To avoid that issue, use this instead:
 
 ```bash
-# Load archey (if installed)
+# Load archeyX (if installed)
 # If not running interactively, don't do anything
 [[ -n "$PS1" && `type archeyX 2> /dev/null` && $UID != 0 ]] && archeyX
 ```
@@ -84,11 +84,17 @@ See [Credits][credits] in the Wiki
 -	**[2017-04-30]** From now, Arxhey X is using Python 3.6+. The “shebang” is changed, and there'se a version check to ask you to upgrade, if you don't have 3.6. So, please upgrade if needed. Thanks!
 -	**[2016-11-23]** This repo has been renamed from: “Archey :: OS X” -> “Archey X”, since it will be X-compatible. Initial version(s) will be `v0.7.0-YYYYMMDD-beta` until it's been tested/verified more to work with _N_ distributions.
 
-If you have any feedback, suggestions? Please, send an email or a tweet.
+**Pylint**
 
-· Eric
+-	**[2017-05-01]** 9.96/10 (pylint 1.7.1, Python 3.6.1).
 
-<!-- Markdown: Links & Images -->
+
+If you have any feedback, suggestions? Please, use the Issues, Pull requests, send an email or a tweet.
+
+· Eric ([@iEFdev][twitter])
+
+<!-- Markdown: link & image dfn's -->
+[licenseBadge]: https://img.shields.io/github/license/iEFdev/Archey-X.svg?style=plastic
 [masterBadge]: https://img.shields.io/badge/master-v0.7--beta-778899.svg?style=plastic
 [latestBadge]: https://img.shields.io/github/release/iEFdev/Archey-X.svg?style=plastic
 [latest]: https://github.com/iEFdev/Archey-X/releases/latest "Latest release"
@@ -104,3 +110,4 @@ If you have any feedback, suggestions? Please, send an email or a tweet.
 [credits]: https://github.com/iEFdev/Archey-X/wiki/Credits "Credits and copyright"
 [prefs]: https://github.com/iEFdev/Archey-X/wiki/Settings-and-Colors "Settings and Colors"
 [iss1]: https://github.com/iEFdev/Archey-X/issues/1#issue-191799189 "Verify distributions"
+[twitter]: https://twitter.com/iEFdev
