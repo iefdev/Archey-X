@@ -45,11 +45,11 @@ if PYTHON_VERSION < '3.6':
          'Please upgrade...'.format(PYTHON_VERSION))
 
 # Version: use --help and --version
-VERSION = 'v0.7.0-20170501-beta (May 1, 2017)' # 03:17:00
+VERSION = 'v0.7.0-20170501-beta (May 1, 2017)' # 07:30:23
 COPYRIGHT = f'Copyright (c) {datetime.now().year} Eric F'
 
 # Settings
-DISK_WARNING = 1                # default: 1  (set 0 to disable)
+DISK_WARNING = True             # default: True (set None to disable)
 DISK_WARNING_THRESHOLD = 20     # default: 20 (% of diskspace left)
 
 
@@ -120,8 +120,7 @@ PM_DICT = {
     'pacman': ['-Q'], 'emerge': ['-ep', 'world'], 'zypper': ['search', '--installed-only'],
     'dnf': ['list', 'installed'], 'yum': ['list', 'installed'], 'dpkg': ['--get-selections'],
 
-    # OS X/macOS
-    'port': ['installed'], 'fink': ['list', '-i'], 'brew': ['list']
+    'port': ['installed'], 'fink': ['list', '-i'], 'brew': ['list']     # OS X/macOS
 }
 
 LABELS = [
@@ -177,12 +176,12 @@ class Utils:
 
     def x_process(self):
         """x_process - get the processes to find name of WM/DE"""
-        if self.x_system() == 'Darwin':
-            procs = str(check_output(('ps', '-u', getuser(), '-o',
-                                      'comm')).decode('utf-8').split('/')).replace('\\n', '')
-        elif self.x_system() == 'Linux':
+        if self.x_system() == 'Linux':
             procs = str(check_output(('ps', '-u', getuser(), '-o', 'comm',
                                       '--no-headers')).decode('utf8')).rstrip('\n').split('\n')
+        elif self.x_system() == 'Darwin':
+            procs = str(check_output(('ps', '-u', getuser(), '-o',
+                                      'comm')).decode('utf-8').split('/')).replace('\\n', '')
         else:
             procs = None
 
@@ -394,10 +393,9 @@ class Packages(Utils):
         for pman in PM_DICT:
             if fExec(pman):
                 PM_DICT[pman].insert(0, pman)
-                if packages != '':
-                    packages = packages + '\n' + self.x_popen(PM_DICT[pman])
-                else:
-                    packages = self.x_popen(PM_DICT[pman]).rstrip('\n')
+                pkgs0 = packages + '\n' + self.x_popen(PM_DICT[pman])
+                pkgs1 = self.x_popen(PM_DICT[pman]).rstrip('\n')
+                packages = pkgs0 if packages != '' else pkgs1
 
         packages = 'n/a' if packages == '' else len(packages.rstrip('\n').split('\n'))
 
@@ -494,7 +492,7 @@ class Disk(Utils):
             disk_color = 2
         if used_percent >= '80':
             disk_color = 0
-        if DISK_WARNING == 1 and left_percent <= int(DISK_WARNING_THRESHOLD):
+        if DISK_WARNING == True and left_percent <= int(DISK_WARNING_THRESHOLD):
             disk_color = 3
 
         # disk_values
