@@ -141,7 +141,7 @@ PARSER = ArgumentParser(formatter_class=RawDescriptionHelpFormatter)
 PARSER.add_argument('-V', '--version', action='version', version=__version__)
 PARSER.add_argument('-b', '--brand', dest='brand', default=None, nargs=1, type=str,
                     help='''You can pass in a Brand/distro name for another color.
-                    The name must exist in DIST_DICT (eg. Fedora, Debian etc.)''')
+                    The name must exist in DIST_DICT (ie. Arch Linux, Fedora, Debian etc.)''')
 
 MACOS = PARSER.add_argument_group('OS X/Darwin (only)')
 MACOS.add_argument('-a', '--apple', dest='apple', action='store_true',
