@@ -45,7 +45,7 @@ if PYTHON_VERSION < '3.6':
          'Please upgrade...'.format(PYTHON_VERSION))
 
 # Version: use --help and --version
-VERSION = 'v0.7.0-20170430-beta (April 30, 2017)' # 18:21:40
+VERSION = 'v0.7.0-20170501-beta (May 1, 2017)' # 03:17:00
 COPYRIGHT = f'Copyright (c) {datetime.now().year} Eric F'
 
 # Settings
@@ -124,14 +124,14 @@ OSX_DICT = {
 
 PM_DICT = {
     'pacman': ['-Q'], 'emerge': ['-ep', 'world'], 'zypper': ['search', '--installed-only'],
-    'dnf': ['list', 'installed'], 'yum': ['list', 'installed'],  'dpkg': ['--get-selections'],
+    'dnf': ['list', 'installed'], 'yum': ['list', 'installed'], 'dpkg': ['--get-selections'],
 
     # OS X/macOS
     'port': ['installed'], 'fink': ['list', '-i'], 'brew': ['list']
 }
 
 LABELS = [
-    'User', 'Hostname', 'Distro', 'Kernel', 'Uptime',  'WindowManager',
+    'User', 'Hostname', 'Distro', 'Kernel', 'Uptime', 'WindowManager',
     'DesktopEnvironment', 'Shell', 'Terminal', 'Packages', 'CPU', 'RAM', 'Disk'
 ]
 
@@ -178,18 +178,20 @@ class Utils:
         """x_system - Linux, Darwin etc"""
         brand = self.capitilize_name(platform)
         pform = brand.replace('2', '').strip()
-        return (pform, 'Linux')[pform == '']        # If empty, return Linux
+        return 'Linux' if pform == '' else pform
 
     def x_process(self):
         """x_process - get the processes to find name of WM/DE"""
         if self.x_system() == 'Darwin':
-            return str(check_output(('ps', '-u', getuser(), '-o',
-                                     'comm')).decode('utf-8').split('/')).replace('\\n', '')
+            procs = str(check_output(('ps', '-u', getuser(), '-o',
+                                      'comm')).decode('utf-8').split('/')).replace('\\n', '')
         elif self.x_system() == 'Linux':
-            return str(check_output(('ps', '-u', getuser(), '-o', 'comm',
-                                     '--no-headers')).decode('utf8')).rstrip('\n').split('\n')
+            procs = str(check_output(('ps', '-u', getuser(), '-o', 'comm',
+                                      '--no-headers')).decode('utf8')).rstrip('\n').split('\n')
         else:
-            return None
+            procs = None
+
+        return procs
 
     @classmethod
     def capitilize_name(cls, text):
@@ -232,8 +234,8 @@ class Output(Utils):
             self.color = DIST_DICT[self.distro]
             return
 
-        self.brand = (BRAND, self.distro)[BRAND is None]
-        self.color = DIST_DICT[self.brand]
+        brand_color = self.distro if BRAND is None else BRAND
+        self.color = DIST_DICT[brand_color]
 
     def x_distro(self, name):
         """x_distro: determing what distro is being used, both name and full name
@@ -287,7 +289,7 @@ class Output(Utils):
         distro_full = sub('Red Hat', 'RHEL', distro_full)
         distro_full = sub('S[Uu]SE', 'SLES', distro_full)
 
-        x_distro_names = { 'name': distro_name, 'full': distro_full }
+        x_distro_names = {'name': distro_name, 'full': distro_full}
         return sub('release | GNU/Linux|Linux |Enterprise |Server ', '', x_distro_names[name])
 
     def append(self, display):
@@ -402,7 +404,7 @@ class Packages(Utils):
                 else:
                     packages = self.x_popen(PM_DICT[pman]).rstrip('\n')
 
-        packages = (len(packages.rstrip('\n').split('\n')), 'n/a')[packages == '']
+        packages = 'n/a' if packages == '' else len(packages.rstrip('\n').split('\n'))
 
         self.key, self.value = 'Packages', packages
 
@@ -459,10 +461,10 @@ class RAM(Utils):
         else:
             mem_total_ram = mem_used = mem_total_free = '-'
 
-        ram_values = r_v = (COLOR_DICT['Clear'][0], COLOR_DICT['Sensors'][0],
-                            COLOR_DICT['Sensors'][1], mem_used,
-                            mem_total_free, mem_total_ram)
-        ram_display = f'{r_v[1]}{r_v[3]}MB{r_v[0]}, {r_v[2]}{r_v[4]}MB{r_v[0]} of {r_v[5]}GB'
+        ram_values = (COLOR_DICT['Clear'][0], COLOR_DICT['Sensors'][0], COLOR_DICT['Sensors'][1],
+                      mem_used, mem_total_free, mem_total_ram)
+        ram_display = f'{ram_values[1]}{ram_values[3]}MB{ram_values[0]}, '
+        ram_display += f'{ram_values[2]}{ram_values[4]}MB{ram_values[0]} of {ram_values[5]}GB'
 
         # RAM: usedMB, freeMB of totalGB
         self.key, self.value = 'RAM', ram_display
@@ -522,7 +524,7 @@ CLASSES = {
 # Start output
 OUT = Output()
 
-LOGOS_DICT = { OUT.distro: '''
+LOGOS_DICT = {OUT.distro: '''
 {color[1]}               +                {results[0]}
 {color[1]}               #                {results[1]}
 {color[1]}              ###               {results[2]}
@@ -546,7 +548,7 @@ LOGOS_DICT = { OUT.distro: '''
 
 # (OSX/macOS only) see --help
 if OUT.distro == 'Darwin' and BRAND == 'Apple':
-    LOGOS_DICT = { OUT.distro: '''
+    LOGOS_DICT = {OUT.distro: '''
 {color[1]}                     ##         {results[0]}
 {color[1]}                  #####         {results[1]}
 {color[1]}                 #####          {results[2]}
