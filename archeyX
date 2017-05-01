@@ -149,12 +149,12 @@ MACOS.add_argument('-a', '--apple', dest='apple', action='store_true',
                    display the Apple instead. (A left-over from the bash-script.)''')
 
 if __name__ == "__main__":
+    BRAND = None
     ARGS = PARSER.parse_args()
     if ARGS.brand and ARGS.brand[0] in DIST_DICT:
         BRAND = ARGS.brand[0]
     elif ARGS.apple is True:
         BRAND = 'Apple'
-    BRAND = None if not ARGS else BRAND
 
 
 # Classes
