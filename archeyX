@@ -45,7 +45,7 @@ if PYTHON_VERSION < '3.6':
          'Please upgrade...'.format(PYTHON_VERSION))
 
 # Version: use --help and --version
-VERSION = 'v0.7.0-20170501-beta (May 1, 2017)' # 07:30:23
+VERSION = 'v0.7.0-20170501-beta (May 1, 2017)' # 20:42:40
 COPYRIGHT = f'Copyright (c) {datetime.now().year} Eric F'
 
 # Settings
@@ -154,7 +154,7 @@ if __name__ == "__main__":
         BRAND = ARGS.brand[0]
     elif ARGS.apple is True:
         BRAND = 'Apple'
-    BRAND = None if not ARGS.brand else BRAND
+    BRAND = None if not ARGS else BRAND
 
 
 # Classes
