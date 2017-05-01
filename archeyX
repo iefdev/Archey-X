@@ -52,12 +52,6 @@ COPYRIGHT = f'Copyright (c) {datetime.now().year} Eric F'
 DISK_WARNING = 1                # default: 1  (set 0 to disable)
 DISK_WARNING_THRESHOLD = 20     # default: 20 (% of diskspace left)
 
-# Custom color (match a name in in COLOR_DICT)
-# You can manually change color here by adding a new line with 'brand'.
-BRAND = None                    # Must have one with 'None' (don't change)
-#BRAND = 'Arch Linux'
-#BRAND = 'Darwin'                # OS X
-
 
 # Dictionaries and lists
 # ------------------------------------------------------------
@@ -161,6 +155,7 @@ if __name__ == "__main__":
         BRAND = ARGS.brand[0]
     elif ARGS.apple is True:
         BRAND = 'Apple'
+    BRAND = None if not ARGS.brand else BRAND
 
 
 # Classes
