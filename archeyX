@@ -45,7 +45,7 @@ if PYTHON_VERSION < '3.6':
          'Please upgrade...'.format(PYTHON_VERSION))
 
 # Version: use --help and --version
-VERSION = 'v0.7.0-20170501-beta (May 1, 2017)' # 20:42:40
+VERSION = 'v0.7 (May 2, 2017)' # 11:59:40
 COPYRIGHT = f'Copyright (c) {datetime.now().year} Eric F'
 
 # Settings
