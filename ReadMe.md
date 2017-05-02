@@ -95,7 +95,7 @@ If you have any feedback, suggestions? Please, use the Issues, Pull requests, se
 
 <!-- Markdown: link & image dfn's -->
 [licenseBadge]: https://img.shields.io/github/license/iEFdev/Archey-X.svg?style=plastic
-[masterBadge]: https://img.shields.io/badge/master-v0.7--beta-778899.svg?style=plastic
+[masterBadge]: https://img.shields.io/badge/master-v0.8--beta-778899.svg?style=plastic
 [latestBadge]: https://img.shields.io/github/release/iEFdev/Archey-X.svg?style=plastic
 [latest]: https://github.com/iEFdev/Archey-X/releases/latest "Latest release"
 [super]: https://github.com/iEFdev/Archey-X/blob/master/archeyX#L303

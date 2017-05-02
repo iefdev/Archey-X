@@ -45,7 +45,7 @@ if PYTHON_VERSION < '3.6':
          'Please upgrade...'.format(PYTHON_VERSION))
 
 # Version: use --help and --version
-VERSION = 'v0.7 (May 2, 2017)' # 11:59:40
+VERSION = 'v0.8-20150502-beta (May 2, 2017)' # 20:51:25
 COPYRIGHT = f'Copyright (c) {datetime.now().year} Eric F'
 
 # Settings
@@ -123,15 +123,14 @@ PM_DICT = {
     'port': ['installed'], 'fink': ['list', '-i'], 'brew': ['list']     # OS X/macOS
 }
 
-LABELS = [
-    'User', 'Hostname', 'Distro', 'Kernel', 'Uptime', 'WindowManager',
-    'DesktopEnvironment', 'Shell', 'Terminal', 'Packages', 'CPU', 'RAM', 'Disk'
-]
+LABELS = ['User', 'Hostname', 'Distro', 'Kernel', 'Uptime', 'WindowManager',
+          'DesktopEnvironment', 'Shell', 'Terminal', 'Packages', 'CPU', 'RAM', 'Disk']
 
-FS_LIST = [  # List of filesystemes to be included in 'df'
-    'ext4', 'ext3', 'ext2', 'reiserfs', 'jfs', 'ntfs', 'fat32',
-    'btrfs', 'fuseblk', 'xfs', 'zfs', 'simfs', 'tempfs',
-]
+CLASSES = {x: x for x in LABELS}
+
+# List of filesystemes to be included in 'df'
+FS_LIST = ['ext4', 'ext3', 'ext2', 'reiserfs', 'jfs', 'ntfs', 'fat32',
+           'btrfs', 'fuseblk', 'xfs', 'zfs', 'simfs', 'tempfs']
 
 
 # Options
@@ -506,14 +505,6 @@ class Disk(Utils):
         self.key, self.value = 'Disk', disk_display
 
 
-CLASSES = {
-    'User': User, 'Hostname': Hostname,
-    'Distro': Distro, 'Kernel': Kernel, 'Uptime': Uptime,
-    'WindowManager': WindowManager, 'DesktopEnvironment': DesktopEnvironment,
-    'Shell': Shell, 'Terminal': Terminal, 'Packages': Packages,
-    'CPU': CPU, 'RAM': RAM, 'Disk': Disk
-}
-
 # Start output
 OUT = Output()
 
@@ -566,7 +557,7 @@ if OUT.distro == 'Darwin' and BRAND == 'Apple':
 # Display output
 if __name__ == "__main__":
     for x in LABELS:
-        OUT.append(CLASSES[x]())
+        OUT.append(vars()[CLASSES[x]]())
     OUT.output()
     exit(0)
 else:
