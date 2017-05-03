@@ -45,7 +45,7 @@ if PYTHON_VERSION < '3.6':
          'Please upgrade...'.format(PYTHON_VERSION))
 
 # Version: use --help and --version
-VERSION = 'v0.8-20150502-beta (May 2, 2017)' # 20:51:25
+VERSION = 'v0.8-20150504-beta (May 4, 2017)' # 02:16:45
 COPYRIGHT = f'Copyright (c) {datetime.now().year} Eric F'
 
 # Settings
@@ -133,12 +133,16 @@ FS_LIST = ['ext4', 'ext3', 'ext2', 'reiserfs', 'jfs', 'ntfs', 'fat32',
            'btrfs', 'fuseblk', 'xfs', 'zfs', 'simfs', 'tempfs']
 
 
-# Options
+# ArgumentParser - help/options
 # ------------------------------------------------------------
-__version__ = f'%(prog)s {VERSION}\n{COPYRIGHT}\n '
-PARSER = ArgumentParser(formatter_class=RawDescriptionHelpFormatter)
-PARSER.add_argument('-V', '--version', action='version', version=__version__)
-PARSER.add_argument('-b', '--brand', dest='brand', default=None, nargs=1, type=str,
+__version__ = f'%(prog)s {VERSION}\n{COPYRIGHT}\n'
+PARSER = ArgumentParser(prog='archeyX', formatter_class=RawDescriptionHelpFormatter,
+                        add_help=False, conflict_handler='resolve')
+PARSER.add_argument('-h', '--help', action='help', help='Show this help message and exit')
+PARSER.add_argument('-V', '--version', action='version', version=__version__,
+                    help='Show program\'s version number and exit')
+PARSER.add_argument('-b', dest='brand', default=None, nargs=1, type=str) # @todo: column width
+PARSER.add_argument('--brand', dest='brand', default=None, nargs=1, type=str,
                     help='''You can pass in a Brand/distro name for another color.
                     The name must exist in DIST_DICT (ie. Arch Linux, Fedora, Debian etc.)''')
 
@@ -190,26 +194,17 @@ class Utils:
     def capitilize_name(cls, text):
         """capitilize_name - fooBar becomes FooBar and not Foobar"""
         txt = comp(r'\s+').sub(' ', text).strip()
-        text = ' '.join(word[0].upper() + word[1:] for word in txt.split(' '))
-        return text
+        return ' '.join(word[0].upper() + word[1:] for word in txt.split(' '))
 
-    # read_release_files(<file>, <search>[, <split char>])
     @classmethod
     def read_release_files(cls, file, search):
-        """read_release_files - reading misc release files"""
-        try:
-            file = open(file, 'r')
-            with file as lines:
-                for rel in lines:
-                    if match(search, rel.lower()):
-                        search = rel.replace('"', '').strip().split('=')[1]
-                        break
-            return search.replace('\"', '')
-        except (TypeError, NameError):
-            pass
-        finally:
-            if file is not None:
-                file.close()
+        """read_release_files - reading misc release files
+        # read_release_files(<file>, <search>[, <split char>])"""
+        with open(file, 'r') as f:
+            for rel in f:
+                if match(search, rel.lower()):
+                    return rel.replace('"', '').strip().split('=')[1]
+            return
 
 
 class Output(Utils):
@@ -218,10 +213,9 @@ class Output(Utils):
     results.extend([''] * (18-len(LABELS)))
 
     def __init__(self):
-        self.distro = self.x_distro('name').rstrip()
-        # Fallback for missing entry in COLOR_DICT
-        if self.distro not in DIST_DICT:
-            self.distro = 'GNU/Linux'
+        """default to GNU/Linux if no distro"""
+        distro = self.x_distro('name').rstrip()
+        self.distro = 'GNU/Linux' if distro not in DIST_DICT else distro
 
         if BRAND not in DIST_DICT:
             self.color = DIST_DICT[self.distro]
@@ -235,6 +229,7 @@ class Output(Utils):
         platform.linux_distribution() is not used. It's deprecated and flagged for removal
         """
         distro_name = distro_full = ''
+
         if self.x_system() == 'Darwin':
             get_name = self.x_popen(['sw_vers', '-productName'])
             get_version = self.x_popen(['sw_vers', '-productVersion'])
@@ -253,13 +248,12 @@ class Output(Utils):
         elif self.x_system() == 'Linux':
             os_release_file = '/etc/os-release'
             os_release_file_in_lib = '/usr/lib/os-release'
-            lsb_release_file = '/etc/lsb-release'
-            issue_file = '/etc/issue'
+            lsb_release_file, issue_file = '/etc/lsb-release', '/etc/issue'
 
             if path.exists(os_release_file):
                 distro_name = self.read_release_files(os_release_file, 'name')
                 distro_full = self.read_release_files(os_release_file, 'pretty')
-            elif path.exists(os_release_file_in_lib):     # in case of missing symlink
+            elif path.exists(os_release_file_in_lib):   # in case of missing symlink
                 distro_name = self.read_release_files(os_release_file_in_lib, 'name')
                 distro_full = self.read_release_files(os_release_file_in_lib, 'pretty')
             elif path.exists(lsb_release_file):
@@ -269,15 +263,10 @@ class Output(Utils):
                 distro_name = self.x_popen(['lsb_release', '-si'])
                 distro_full = self.x_popen(['lsb_release', '-sd'])
             elif path.exists(issue_file):
-                try:
-                    issue = open(issue_file, 'r')
+                with open(issue_file, 'r') as issue:
                     i = issue.readline()
                     distro_name = sub('Red', 'RHEL', i.split(' ')[0].rstrip())
                     distro_full = i.split(' \\')[0].rstrip()
-                except (ValueError, NameError):
-                    pass
-                finally:
-                    issue.close()
 
         distro_full = sub('Red Hat', 'RHEL', distro_full)
         distro_full = sub('S[Uu]SE', 'SLES', distro_full)
@@ -292,7 +281,7 @@ class Output(Utils):
 
     def output(self):
         """output: matching name/colors"""
-        print(LOGOS_DICT[self.distro].format(color=COLOR_DICT[self.color], results=self.results))
+        return(LOGOS_DICT[self.distro].format(color=COLOR_DICT[self.color], results=self.results))
 
 
 class User(Utils):
@@ -318,9 +307,8 @@ class Kernel(Utils):
     """Get the kernel name"""
     def __init__(self):
         if self.x_system() == 'Darwin':
-            # Darwin 11.x.x (x86_64)
-            kernel = f'{uname()[0]} {uname()[2]} {uname()[4]}'
-            #kernel = sub('.*:+', '', uname()[3]).strip('REL.*')  # xnu-123...
+            kernel = f'{uname()[0]} {uname()[2]} {uname()[4]}'  # Darwin 11.x.x (x86_64)
+            #kernel = sub('.*:+', '', uname()[3]).strip('REL.*') # xnu-123...
         else:
             kernel = self.x_popen(['uname', '-r'])
 
@@ -335,7 +323,8 @@ class Uptime(Utils):
             boot_time = boot_time.split()[3][:-1]
             boot_time = int(round(time())) - int(boot_time)
         else:
-            boot_time = open('/proc/uptime').read().split('.')[0]
+            with open('/proc/uptime', 'r') as t:
+                boot_time = t.read().split('.')[0]
 
         uptime = f'{timedelta(seconds=int(boot_time))}'[:-3]
         self.key, self.value = 'Uptime', uptime
@@ -359,6 +348,7 @@ class DesktopEnvironment(Utils):
     """Get Desktop Environment"""
     def __init__(self):
         desktop_enviroment = ''
+
         for key in DE_DICT:
             if key in self.x_process():
                 desktop_enviroment = DE_DICT[key]
@@ -383,7 +373,7 @@ class Packages(Utils):
     """Get the number of installed packages"""
     def __init__(self):
         packages = ''
-        if fExec('dnf') and fExec('yum'):  # eg. if Fedora, skip yum
+        if fExec('dnf') and fExec('yum'):   # ie. if Fedora, skip yum
             del PM_DICT['yum']
         elif fExec('yum'):
             del PM_DICT['dnf']
@@ -417,7 +407,8 @@ class CPU(Utils):
 
 
 class RAM(Utils):
-    """Calculate the RAM usage and format to display"""
+    """Calculate the RAM usage and format to display
+    # RAM: usedMB, freeMB of totalGB"""
     def __init__(self):
         if self.x_system() == 'Linux':
             raminfo = self.x_popen(['free', '-m', '--si']).split('\n')
@@ -457,7 +448,6 @@ class RAM(Utils):
         ram_display = f'{ram_values[1]}{ram_values[3]}MB{ram_values[0]}, '
         ram_display += f'{ram_values[2]}{ram_values[4]}MB{ram_values[0]} of {ram_values[5]}GB'
 
-        # RAM: usedMB, freeMB of totalGB
         self.key, self.value = 'RAM', ram_display
 
 
@@ -481,19 +471,16 @@ class Disk(Utils):
             disk_vars = (total[2], capacity, total[1], total[3], total[0].replace('/dev/', ''))
 
         used_percent = left_percent = '-'
-        used_percent = capacity.replace('%', '')
-        left_percent = (100 - int(used_percent))
+        used_percent = int(capacity.replace('%', ''))
+        left_percent = (100 - used_percent)
 
-        if used_percent <= '50':    # using str to avoid str -> int errs (pylint)
-            disk_color = 1
-        if used_percent > '50' and used_percent < '80':
-            disk_color = 2
-        if used_percent >= '80':
-            disk_color = 0
-        if DISK_WARNING == 1 and left_percent <= int(DISK_WARNING_THRESHOLD):
+        disk_color = 1
+        disk_color = 2 if used_percent >= 50 else disk_color
+        disk_color = 0 if used_percent >= 80 else disk_color
+        if DISK_WARNING == 1 and left_percent <= DISK_WARNING_THRESHOLD:
             disk_color = 3
 
-        # disk_values
+        # d_v = disk_vars
         d_v = (COLOR_DICT['Clear'][0], COLOR_DICT['Sensors'][disk_color],
                # used (capacity) of size, available (disknr)
                disk_vars[0], disk_vars[1], disk_vars[2], disk_vars[3], disk_vars[4])
@@ -557,7 +544,7 @@ if OUT.distro == 'Darwin' and BRAND == 'Apple':
 if __name__ == "__main__":
     for x in LABELS:
         OUT.append(vars()[CLASSES[x]]())
-    OUT.output()
+    print(OUT.output())
     exit(0)
 else:
     exit(1)
