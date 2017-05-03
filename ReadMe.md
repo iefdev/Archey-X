@@ -98,14 +98,12 @@ If you have any feedback, suggestions? Please, use the Issues, Pull requests, se
 [masterBadge]: https://img.shields.io/badge/master-v0.8--beta-778899.svg?style=plastic
 [latestBadge]: https://img.shields.io/github/release/iEFdev/Archey-X.svg?style=plastic
 [latest]: https://github.com/iEFdev/Archey-X/releases/latest "Latest release"
-[super]: https://github.com/iEFdev/Archey-X/blob/master/archeyX#L303
 [dja]: https://github.com/djmelik/archey "Archey"
 [djm]: https://github.com/djmelik "Melik Manukyan"
 [scrap]: https://raw.githubusercontent.com/iEFdev/Archey-X/master/screenshot.png "Screenshot of Archey X"
 [scraps]: https://github.com/iEFdev/Archey-X/wiki/Screenshots "More Screenshots"
 [x2]: https://github.com/iEFdev/Archey-X/wiki/_Images/screenshot_x2.png "Screenshot(s) of Archey X"
 [myterm]: https://github.com/iEFdev/myTerm "My Terminal theme"
-[jy]: https://github.com/iEFdev/junkyard "iEFdev/Junkyard"
 [about]: https://github.com/iEFdev/Archey-X/wiki/About "About Archey X"
 [credits]: https://github.com/iEFdev/Archey-X/wiki/Credits "Credits and copyright"
 [prefs]: https://github.com/iEFdev/Archey-X/wiki/Settings-and-Colors "Settings and Colors"
