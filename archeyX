@@ -217,12 +217,8 @@ class Output(Utils):
         distro = self.x_distro('name').rstrip()
         self.distro = 'GNU/Linux' if distro not in DIST_DICT else distro
 
-        if BRAND not in DIST_DICT:
-            self.color = DIST_DICT[self.distro]
-            return
-
         brand_color = self.distro if BRAND is None else BRAND
-        self.color = DIST_DICT[brand_color]
+        self.color = DIST_DICT.get(brand_color, distro)
 
     def x_distro(self, name):
         """x_distro: determing what distro is being used, both name and full name
@@ -395,13 +391,11 @@ class CPU(Utils):
     def __init__(self):
         cpu_info = 'n/a'
         if self.x_system() == 'Linux':
-            cpu = open('/proc/cpuinfo')
-            file = cpu.readlines()
-            cpu_info = sub('  +', ' ', file[4])
-            cpu.close()
+            with open('./x_proc/cpuinfo') as cpu:
+                cpu_info = sub('  +', ' ', cpu.readlines()[4])
         elif self.x_system() == 'Darwin':
-            cpu_info = self.x_popen(['sysctl', '-n', 'machdep.cpu.brand_string'])
-            cpu_info = sub('  +', ' ', cpu_info)
+            cpu = self.x_popen(['sysctl', '-n', 'machdep.cpu.brand_string'])
+            cpu_info = sub('  +', ' ', cpu)
 
         self.key, self.value = 'CPU', sub('model name\t: |CPU ', '', cpu_info).strip()
 
