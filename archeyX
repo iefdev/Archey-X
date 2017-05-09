@@ -391,7 +391,7 @@ class CPU(Utils):
     def __init__(self):
         cpu_info = 'n/a'
         if self.x_system() == 'Linux':
-            with open('./x_proc/cpuinfo') as cpu:
+            with open('/proc/cpuinfo') as cpu:
                 cpu_info = sub('  +', ' ', cpu.readlines()[4])
         elif self.x_system() == 'Darwin':
             cpu = self.x_popen(['sysctl', '-n', 'machdep.cpu.brand_string'])
