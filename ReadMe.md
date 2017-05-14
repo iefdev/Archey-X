@@ -25,7 +25,9 @@ _A few more Screenshots can be found in the [Wiki …»][scraps]._
 
 Copy the file to `/usr/local/bin`, and give it permission to execute.
 
-	sudo install -m 0755 archeyX /usr/local/bin
+```bash
+sudo install -v -m 0755 archeyX /usr/local/bin
+```
 
 _(make sure `/usr/local/bin` is in your `PATH`)_
 
@@ -41,13 +43,15 @@ To load at start. Add to your `.bashrc` _(or `.bash_profile`)_:
 [[ `type archeyX 2> /dev/null` && $UID != 0 ]] && archeyX
 ```
 
-**Note:** When using `scp` over the network and logging into a machine with `archeyX` loading up... It _might_ cause an error about output. To avoid that issue, use this instead:
+> **Note:** When using `scp` over the network and logging into a machine with `archeyX` loading up... It _might_ cause an error about output. It's about being interactive or not. You can try/use one of these to surround it with:
 
-```bash
-# Load archeyX (if installed)
-# If not running interactively, don't do anything
-[[ -n "$PS1" && `type archeyX 2> /dev/null` && $UID != 0 ]] && archeyX
-```
+> ```bash
+> [ -z $PS1 ]
+> [ -v $PS1 ]  # bash 4.2+
+> [ -t 1 ]
+> [[ $- =~ i ]]
+> [[ $- == *i* ]]
+> ```
 
 
 ## Settings and Colors
