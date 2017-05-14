@@ -35,17 +35,16 @@ from os import getenv, path, uname
 from re import sub, match, compile as comp
 from socket import gethostname
 from subprocess import check_output, PIPE, Popen
-from sys import platform, version_info
+from sys import platform, version as python_version
 from time import time
 
 # Inform about python3.6
-PYTHON_VERSION = '{0}.{1}'.format(version_info.major, version_info.minor)
-if PYTHON_VERSION < '3.6':
+if vcomp(python_version[0:3]) < vcomp('3.6'):
     exit('Archey X requires Python 3.6+\nYour version is: Python {0}\n'
-         'Please upgrade...'.format(PYTHON_VERSION))
+         'Please upgrade...'.format(python_version[0:3]))
 
 # Version: use --help and --version
-VERSION = 'v0.8-20150504-beta (May 4, 2017)' # 02:16:45
+VERSION = 'v0.8-20150514-beta (May 14, 2017)' # 02:13:25
 COPYRIGHT = f'Copyright (c) {datetime.now().year} Eric F'
 
 # Settings
@@ -53,7 +52,7 @@ DISK_WARNING = 1                # default: 1 (set 0 to disable)
 DISK_WARNING_THRESHOLD = 20     # default: 20 (% of diskspace left)
 
 
-# Dictionaries and lists
+# Dictionaries, lists and tuples
 # ------------------------------------------------------------
 COLOR_DICT = {   # (@todo: simplify with 1 line/color)
     'color00': ['\x1b[0;33m', '\x1b[1;37m'],    # default/fallback (yellow/white)
@@ -68,9 +67,8 @@ COLOR_DICT = {   # (@todo: simplify with 1 line/color)
     'color09': ['\x1b[0;32m', '\x1b[1;32m'],    # OpenSuse (green/green)
     'color10': ['\x1b[0;34m', '\x1b[1;32m'],    # CentOS (blue/green)
 
-    # Sensors: [<red>, <yellow>, <green>, <blinking red>]
-    'Sensors': ['\x1b[0;31m', '\x1b[0;32m', '\x1b[0;33m', '\x1b[5;31m'],
-    'Clear': ['\x1b[0m']
+    # Varies: [<red>, <yellow>, <green>, <blinking red> <clear>]
+    'varies': ['\x1b[0;31m', '\x1b[0;32m', '\x1b[0;33m', '\x1b[5;31m', '\x1b[0m'],
 }
 
 DIST_DICT = {
@@ -110,11 +108,10 @@ WM_DICT = {
     'Spectacle': 'Spectacle', 'TylerWM': 'TylerWM', 'Xmonad': 'Xmonad'
 }
 
-OSX_DICT = {
-    '10.5': 'Leopard', '10.6': 'Snow Leopard', '10.7': 'Lion',
-    '10.8': 'Mountain Lion', '10.9': 'Mavericks', '10.10': 'Yosemite',
-    '10.11': 'El Capitan', '10.12': 'Sierra'
-}
+OSX_VERS = ('Tiger', 'Leopard', 'Snow Leopard', 'Lion', 'Mountain Lion', 'Mavericks',
+            'Yosemite', 'El Capitan', 'Sierra')
+
+OSX_DICT = {f'10.{x}': y for x,y in enumerate(OSX_VERS, 4)}
 
 PM_DICT = {
     'pacman': ['-Q'], 'emerge': ['-ep', 'world'], 'zypper': ['search', '--installed-only'],
@@ -123,14 +120,14 @@ PM_DICT = {
     'port': ['installed'], 'fink': ['list', '-i'], 'brew': ['list']     # OS X/macOS
 }
 
-LABELS = ['User', 'Hostname', 'Distro', 'Kernel', 'Uptime', 'WindowManager',
-          'DesktopEnvironment', 'Shell', 'Terminal', 'Packages', 'CPU', 'RAM', 'Disk']
+LABELS = ('User', 'Hostname', 'Distro', 'Kernel', 'Uptime', 'WindowManager',
+          'DesktopEnvironment', 'Shell', 'Terminal', 'Packages', 'CPU', 'RAM', 'Disk')
 
 CLASSES = {x: x for x in LABELS}
 
 # List of filesystemes to be included in 'df'
-FS_LIST = ['ext4', 'ext3', 'ext2', 'reiserfs', 'jfs', 'ntfs', 'fat32',
-           'btrfs', 'fuseblk', 'xfs', 'zfs', 'simfs', 'tempfs']
+FS_TYPES = ('btrfs', 'ext2', 'ext3', 'ext4', 'fat32', 'fuseblk', 'hfs', 'jfs',
+            'msdos', 'ntfs', 'reiserfs', 'simfs', 'tempfs', 'xfs', 'zfs')
 
 
 # ArgumentParser - help/options
@@ -217,22 +214,23 @@ class Output(Utils):
         distro = self.x_distro('name').rstrip()
         self.distro = 'GNU/Linux' if distro not in DIST_DICT else distro
 
-        brand_color = self.distro if BRAND is None else BRAND
+        brand_color = self.distro if BRAND not in DIST_DICT else BRAND
         self.color = DIST_DICT.get(brand_color, distro)
 
     def x_distro(self, name):
         """x_distro: determing what distro is being used, both name and full name
         platform.linux_distribution() is not used. It's deprecated and flagged for removal
         """
-        distro_name = distro_full = ''
+        distro_name = distro_full = '' if self.x_system() == 'Darwin' else 'GNU/Linux'
 
         if self.x_system() == 'Darwin':
             get_name = self.x_popen(['sw_vers', '-productName'])
             get_version = self.x_popen(['sw_vers', '-productVersion'])
             osx_name = self.x_popen(['sw_vers', '-buildVersion'])
 
-            if get_version[:-2] in OSX_DICT and not OSX_DICT[get_version[:-2]] is None:
-                osx_name = OSX_DICT[get_version[:-2]]
+            get_name = 'macOS' if vcomp(get_version[:-2]) >= vcomp('10.12') else get_name \
+                       or get_name if vcomp(get_version[:-2]) <= vcomp('10.7') else 'OS X'
+            osx_name = OSX_DICT.get(get_version[:-2], osx_name) # get fancy names
 
             distro_name = self.x_system()
             distro_full = f'{get_name} {get_version} ({osx_name})'
@@ -242,24 +240,22 @@ class Output(Utils):
         #    distro = distro_full = self.x_system()
 
         elif self.x_system() == 'Linux':
-            os_release_file = '/etc/os-release'
-            os_release_file_in_lib = '/usr/lib/os-release'
-            lsb_release_file, issue_file = '/etc/lsb-release', '/etc/issue'
+            rel_files = ('/etc/os-release', '/usr/lib/os-release', # in case of missing symlink
+                        '/etc/lsb-release', '/etc/issue')
 
-            if path.exists(os_release_file):
-                distro_name = self.read_release_files(os_release_file, 'name')
-                distro_full = self.read_release_files(os_release_file, 'pretty')
-            elif path.exists(os_release_file_in_lib):   # in case of missing symlink
-                distro_name = self.read_release_files(os_release_file_in_lib, 'name')
-                distro_full = self.read_release_files(os_release_file_in_lib, 'pretty')
-            elif path.exists(lsb_release_file):
-                distro_name = self.read_release_files(lsb_release_file, 'distrib_id')
-                distro_full = self.read_release_files(lsb_release_file, 'distrib_description')
+            os_release = rel_files[0] if path.exists(rel_files[0]) else rel_files[1]
+
+            if path.exists(os_release):
+                distro_name = self.read_release_files(os_release, 'name')
+                distro_full = self.read_release_files(os_release, 'pretty')
             elif fExec('lsb_release'):
                 distro_name = self.x_popen(['lsb_release', '-si'])
                 distro_full = self.x_popen(['lsb_release', '-sd'])
-            elif path.exists(issue_file):
-                with open(issue_file, 'r') as issue:
+            elif path.exists(rel_files[2]):
+                distro_name = self.read_release_files(rel_files[2], 'distrib_id')
+                distro_full = self.read_release_files(rel_files[2], 'distrib_description')
+            elif path.exists(rel_files[3]):
+                with open(rel_files[3], 'r') as issue:
                     i = issue.readline()
                     distro_name = sub('Red', 'RHEL', i.split(' ')[0].rstrip())
                     distro_full = i.split(' \\')[0].rstrip()
@@ -273,7 +269,7 @@ class Output(Utils):
     def append(self, display):
         """append: preparing the output"""
         self.results.append(f'{COLOR_DICT[self.color][1]}{display.key}: '
-                            f'{COLOR_DICT["Clear"][0]}{display.value}')
+                            f'{COLOR_DICT["varies"][-1]}{display.value}')
 
     def output(self):
         """output: matching name/colors"""
@@ -303,7 +299,7 @@ class Kernel(Utils):
     """Get the kernel name"""
     def __init__(self):
         if self.x_system() == 'Darwin':
-            kernel = f'{uname()[0]} {uname()[2]} {uname()[4]}'  # Darwin 11.x.x (x86_64)
+            kernel = f'{uname()[0]} {uname()[2]} {uname()[4]}'  # Darwin 12.3.4 x86_64
             #kernel = sub('.*:+', '', uname()[3]).strip('REL.*') # xnu-123...
         else:
             kernel = self.x_popen(['uname', '-r'])
@@ -327,9 +323,9 @@ class Uptime(Utils):
 
 
 class WindowManager(Utils):
-    """Get the name of the Window Manager"""
+    """Get the name of the Window Manager
+    # Default WM's: OS X = Quartz, Linux = ''"""
     def __init__(self):
-        # Default WM's: OS X = Quartz, Linux = ''
         window_manager = 'Quartz' if self.x_system() == 'Darwin' else ''
 
         for key in WM_DICT:
@@ -437,7 +433,7 @@ class RAM(Utils):
         else:
             mem_total_ram = mem_used = mem_total_free = '-'
 
-        ram_values = (COLOR_DICT['Clear'][0], COLOR_DICT['Sensors'][0], COLOR_DICT['Sensors'][1],
+        ram_values = (COLOR_DICT['varies'][-1], COLOR_DICT['varies'][0], COLOR_DICT['varies'][1],
                       mem_used, mem_total_free, mem_total_ram)
         ram_display = f'{ram_values[1]}{ram_values[3]}MB{ram_values[0]}, '
         ram_display += f'{ram_values[2]}{ram_values[4]}MB{ram_values[0]} of {ram_values[5]}GB'
@@ -446,22 +442,21 @@ class RAM(Utils):
 
 
 class Disk(Utils):
-    """Calculate the disk usage and format to display"""
+    """Calculate the disk usage and format to display
+    # disk_vars: used, capacity, size, available, disknr
+    # Display: used (%) of total, N available (disk)"""
     def __init__(self):
         if self.x_system() == 'Linux':
-            df_cmd = ['df', '-HlPT', '--total']
-            filesystems = tuple(zip(('-t',) * len(FS_LIST), FS_LIST))
-            pass1 = self.x_popen(list(chain(df_cmd, *filesystems)))
+            filesystems = tuple(zip(('-t',) * len(FS_TYPES), FS_TYPES))
+            pass1 = self.x_popen(list(chain(['df', '-HlPT', '--total'], *filesystems)))
             pass2 = self.x_popen(['df', '/boot']).splitlines()[1].split()[0]
             total = pass1.splitlines()[-1].split()
             capacity = total[5]
-            # disk_vars: used, capacity, size, available, disknr
             disk_vars = (total[3], capacity, total[2], total[4], pass2.replace('/dev/', ''))
         elif self.x_system() == 'Darwin':
-            pass1 = self.x_popen(['df', '-Hl'])
+            pass1 = self.x_popen(['df', '-HT', ','.join(FS_TYPES)])
             total = pass1.splitlines()[1].split()
             capacity = total[4]
-            # disk_vars: used, capacity, size, available, disknr
             disk_vars = (total[2], capacity, total[1], total[3], total[0].replace('/dev/', ''))
 
         used_percent = left_percent = '-'
@@ -474,14 +469,11 @@ class Disk(Utils):
         if DISK_WARNING == 1 and left_percent <= DISK_WARNING_THRESHOLD:
             disk_color = 3
 
-        # d_v = disk_vars
-        d_v = (COLOR_DICT['Clear'][0], COLOR_DICT['Sensors'][disk_color],
-               # used (capacity) of size, available (disknr)
-               disk_vars[0], disk_vars[1], disk_vars[2], disk_vars[3], disk_vars[4])
-        disk_display = f'{d_v[1]}{d_v[2]}B{d_v[0]} ({d_v[3]}) of {d_v[4]}B, '
-        disk_display += f'{d_v[5]}B available ({d_v[6]})'
+        dv = (COLOR_DICT['varies'][-1], COLOR_DICT['varies'][disk_color],
+              disk_vars[0], disk_vars[1], disk_vars[2], disk_vars[3], disk_vars[4])
+        disk_display = f'{dv[1]}{dv[2]}B{dv[0]} ({dv[3]}) of {dv[4]}B, '
+        disk_display += f'{dv[5]}B available ({dv[6]})'
 
-        # Display: used (%) of total, N available (disk)
         self.key, self.value = 'Disk', disk_display
 
 
