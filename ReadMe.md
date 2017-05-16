@@ -9,6 +9,11 @@ This is a forked/ported version of the original script: [Archey][dja], by [djmel
 
 ### Screenshots
 
+Here's a small demo you can watch at Vimeo.
+
+[![][vimeo_poster]][vimeo]
+
+
 v0.7.0-beta on OS X. (Terminal theme: [myTerm][myterm].)
 
 ![][scrap]
@@ -104,7 +109,9 @@ If you have any feedback, suggestions? Please, use the Issues, Pull requests, se
 [latest]: https://github.com/iEFdev/Archey-X/releases/latest "Latest release"
 [dja]: https://github.com/djmelik/archey "Archey"
 [djm]: https://github.com/djmelik "Melik Manukyan"
-[scrap]: https://raw.githubusercontent.com/iEFdev/Archey-X/master/screenshot.png "Screenshot of Archey X"
+[vimeo]: https://vimeo.com/217440806 "Archey X (demo)"
+[vimeo_poster]: https://raw.githubusercontent.com/iEFdev/Archey-X/master/images/vimeo_poster.png "Archey X (demo)"
+[scrap]: https://raw.githubusercontent.com/iEFdev/Archey-X/master/images/screenshot.png "Screenshot of Archey X"
 [scraps]: https://github.com/iEFdev/Archey-X/wiki/Screenshots "More Screenshots"
 [x2]: https://github.com/iEFdev/Archey-X/wiki/_Images/screenshot_x2.png "Screenshot(s) of Archey X"
 [myterm]: https://github.com/iEFdev/myTerm "My Terminal theme"
