@@ -4,6 +4,8 @@
 
 ![][masterBadge] [![GitHub release][latestBadge]][latest]
 
+![][pythonVersion]
+
 This is a forked/ported version of the original script: [Archey][dja], by [djmelek][djm] - made to be X compatible with both OS X and misc GNU/Linux distributions - hence the name: Archey **X**. _(Previously an OS X port of Archey.)_ […»][about]
 
 
@@ -74,9 +76,11 @@ See [Settings and Colors][prefs] in the Wiki
 _Please, report working distributions [here][iss1]._
 
 
-## Credits and copright
+## License, credits and copyright
 
-See [Credits][credits] in the Wiki
+![][licenseBadge]
+
+See [Credits][credits] in the Wiki…
 
 
 ## Contributing
@@ -103,6 +107,7 @@ If you have any feedback, suggestions? Please, use the Issues, Pull requests, se
 · Eric ([@iEFdev][twitter])
 
 <!-- Markdown: link & image dfn's -->
+[pythonVersion]: https://img.shields.io/badge/Python-%3E%3D_3.6-FAC826.svg?style=plastic&colorA=3D75AD&logoWidth=14
 [licenseBadge]: https://img.shields.io/github/license/iEFdev/Archey-X.svg?style=plastic
 [masterBadge]: https://img.shields.io/badge/master-v0.8--beta-778899.svg?style=plastic
 [latestBadge]: https://img.shields.io/github/release/iEFdev/Archey-X.svg?style=plastic
