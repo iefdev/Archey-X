@@ -44,7 +44,7 @@ if vcomp(python_version[0:3]) < vcomp('3.6'):
          'Please upgrade...'.format(python_version[0:3]))
 
 # Version: use --help and --version
-VERSION = 'v0.8-20150514-beta (May 14, 2017)' # 02:13:25
+VERSION = 'v0.8-20150518-beta (May 18, 2017)' # 10:18:15
 COPYRIGHT = f'Copyright (c) {datetime.now().year} Eric F'
 
 # Settings
@@ -54,35 +54,24 @@ DISK_WARNING_THRESHOLD = 20     # default: 20 (% of diskspace left)
 
 # Dictionaries, lists and tuples
 # ------------------------------------------------------------
-COLOR_DICT = {   # (@todo: simplify with 1 line/color)
-    'color00': ['\x1b[0;33m', '\x1b[1;37m'],    # default/fallback (yellow/white)
-    'color01': ['\x1b[0;34m', '\x1b[1;34m'],    # Arch (blue/blue)
-    'color02': ['\x1b[0;37m', '\x1b[1;30m'],    # Crunchbang (grey/grey)
-    'color03': ['\x1b[0;36m', '\x1b[1;36m'],    # Darwin, Mac OS X (cyan/cyan)
-    'color04': ['\x1b[0;34m', '\x1b[1;37m'],    # Fedora (blue/white)
-    'color05': ['\x1b[0;31m', '\x1b[1;31m'],    # Debian, *buntu, RHEL (red/red)
-    'color06': ['\x1b[0;37m', '\x1b[1;35m'],    # Gentoo (white/purple)
-    'color07': ['\x1b[0;32m', '\x1b[1;37m'],    # Mint (white/green)
-    'color08': ['\x1b[0;32m', '\x1b[1;30m'],    # SLES (grey/green)
-    'color09': ['\x1b[0;32m', '\x1b[1;32m'],    # OpenSuse (green/green)
-    'color10': ['\x1b[0;34m', '\x1b[1;32m'],    # CentOS (blue/green)
+COLOR_PAIRS = (
+    (33, 37), (34, 34), (37, 30), (36, 36), # yellow/white, blue/blue, grey/grey, cyan/cyan
+    (34, 37), (31, 31), (37, 35), (32, 37), # blue/white, red/red, white/purple, white/green
+    (32, 30), (32, 32), (34, 32),           # green/grey, green/green, blue/green
+)
 
-    # Varies: [<red>, <yellow>, <green>, <blinking red> <clear>]
-    'varies': ['\x1b[0;31m', '\x1b[0;32m', '\x1b[0;33m', '\x1b[5;31m', '\x1b[0m'],
-}
+COLOR_VARIES = {'varies': ('\x1b[0;31m', '\x1b[0;32m', '\x1b[0;33m', '\x1b[5;31m', '\x1b[0m')}
+COLOR_COMPR = {f'color{c:02d}': (f'\x1b[0;{n}m', f'\x1b[1;{b}m')
+               for c, (n, b) in enumerate(COLOR_PAIRS)}
+
+COLOR_DICT = {**COLOR_COMPR, **COLOR_VARIES}
 
 DIST_DICT = {
-    'GNU/Linux': 'color00',
-    'Arch Linux': 'color01',
-    'Crunchbang': 'color02',
-    'Darwin': 'color03', 'Mac OS X': 'color03',
-    'Fedora': 'color04',
+    'GNU/Linux': 'color00', 'Arch Linux': 'color01', 'Crunchbang': 'color02',
+    'Darwin': 'color03', 'Mac OS X': 'color03', 'Fedora': 'color04',
     'RHEL': 'color05', 'Debian': 'color05', 'Ubuntu': 'color05',
-    'Gentoo': 'color06',
-    'LinuxMint': 'color07',
-    'SLES': 'color08',
-    'OpenSUSE': 'color09',
-    'CentOS': 'color10',
+    'Gentoo': 'color06', 'LinuxMint': 'color07', 'SLES': 'color08',
+    'OpenSUSE': 'color09', 'CentOS': 'color10',
 }
 
 DE_DICT = {
@@ -111,7 +100,7 @@ WM_DICT = {
 OSX_VERS = ('Tiger', 'Leopard', 'Snow Leopard', 'Lion', 'Mountain Lion', 'Mavericks',
             'Yosemite', 'El Capitan', 'Sierra')
 
-OSX_DICT = {f'10.{x}': y for x,y in enumerate(OSX_VERS, 4)}
+OSX_DICT = {f'10.{x}': y for x, y in enumerate(OSX_VERS, 4)}
 
 PM_DICT = {
     'pacman': ['-Q'], 'emerge': ['-ep', 'world'], 'zypper': ['search', '--installed-only'],
@@ -197,8 +186,8 @@ class Utils:
     def read_release_files(cls, file, search):
         """read_release_files - reading misc release files
         # read_release_files(<file>, <search>[, <split char>])"""
-        with open(file, 'r') as f:
-            for rel in f:
+        with open(file, 'r') as lines:
+            for rel in lines:
                 if match(search, rel.lower()):
                     return rel.replace('"', '').strip().split('=')[1]
             return
@@ -241,7 +230,7 @@ class Output(Utils):
 
         elif self.x_system() == 'Linux':
             rel_files = ('/etc/os-release', '/usr/lib/os-release', # in case of missing symlink
-                        '/etc/lsb-release', '/etc/issue')
+                         '/etc/lsb-release', '/etc/issue')
 
             os_release = rel_files[0] if path.exists(rel_files[0]) else rel_files[1]
 
@@ -273,7 +262,7 @@ class Output(Utils):
 
     def output(self):
         """output: matching name/colors"""
-        return(LOGOS_DICT[self.distro].format(color=COLOR_DICT[self.color], results=self.results))
+        return LOGOS_DICT[self.distro].format(color=COLOR_DICT[self.color], results=self.results)
 
 
 class User(Utils):
@@ -315,8 +304,8 @@ class Uptime(Utils):
             boot_time = boot_time.split()[3][:-1]
             boot_time = int(round(time())) - int(boot_time)
         else:
-            with open('/proc/uptime', 'r') as t:
-                boot_time = t.read().split('.')[0]
+            with open('/proc/uptime', 'r') as utime:
+                boot_time = utime.read().split('.')[0]
 
         uptime = f'{timedelta(seconds=int(boot_time))}'[:-3]
         self.key, self.value = 'Uptime', uptime
@@ -469,10 +458,10 @@ class Disk(Utils):
         if DISK_WARNING == 1 and left_percent <= DISK_WARNING_THRESHOLD:
             disk_color = 3
 
-        dv = (COLOR_DICT['varies'][-1], COLOR_DICT['varies'][disk_color],
-              disk_vars[0], disk_vars[1], disk_vars[2], disk_vars[3], disk_vars[4])
-        disk_display = f'{dv[1]}{dv[2]}B{dv[0]} ({dv[3]}) of {dv[4]}B, '
-        disk_display += f'{dv[5]}B available ({dv[6]})'
+        d_v = (COLOR_DICT['varies'][-1], COLOR_DICT['varies'][disk_color],
+               disk_vars[0], disk_vars[1], disk_vars[2], disk_vars[3], disk_vars[4])
+        disk_display = f'{d_v[1]}{d_v[2]}B{d_v[0]} ({d_v[3]}) of {d_v[4]}B, '
+        disk_display += f'{d_v[5]}B available ({d_v[6]})'
 
         self.key, self.value = 'Disk', disk_display
 
