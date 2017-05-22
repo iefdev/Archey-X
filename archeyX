@@ -41,10 +41,10 @@ from time import time
 # Inform about python3.6
 if vcomp(python_version[0:3]) < vcomp('3.6'):
     exit('Archey X requires Python 3.6+\nYour version is: Python {0}\n'
-         'Please upgrade...'.format(python_version[0:3]))
+         'Please upgrade...'.format(python_version[0:5]))
 
 # Version: use --help and --version
-VERSION = 'v0.8-20150518-beta (May 18, 2017)' # 10:18:15
+VERSION = 'v0.8-20150522-beta (May 22, 2017)'  # 03:33:50
 COPYRIGHT = f'Copyright (c) {datetime.now().year} Eric F'
 
 # Settings
@@ -55,9 +55,9 @@ DISK_WARNING_THRESHOLD = 20     # default: 20 (% of diskspace left)
 # Dictionaries, lists and tuples
 # ------------------------------------------------------------
 COLOR_PAIRS = (
-    (33, 37), (34, 34), (37, 30), (36, 36), # yellow/white, blue/blue, grey/grey, cyan/cyan
-    (34, 37), (31, 31), (37, 35), (32, 37), # blue/white, red/red, white/purple, white/green
-    (32, 30), (32, 32), (34, 32),           # green/grey, green/green, blue/green
+    (33, 37), (34, 34), (37, 30), (36, 36),  # yellow/white, blue/blue, grey/grey, cyan/cyan
+    (34, 37), (31, 31), (37, 35), (32, 37),  # blue/white, red/red, white/purple, white/green
+    (32, 30), (32, 32), (34, 32),            # green/grey, green/green, blue/green
 )
 
 COLOR_VARIES = {'varies': ('\x1b[0;31m', '\x1b[0;32m', '\x1b[0;33m', '\x1b[5;31m', '\x1b[0m')}
@@ -127,7 +127,7 @@ PARSER = ArgumentParser(prog='archeyX', formatter_class=RawDescriptionHelpFormat
 PARSER.add_argument('-h', '--help', action='help', help='Show this help message and exit')
 PARSER.add_argument('-V', '--version', action='version', version=__version__,
                     help='Show program\'s version number and exit')
-PARSER.add_argument('-b', dest='brand', default=None, nargs=1, type=str) # @todo: column width
+PARSER.add_argument('-b', dest='brand', default=None, nargs=1, type=str)  # @todo: column width
 PARSER.add_argument('--brand', dest='brand', default=None, nargs=1, type=str,
                     help='''You can pass in a Brand/distro name for another color.
                     The name must exist in DIST_DICT (ie. Arch Linux, Fedora, Debian etc.)''')
@@ -196,7 +196,7 @@ class Utils:
 class Output(Utils):
     """Function and tools for the Output"""
     results = []
-    results.extend([''] * (18-len(LABELS)))
+    results.extend([''] * (18 - len(LABELS)))
 
     def __init__(self):
         """default to GNU/Linux if no distro"""
@@ -219,17 +219,17 @@ class Output(Utils):
 
             get_name = 'macOS' if vcomp(get_version[:-2]) >= vcomp('10.12') else get_name \
                        or get_name if vcomp(get_version[:-2]) <= vcomp('10.7') else 'OS X'
-            osx_name = OSX_DICT.get(get_version[:-2], osx_name) # get fancy names
+            osx_name = OSX_DICT.get(get_version[:-2], osx_name)  # get fancy names
 
             distro_name = self.x_system()
             distro_full = f'{get_name} {get_version} ({osx_name})'
 
         # (*BSD... Hopefully at some point)
-        #elif x_system == 'FreeBSD' or 'OpenBSD':
-        #    distro = distro_full = self.x_system()
+        # elif x_system == 'FreeBSD' or 'OpenBSD':
+        #     distro = distro_full = self.x_system()
 
         elif self.x_system() == 'Linux':
-            rel_files = ('/etc/os-release', '/usr/lib/os-release', # in case of missing symlink
+            rel_files = ('/etc/os-release', '/usr/lib/os-release',  # in case of missing symlink
                          '/etc/lsb-release', '/etc/issue')
 
             os_release = rel_files[0] if path.exists(rel_files[0]) else rel_files[1]
@@ -289,7 +289,7 @@ class Kernel(Utils):
     def __init__(self):
         if self.x_system() == 'Darwin':
             kernel = f'{uname()[0]} {uname()[2]} {uname()[4]}'  # Darwin 12.3.4 x86_64
-            #kernel = sub('.*:+', '', uname()[3]).strip('REL.*') # xnu-123...
+            # kernel = sub('.*:+', '', uname()[3]).strip('REL.*')  # xnu-123...
         else:
             kernel = self.x_popen(['uname', '-r'])
 
@@ -408,17 +408,17 @@ class RAM(Utils):
             get_memory = self.x_popen(['vm_stat']).replace('.', '')
             get_memory = sub(r':[\s]+', ' ', get_memory.replace('Pages ', '')).split('\n')
             mem = {}
-            for row in range(1, len(get_memory)-7):
+            for row in range(1, len(get_memory) - 7):
                 row = get_memory[row].replace('down', '').splitlines()[0].strip().split()
                 mem[(row[0])] = int(row[1]) * int(4000)
             # [note] Using 4000 instead of 4096 makes it sum up exactly as
             # in Activity Monitor, including the use of “ceil()”.
 
             # Used and free memory
-            mem_used = int(ceil((mem['wired'] + mem['active']
-                                 + mem['inactive']) / int(1048576) / 10.0) * 10)
-            mem_total_free = int(ceil((mem['free']
-                                       + mem['speculative']) / int(1048576) / 10.0) * 10)
+            mem_used = int(ceil((mem['wired'] + mem['active'] +
+                                 mem['inactive']) / int(1048576) / 10.0) * 10)
+            mem_total_free = int(ceil((mem['free'] +
+                                       mem['speculative']) / int(1048576) / 10.0) * 10)
         else:
             mem_total_ram = mem_used = mem_total_free = '-'
 
@@ -488,8 +488,7 @@ LOGOS_DICT = {OUT.distro: '''
 {color[0]}  ;####                 ####;   {results[15]}
 {color[0]}  ##'                     '##   {results[16]}
 {color[0]} #'                         `#  {results[17]}
-\x1b[0m'''
-             }
+\x1b[0m'''}
 
 # (OSX/macOS only) see --help
 if OUT.distro == 'Darwin' and BRAND == 'Apple':
@@ -512,8 +511,7 @@ if OUT.distro == 'Darwin' and BRAND == 'Apple':
 {color[0]}     #####################      {results[15]}
 {color[0]}      ##################        {results[16]}
 {color[0]}        ####      ####          {results[17]}
-\x1b[0m'''
-                 }
+\x1b[0m'''}
 
 # Display output
 if __name__ == "__main__":
