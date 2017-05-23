@@ -109,8 +109,8 @@ PM_DICT = {
     'port': ['installed'], 'fink': ['list', '-i'], 'brew': ['list']     # OS X/macOS
 }
 
-LABELS = ('User', 'Hostname', 'Distro', 'Kernel', 'Uptime', 'WindowManager',
-          'DesktopEnvironment', 'Shell', 'Terminal', 'Packages', 'CPU', 'RAM', 'Disk')
+LABELS = ('User', 'Hostname', 'Distro', 'Kernel', 'Uptime', 'Window_Manager',
+          'Desktop_Environment', 'Shell', 'Terminal', 'Packages', 'CPU', 'RAM', 'Disk')
 
 CLASSES = {x: x for x in LABELS}
 
@@ -265,19 +265,19 @@ class Output(Utils):
 class User(Utils):
     """Get the username"""
     def __init__(self):
-        self.key, self.value = 'User', getuser()
+        self.key, self.value = __class__.__name__, getuser()
 
 
 class Hostname(Utils):
     """Get the hostname"""
     def __init__(self):
-        self.key, self.value = 'Hostname', gethostname()
+        self.key, self.value = __class__.__name__, gethostname()
 
 
 class Distro(Output, Utils):
     """Display the Distro name"""
     def __init__(self):
-        self.key, self.value = 'Distro', self.x_distro('full')
+        self.key, self.value = __class__.__name__, self.x_distro('full')
         super().__init__()
 
 
@@ -290,7 +290,7 @@ class Kernel(Utils):
         else:
             kernel = self.x_popen(['uname', '-r'])
 
-        self.key, self.value = 'Kernel', kernel
+        self.key, self.value = __class__.__name__, kernel
 
 
 class Uptime(Utils):
@@ -305,10 +305,10 @@ class Uptime(Utils):
                 boot_time = utime.read().split('.')[0]
 
         uptime = f'{timedelta(seconds=int(boot_time))}'[:-3]
-        self.key, self.value = 'Uptime', uptime
+        self.key, self.value = __class__.__name__, uptime
 
 
-class WindowManager(Utils):
+class Window_Manager(Utils):
     """Get the name of the Window Manager
     # Default WM's: OS X = Quartz, Linux = ''"""
     def __init__(self):
@@ -319,10 +319,10 @@ class WindowManager(Utils):
                 window_manager = WM_DICT[key]
                 break
 
-        self.key, self.value = 'Window Manager', window_manager
+        self.key, self.value = sub('_', ' ', __class__.__name__), window_manager
 
 
-class DesktopEnvironment(Utils):
+class Desktop_Environment(Utils):
     """Get Desktop Environment"""
     def __init__(self):
         desktop_enviroment = ''
@@ -332,19 +332,19 @@ class DesktopEnvironment(Utils):
                 desktop_enviroment = DE_DICT[key]
                 break
 
-        self.key, self.value = 'Desktop Environment', desktop_enviroment
+        self.key, self.value = sub('_', ' ', __class__.__name__), desktop_enviroment
 
 
 class Shell(Utils):
     """Shell name"""
     def __init__(self):
-        self.key, self.value = 'Shell', getenv('SHELL')
+        self.key, self.value = __class__.__name__, getenv('SHELL')
 
 
 class Terminal(Utils):
     """Terminal name"""
     def __init__(self):
-        self.key, self.value = 'Terminal', getenv('TERM')
+        self.key, self.value = __class__.__name__, getenv('TERM')
 
 
 class Packages(Utils):
@@ -365,7 +365,7 @@ class Packages(Utils):
 
         packages = 'n/a' if packages == '' else len(packages.rstrip('\n').split('\n'))
 
-        self.key, self.value = 'Packages', packages
+        self.key, self.value = __class__.__name__, packages
 
 
 class CPU(Utils):
@@ -379,7 +379,8 @@ class CPU(Utils):
             cpu = self.x_popen(['sysctl', '-n', 'machdep.cpu.brand_string'])
             cpu_info = sub('  +', ' ', cpu)
 
-        self.key, self.value = 'CPU', sub('model name\t: |CPU ', '', cpu_info).strip()
+        self.key = __class__.__name__
+        self.value = sub('model name\t: |CPU ', '', cpu_info).strip()
 
 
 class RAM(Utils):
@@ -424,7 +425,7 @@ class RAM(Utils):
         ram_display = f'{ram_values[1]}{ram_values[3]}MB{ram_values[0]}, '
         ram_display += f'{ram_values[2]}{ram_values[4]}MB{ram_values[0]} of {ram_values[5]}GB'
 
-        self.key, self.value = 'RAM', ram_display
+        self.key, self.value = __class__.__name__, ram_display
 
 
 class Disk(Utils):
@@ -460,7 +461,7 @@ class Disk(Utils):
         disk_display = f'{d_v[1]}{d_v[2]}B{d_v[0]} ({d_v[3]}) of {d_v[4]}B, '
         disk_display += f'{d_v[5]}B available ({d_v[6]})'
 
-        self.key, self.value = 'Disk', disk_display
+        self.key, self.value = __class__.__name__, disk_display
 
 
 # Start output
