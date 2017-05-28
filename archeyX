@@ -1,5 +1,4 @@
 #!/usr/bin/env python3.6
-# -*- coding: utf-8 -*-
 
 """/usr/local/bin/archeyX
 
@@ -35,16 +34,14 @@ from os import getenv, path, uname
 from re import sub, match, compile as comp
 from socket import gethostname
 from subprocess import check_output, PIPE, Popen
-from sys import platform, version as python_version
+from sys import platform
 from time import time
 
-# Inform about python3.6
-if vcomp(python_version[0:3]) < vcomp('3.6'):
-    exit('Archey X requires Python 3.6+\nYour version is: Python {0}\n'
-         'Please upgrade...'.format(python_version[0:5]))
+# Inform about python3.6 (force an SyntaxError)
+INFO = f'Archey X requires Python 3.6+ - Please upgrade...'
 
 # Version: use --help and --version
-VERSION = 'v0.8-beta-20170528 (May 28, 2017)'  # 05:12:45
+VERSION = 'v0.8-beta-20170528 (May 28, 2017)'  # 23:20:45
 COPYRIGHT = f'Copyright (c) {datetime.now().year} Eric F'
 
 # Settings
@@ -109,8 +106,8 @@ PM_DICT = {
     'port': ['installed'], 'fink': ['list', '-i'], 'brew': ['list']     # OS X/macOS
 }
 
-LABELS = ('User', 'Hostname', 'Distro', 'Kernel', 'Uptime', 'Window_Manager',
-          'Desktop_Environment', 'Shell', 'Terminal', 'Packages', 'CPU', 'RAM', 'Disk')
+LABELS = ('User', 'Hostname', 'Distro', 'Kernel', 'Uptime', 'WindowManager',
+          'DesktopEnvironment', 'Shell', 'Terminal', 'Packages', 'CPU', 'RAM', 'Disk')
 
 CLASSES = {x: x for x in LABELS}
 
@@ -265,19 +262,19 @@ class Output(Utils):
 class User(Utils):
     """Get the username"""
     def __init__(self):
-        self.key, self.value = __class__.__name__, getuser()
+        self.key, self.value = 'User', getuser()
 
 
 class Hostname(Utils):
     """Get the hostname"""
     def __init__(self):
-        self.key, self.value = __class__.__name__, gethostname()
+        self.key, self.value = 'Hostname', gethostname()
 
 
 class Distro(Output, Utils):
     """Display the Distro name"""
     def __init__(self):
-        self.key, self.value = __class__.__name__, self.x_distro('full')
+        self.key, self.value = 'Distro', self.x_distro('full')
         super().__init__()
 
 
@@ -290,7 +287,7 @@ class Kernel(Utils):
         else:
             kernel = self.x_popen(['uname', '-r'])
 
-        self.key, self.value = __class__.__name__, kernel
+        self.key, self.value = 'Kernel', kernel
 
 
 class Uptime(Utils):
@@ -305,10 +302,10 @@ class Uptime(Utils):
                 boot_time = utime.read().split('.')[0]
 
         uptime = f'{timedelta(seconds=int(boot_time))}'[:-3]
-        self.key, self.value = __class__.__name__, uptime
+        self.key, self.value = 'Uptime', uptime
 
 
-class Window_Manager(Utils):
+class WindowManager(Utils):
     """Get the name of the Window Manager
     # Default WM's: OS X = Quartz, Linux = ''"""
     def __init__(self):
@@ -319,10 +316,10 @@ class Window_Manager(Utils):
                 window_manager = WM_DICT[key]
                 break
 
-        self.key, self.value = sub('_', ' ', __class__.__name__), window_manager
+        self.key, self.value = 'Window Manager', window_manager
 
 
-class Desktop_Environment(Utils):
+class DesktopEnvironment(Utils):
     """Get Desktop Environment"""
     def __init__(self):
         desktop_enviroment = ''
@@ -332,19 +329,19 @@ class Desktop_Environment(Utils):
                 desktop_enviroment = DE_DICT[key]
                 break
 
-        self.key, self.value = sub('_', ' ', __class__.__name__), desktop_enviroment
+        self.key, self.value = 'Desktop Environment', desktop_enviroment
 
 
 class Shell(Utils):
     """Shell name"""
     def __init__(self):
-        self.key, self.value = __class__.__name__, getenv('SHELL')
+        self.key, self.value = 'Shell', getenv('SHELL')
 
 
 class Terminal(Utils):
     """Terminal name"""
     def __init__(self):
-        self.key, self.value = __class__.__name__, getenv('TERM')
+        self.key, self.value = 'Terminal', getenv('TERM')
 
 
 class Packages(Utils):
@@ -365,7 +362,7 @@ class Packages(Utils):
 
         packages = 'n/a' if packages == '' else len(packages.rstrip('\n').split('\n'))
 
-        self.key, self.value = __class__.__name__, packages
+        self.key, self.value = 'Packages', packages
 
 
 class CPU(Utils):
@@ -379,8 +376,7 @@ class CPU(Utils):
             cpu = self.x_popen(['sysctl', '-n', 'machdep.cpu.brand_string'])
             cpu_info = sub('  +', ' ', cpu)
 
-        self.key = __class__.__name__
-        self.value = sub('model name\t: |CPU ', '', cpu_info).strip()
+        self.key, self.value = 'CPU', sub('model name\t: |CPU ', '', cpu_info).strip()
 
 
 class RAM(Utils):
@@ -425,7 +421,7 @@ class RAM(Utils):
         ram_display = f'{ram_values[1]}{ram_values[3]}MB{ram_values[0]}, '
         ram_display += f'{ram_values[2]}{ram_values[4]}MB{ram_values[0]} of {ram_values[5]}GB'
 
-        self.key, self.value = __class__.__name__, ram_display
+        self.key, self.value = 'RAM', ram_display
 
 
 class Disk(Utils):
@@ -461,7 +457,7 @@ class Disk(Utils):
         disk_display = f'{d_v[1]}{d_v[2]}B{d_v[0]} ({d_v[3]}) of {d_v[4]}B, '
         disk_display += f'{d_v[5]}B available ({d_v[6]})'
 
-        self.key, self.value = __class__.__name__, disk_display
+        self.key, self.value = 'Disk', disk_display
 
 
 # Start output
