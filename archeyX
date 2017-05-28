@@ -44,7 +44,7 @@ if vcomp(python_version[0:3]) < vcomp('3.6'):
          'Please upgrade...'.format(python_version[0:5]))
 
 # Version: use --help and --version
-VERSION = 'v0.8-beta-20170523 (May 23, 2017)'  # 05:27:40
+VERSION = 'v0.8-beta-20170528 (May 28, 2017)'  # 05:12:45
 COPYRIGHT = f'Copyright (c) {datetime.now().year} Eric F'
 
 # Settings
@@ -121,7 +121,7 @@ FS_TYPES = ('btrfs', 'ext2', 'ext3', 'ext4', 'fat32', 'fuseblk', 'hfs', 'jfs',
 
 # ArgumentParser - help/options
 # ------------------------------------------------------------
-__version__ = f'%(prog)s {VERSION}\n{COPYRIGHT}\n'
+__version__ = f'%(prog)s {VERSION}\n{COPYRIGHT}\v'
 PARSER = ArgumentParser(prog='archeyX', formatter_class=RawDescriptionHelpFormatter,
                         add_help=False, conflict_handler='resolve')
 PARSER.add_argument('-h', '--help', action='help', help='Show this help message and exit')
@@ -222,7 +222,7 @@ class Output(Utils):
             distro_full = f'{get_name} {get_version} ({osx_name})'
 
         # (*BSD... Hopefully at some point)
-        # elif x_system == 'FreeBSD' or 'OpenBSD':
+        # elif self.x_system('FreeBSD') or self.x_system('OpenBSD'):
         #     distro = distro_full = self.x_system()
 
         elif self.x_system('Linux'):
