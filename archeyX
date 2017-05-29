@@ -41,7 +41,7 @@ from time import time
 INFO = f'Archey X requires Python 3.6+ - Please upgrade...'
 
 # Version: use --help and --version
-VERSION = 'v0.8-beta-20170528 (May 28, 2017)'  # 23:20:45
+VERSION = 'v0.8-beta-20170529 (May 29, 2017)'  # 05:45:30
 COPYRIGHT = f'Copyright (c) {datetime.now().year} Eric F'
 
 # Settings
@@ -57,11 +57,9 @@ COLOR_PAIRS = (
     (32, 30), (32, 32), (34, 32),            # green/grey, green/green, blue/green
 )
 
-COLOR_VARIES = {'varies': ('\x1b[0;31m', '\x1b[0;32m', '\x1b[0;33m', '\x1b[5;31m', '\x1b[0m')}
-COLOR_COMPR = {f'color{c:02d}': (f'\x1b[0;{n}m', f'\x1b[1;{b}m')
-               for c, (n, b) in enumerate(COLOR_PAIRS)}
-
-COLOR_DICT = {**COLOR_COMPR, **COLOR_VARIES}
+COLOR_VARIES = ('\x1b[0;31m', '\x1b[0;32m', '\x1b[0;33m', '\x1b[5;31m', '\x1b[0m')
+COLOR_DICT = {f'color{c:02d}': (f'\x1b[0;{n}m', f'\x1b[1;{b}m')
+              for c, (n, b) in enumerate(COLOR_PAIRS)}
 
 DIST_DICT = {
     'GNU/Linux': 'color00', 'Arch Linux': 'color01', 'Crunchbang': 'color02',
@@ -252,7 +250,7 @@ class Output(Utils):
     def append(self, display):
         """append: preparing the output"""
         self.results.append(f'{COLOR_DICT[self.color][1]}{display.key}: '
-                            f'{COLOR_DICT["varies"][-1]}{display.value}')
+                            f'{COLOR_VARIES[-1]}{display.value}')
 
     def output(self):
         """output: matching name/colors"""
@@ -386,40 +384,33 @@ class RAM(Utils):
         if self.x_system('Linux'):
             raminfo = self.x_popen(['free', '-m', '--si']).split('\n')
             ram = ''.join(filter(comp('M').search, raminfo)).split()
-            mem_total_ram = round(float(ram[1]) / 1000, 2)
-            mem_used = int(ram[2])
-            mem_total_free = int(ram[3]) + int(ram[5])
-            # If < 3.3.10, we need to add some parts
+            total_ram = round(float(ram[1]) / 1000, 2)
+            used_ram = int(ram[2])
+            total_free = int(ram[3]) + int(ram[5])
+            # If <= 3.3.9, we need to add some parts
             if vcomp(self.x_popen(['free', '-V']).split()[-1]) <= vcomp('3.3.9'):
-                mem_used = mem_used - int(ram[5]) - int(ram[6])
-                mem_total_free = mem_total_free + int(ram[6])
+                used_ram = used_ram - int(ram[5]) - int(ram[6])
+                total_free = total_free + int(ram[6])
         elif self.x_system('Darwin'):
-            # Installed RAM
             mem_size = self.x_popen(['sysctl', '-n', 'hw.memsize'])
-            mem_total_ram = int(mem_size) / int(1024) / int(1048576)
+            total_ram = int(mem_size) / 1073741824
 
-            # Get all memory data
             get_memory = self.x_popen(['vm_stat']).replace('.', '')
             get_memory = sub(r':[\s]+', ' ', get_memory.replace('Pages ', '')).split('\n')
             mem = {}
             for row in range(1, len(get_memory) - 7):
                 row = get_memory[row].replace('down', '').splitlines()[0].strip().split()
-                mem[(row[0])] = int(row[1]) * int(4000)
-            # [note] Using 4000 instead of 4096 makes it sum up exactly as
-            # in Activity Monitor, including the use of “ceil()”.
+                mem[(row[0])] = int(row[1]) * 4000
+            # [note] Using 4000 (eg 4096) makes it sum up exactly as in Activity Monitor
 
-            # Used and free memory
-            mem_used = int(ceil((mem['wired'] + mem['active'] +
-                                 mem['inactive']) / int(1048576) / 10.0) * 10)
-            mem_total_free = int(ceil((mem['free'] +
-                                       mem['speculative']) / int(1048576) / 10.0) * 10)
+            used_ram = ceil((mem['wired'] + mem['active'] +
+                             mem['inactive']) / 1048576 / 10.0) * 10
+            total_free = ceil((mem['free'] + mem['speculative']) / 1048576 / 10.0) * 10
         else:
-            mem_total_ram = mem_used = mem_total_free = '-'
+            used_ram = total_ram = total_free = '-'
 
-        ram_values = (COLOR_DICT['varies'][-1], COLOR_DICT['varies'][0], COLOR_DICT['varies'][1],
-                      mem_used, mem_total_free, mem_total_ram)
-        ram_display = f'{ram_values[1]}{ram_values[3]}MB{ram_values[0]}, '
-        ram_display += f'{ram_values[2]}{ram_values[4]}MB{ram_values[0]} of {ram_values[5]}GB'
+        red, grn, clr = (COLOR_VARIES[0], COLOR_VARIES[1], COLOR_VARIES[-1])
+        ram_display = f'{red}{used_ram}MB{clr}, {grn}{total_free}MB{clr} of {total_ram}GB'
 
         self.key, self.value = 'RAM', ram_display
 
@@ -432,30 +423,26 @@ class Disk(Utils):
         if self.x_system('Linux'):
             filesystems = tuple(zip(('-t',) * len(FS_TYPES), FS_TYPES))
             pass1 = self.x_popen(list(chain(['df', '-HlPT', '--total'], *filesystems)))
-            pass2 = self.x_popen(['df', '/boot']).splitlines()[1].split()[0]
-            total = pass1.splitlines()[-1].split()
-            capacity = total[5]
-            disk_vars = (total[3], capacity, total[2], total[4], pass2.replace('/dev/', ''))
+            total = tuple(sub('%', '', t) for t in pass1.splitlines()[-1].split())
+            disknr, size, used, avail, capacity = total[1:-1]
+            disk = self.x_popen(['df', '/boot']).splitlines()[1].split()[0]
+            disknr = disk.replace('/dev/', '')
         elif self.x_system('Darwin'):
             pass1 = self.x_popen(['df', '-HT', ','.join(FS_TYPES)])
-            total = pass1.splitlines()[1].split()
-            capacity = total[4]
-            disk_vars = (total[2], capacity, total[1], total[3], total[0].replace('/dev/', ''))
+            total = tuple(sub('(/dev/|%)', '', t) for t in pass1.splitlines()[1].split())
+            disknr, size, used, avail, capacity = total[:-1]
 
-        used_percent = left_percent = '-'
-        used_percent = int(capacity.replace('%', ''))
-        left_percent = (100 - used_percent)
+        used_percent = int(capacity) if capacity else '-'
 
         disk_color = 1
         disk_color = 2 if used_percent >= 50 else disk_color
         disk_color = 0 if used_percent >= 80 else disk_color
-        if DISK_WARNING == 1 and left_percent <= DISK_WARNING_THRESHOLD:
+        if DISK_WARNING == 1 and (100 - used_percent) <= DISK_WARNING_THRESHOLD:
             disk_color = 3
 
-        d_v = (COLOR_DICT['varies'][-1], COLOR_DICT['varies'][disk_color],
-               disk_vars[0], disk_vars[1], disk_vars[2], disk_vars[3], disk_vars[4])
-        disk_display = f'{d_v[1]}{d_v[2]}B{d_v[0]} ({d_v[3]}) of {d_v[4]}B, '
-        disk_display += f'{d_v[5]}B available ({d_v[6]})'
+        col, clr = (COLOR_VARIES[disk_color], COLOR_VARIES[-1])
+        disk_display = f'{col}{used}B{clr} ({capacity}%) of {size}B, ' \
+                       f'{avail}B available ({disknr})'
 
         self.key, self.value = 'Disk', disk_display
 
