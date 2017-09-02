@@ -76,7 +76,7 @@ DE_DICT = {
 }
 
 WM_DICT = {
-    'awesome': 'Awesome', 'beryl': 'Beryl', 'blackbox': 'Blackbox',
+    'awesome': 'Awesome', 'beryl': 'Beryl', 'blackbox': 'Blackbox', 'bspwm': 'bspwm',
     'compiz': 'Compiz', 'dwm': 'DWM', 'enlightenment': 'Enlightenment',
     'fluxbox': 'Fluxbox', 'fvwm': 'FVWM', 'herbstluftwm': 'herbstluftwm',
     'i3': 'i3', 'icewm': 'IceWM', 'kwin': 'KWin',
