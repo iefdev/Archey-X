@@ -94,7 +94,7 @@ See [Credits][credits] in the Wiki…
 
 ## Author notes
 
--	**[2017-04-30]** From now, Arxhey X is using Python 3.6+. The “shebang” is changed, and there'se a version check to ask you to upgrade, if you don't have 3.6. So, please upgrade if needed. Thanks!
+-	**[2017-04-30]** From now, Arxhey X is using Python 3.6+. The “shebang” is changed, and there's a `f'{}'` to trigger an error with a msg to ask you to upgrade if you don't have 3.6. So, please upgrade if needed. Thanks!
 -	**[2016-11-23]** This repo has been renamed from: “Archey :: OS X” -> “Archey X”, since it will be X-compatible. Initial version(s) will be `v0.7.0-YYYYMMDD-beta` until it's been tested/verified more to work with _N_ distributions.
 
 **Pylint**
