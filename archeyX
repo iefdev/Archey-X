@@ -93,7 +93,7 @@ WM_DICT = {
 }
 
 OSX_VERS = ('Tiger', 'Leopard', 'Snow Leopard', 'Lion', 'Mountain Lion', 'Mavericks',
-            'Yosemite', 'El Capitan', 'Sierra')
+            'Yosemite', 'El Capitan', 'Sierra', 'High Sierra')
 
 OSX_DICT = {f'10.{x}': y for x, y in enumerate(OSX_VERS, 4)}
 
