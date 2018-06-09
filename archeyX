@@ -41,7 +41,7 @@ from time import time
 INFO = f'Archey X requires Python 3.6+ - Please upgrade...'
 
 # Version: use --help and --version
-VERSION = 'v0.8-beta-20171013 (Oct 13, 2017)'  # 17:19:35
+VERSION = 'v0.8-beta-20180609 (June 9, 2018)'  # 06:21:50
 COPYRIGHT = f'Copyright (c) {datetime.now().year} Eric F'
 
 # Settings
@@ -93,7 +93,7 @@ WM_DICT = {
 }
 
 OSX_VERS = ('Tiger', 'Leopard', 'Snow Leopard', 'Lion', 'Mountain Lion', 'Mavericks',
-            'Yosemite', 'El Capitan', 'Sierra', 'High Sierra')
+            'Yosemite', 'El Capitan', 'Sierra', 'High Sierra', 'Mojave')
 
 OSX_DICT = {f'10.{x}': y for x, y in enumerate(OSX_VERS, 4)}
 
