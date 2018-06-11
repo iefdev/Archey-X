@@ -85,11 +85,11 @@ See [Credits][credits] in the Wiki…
 
 ## Contributing
 
-1. Fork it (<https://github.com/iEFdev/Archey-X/fork>)
-2. Create your feature branch (`git checkout -b feature/foo-bar`)
+1. Fork it (<https://gitlab.com/iEFdev/Archey-X/forks/new>)
+2. Create your feature branch (`git checkout -b feature/fooBar`)
 3. Commit your changes (`git commit -am 'Add some fooBar'`)
-4. Push to the branch (`git push origin feature/foo-bar`)
-5. Create a new Pull Request
+4. Push to the branch (`git push origin feature/fooBar`)
+5. Create a new Merge Request
 
 
 ## Author notes
@@ -108,20 +108,20 @@ If you have any feedback, suggestions? Please, use the Issues, Pull requests, se
 
 <!-- Markdown: link & image dfn's -->
 [pythonVersion]: https://img.shields.io/badge/Python-%3E%3D_3.6-FAC826.svg?style=plastic&colorA=3D75AD&logoWidth=14
-[licenseBadge]: https://img.shields.io/github/license/iEFdev/Archey-X.svg?style=plastic
+[licenseBadge]: https://img.shields.io/badge/license-GPL--3.0-orange.svg?style=plastic
 [masterBadge]: https://img.shields.io/badge/master-v0.8--beta-778899.svg?style=plastic
-[latestBadge]: https://img.shields.io/github/release/iEFdev/Archey-X.svg?style=plastic
-[latest]: https://github.com/iEFdev/Archey-X/releases/latest "Latest release"
+[latestBadge]: https://img.shields.io/badge/latest-v0.7.0-blue.svg?style=plastic
+[latest]: https://gitlab.com/iEFdev/Archey-X/tags/ "Tags"
 [dja]: https://github.com/djmelik/archey "Archey"
 [djm]: https://github.com/djmelik "Melik Manukyan"
 [vimeo]: https://vimeo.com/217440806 "Archey X (demo)"
-[vimeo_poster]: https://raw.githubusercontent.com/iEFdev/Archey-X/master/images/vimeo_poster.png "Archey X (demo)"
-[scrap]: https://raw.githubusercontent.com/iEFdev/Archey-X/master/images/screenshot.png "Screenshot of Archey X"
-[scraps]: https://github.com/iEFdev/Archey-X/wiki/Screenshots "More Screenshots"
-[x2]: https://github.com/iEFdev/Archey-X/wiki/_Images/screenshot_x2.png "Screenshot(s) of Archey X"
-[myterm]: https://github.com/iEFdev/myTerm "My Terminal theme"
-[about]: https://github.com/iEFdev/Archey-X/wiki/About "About Archey X"
-[credits]: https://github.com/iEFdev/Archey-X/wiki/Credits "Credits and copyright"
-[prefs]: https://github.com/iEFdev/Archey-X/wiki/Settings-and-Colors "Settings and Colors"
-[iss1]: https://github.com/iEFdev/Archey-X/issues/1#issue-191799189 "Verify distributions"
+[vimeo_poster]: https://gitlab.com/iEFdev/Archey-X/raw/master/images/vimeo_poster.png "Archey X (demo)"
+[scrap]: https://gitlab.com/iEFdev/Archey-X/raw/master/images/screenshot.png "Screenshot of Archey X"
+[scraps]: https://gitlab.com/iEFdev/Archey-X/wikis/Screenshots "More Screenshots"
+[x2]: https://gitlab.com/iEFdev/Archey-X/wikis/_Images/screenshot_x2.png "Screenshot(s) of Archey X"
+[myterm]: https://gitlab.com/iEFdev/myTerm "My Terminal theme"
+[about]: https://gitlab.com/iEFdev/Archey-X/wikis/About "About Archey X"
+[credits]: https://gitlab.com/iEFdev/Archey-X/wikis/Credits "Credits and copyright"
+[prefs]: https://gitlab.com/iEFdev/Archey-X/wikis/Settings-and-Colors "Settings and Colors"
+[iss1]: https://gitlab.com/iEFdev/Archey-X/issues/1 "#1 - Verify distributions"
 [twitter]: https://twitter.com/iEFdev
