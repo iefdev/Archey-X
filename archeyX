@@ -41,7 +41,7 @@ from time import time
 INFO = f'Archey X requires Python 3.6+ - Please upgrade...'
 
 # Version: use --help and --version
-VERSION = 'v0.8-beta-20180609 (June 9, 2018)'  # 06:21:50
+VERSION = 'v0.8.0 (June 17, 2018)'  # 15:39:30
 COPYRIGHT = f'Copyright (c) {datetime.now().year} Eric F'
 
 # Settings
