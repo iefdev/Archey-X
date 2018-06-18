@@ -41,7 +41,7 @@ from time import time
 INFO = f'Archey X requires Python 3.6+ - Please upgrade...'
 
 # Version: use --help and --version
-VERSION = 'v0.8.0 (June 17, 2018)'  # 15:39:30
+VERSION = 'v0.9-beta-20180618 (June 18, 2018)'  # 08:55:50
 COPYRIGHT = f'Copyright (c) {datetime.now().year} Eric F'
 
 # Settings
@@ -110,8 +110,8 @@ LABELS = ('User', 'Hostname', 'Distro', 'Kernel', 'Uptime', 'WindowManager',
 CLASSES = {x: x for x in LABELS}
 
 # List of filesystemes to be included in 'df'
-FS_TYPES = ('btrfs', 'ext2', 'ext3', 'ext4', 'fat32', 'fuseblk', 'hfs', 'jfs',
-            'msdos', 'ntfs', 'reiserfs', 'simfs', 'tempfs', 'xfs', 'zfs')
+FS_TYPES = ('apfs', 'btrfs', 'ext2', 'ext3', 'ext4', 'fat32', 'fuseblk', 'hfs',
+            'jfs', 'msdos', 'ntfs', 'reiserfs', 'simfs', 'tempfs', 'xfs', 'zfs')
 
 
 # ArgumentParser - help/options
