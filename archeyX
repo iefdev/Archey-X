@@ -1,4 +1,4 @@
-#!/usr/bin/env python3.6
+#!/usr/bin/env python3
 
 """/usr/local/bin/archeyX
 
@@ -37,7 +37,7 @@ from subprocess import check_output, PIPE, Popen
 from sys import platform
 from time import time
 
-# Inform about python3.6 (force an SyntaxError)
+# Inform about python3.6+ (force an SyntaxError)
 INFO = f'Archey X requires Python 3.6+ - Please upgrade...'
 
 # Version: use --help and --version
