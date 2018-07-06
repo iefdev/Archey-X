@@ -41,7 +41,7 @@ from time import time
 INFO = f'Archey X requires Python 3.6+ - Please upgrade...'
 
 # Version: use --help and --version
-VERSION = 'v0.9-beta-20180618 (June 18, 2018)'  # 08:55:50
+VERSION = 'v0.9-beta-20180630 (June 30, 2018)'  # 11:29:40
 COPYRIGHT = f'Copyright (c) {datetime.now().year} Eric F'
 
 # Settings
@@ -76,19 +76,19 @@ DE_DICT = {
 }
 
 WM_DICT = {
-    'awesome': 'Awesome', 'beryl': 'Beryl', 'blackbox': 'Blackbox', 'bspwm': 'bspwm',
+    'awesome': 'Awesome', 'beryl': 'Beryl', 'blackbox': 'Blackbox', 'bspwm': 'Bspwm',
     'compiz': 'Compiz', 'dwm': 'DWM', 'enlightenment': 'Enlightenment',
-    'fluxbox': 'Fluxbox', 'fvwm': 'FVWM', 'herbstluftwm': 'herbstluftwm',
-    'i3': 'i3', 'icewm': 'IceWM', 'kwin': 'KWin',
-    'metacity': 'Metacity', 'musca': 'Musca', 'nemo': 'Nemo',
-    'openbox': 'Openbox', 'pekwm': 'PekWM', 'ratpoison': 'ratpoison',
-    'scrotwm': 'ScrotWM', 'wmaker': 'Window Maker', 'wmfs': 'Wmfs',
-    'wmii': 'wmii', 'xfwm4': 'Xfwm', 'xmonad': 'xmonad',
+    'fluxbox': 'Fluxbox', 'fvwm': 'FVWM', 'herbstluftwm': 'Herbstluftwm',
+    'i3': 'i3', 'icewm': 'IceWM', 'kwin': 'KWin', 'metacity': 'Metacity',
+    'musca': 'Musca', 'nemo': 'Nemo', 'openbox': 'Openbox', 'pekwm': 'PekWM',
+    'ratpoison': 'Ratpoison', 'scrotwm': 'ScrotWM', 'wmaker': 'Window Maker',
+    'wmfs': 'Wmfs', 'wmii': 'Wmii', 'xfwm4': 'Xfwm', 'xmonad': 'Xmonad',
 
     # OS X/macOS
-    'Cinch': 'Cinch', 'Factory': 'Factory', 'Mizage': 'Mizage',
-    'Moom': 'Moom', 'Optimal Layout': 'Optimal Layout', 'ShiftIt': 'ShiftIt',
-    'SizeUp': 'SizeUp', 'Slate': 'Slate', 'Slicer': 'Slicer',
+    'Amethyst': 'Amethyst', 'AppGrid': 'AppGrid', 'Cinch': 'Cinch', 'chunkwm': 'Chunkwm',
+    'Factory': 'Factory', 'Hammerspoon': 'Hammerspoon', 'Mizage': 'Mizage',
+    'Moom': 'Moom', 'Optimal Layout': 'Optimal Layout', 'Phoenix': 'Phoenix',
+    'ShiftIt': 'ShiftIt', 'SizeUp': 'SizeUp', 'Slate': 'Slate', 'Slicer': 'Slicer',
     'Spectacle': 'Spectacle', 'TylerWM': 'TylerWM', 'Xmonad': 'Xmonad'
 }
 
