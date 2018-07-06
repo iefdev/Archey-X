@@ -41,7 +41,7 @@ from time import time
 INFO = f'Archey X requires Python 3.6+ - Please upgrade...'
 
 # Version: use --help and --version
-VERSION = 'v0.9 (July 06, 2018)'  # 20:11:50
+VERSION = 'v1.0-beta-20180708 (July 08, 2018)'  # 04:28:45
 COPYRIGHT = f'Copyright (c) {datetime.now().year} Eric F'
 
 # Settings
@@ -110,8 +110,8 @@ LABELS = ('User', 'Hostname', 'Distro', 'Kernel', 'Uptime', 'WindowManager',
 CLASSES = {x: x for x in LABELS}
 
 # List of filesystemes to be included in 'df'
-FS_TYPES = ('apfs', 'btrfs', 'ext2', 'ext3', 'ext4', 'fat32', 'fuseblk', 'hfs',
-            'jfs', 'msdos', 'ntfs', 'reiserfs', 'simfs', 'tempfs', 'xfs', 'zfs')
+FS_TYPES = ('apfs', 'btrfs', 'ext2', 'ext3', 'ext4', 'fat32', 'fuseblk', 'hfs', 'jfs',
+            'lxfs', 'msdos', 'ntfs', 'reiserfs', 'simfs', 'tempfs', 'xfs', 'zfs')
 
 
 # ArgumentParser - help/options
@@ -471,7 +471,7 @@ LOGOS_DICT = {OUT.distro: '''
 {color[0]} #'                         `#  {results[17]}
 \x1b[0m'''}
 
-# (OSX/macOS only) see --help
+# (OS X/macOS only) see --help
 if OUT.distro == 'Darwin' and BRAND == 'Apple':
     LOGOS_DICT = {OUT.distro: '''
 {color[1]}                     ##         {results[0]}
