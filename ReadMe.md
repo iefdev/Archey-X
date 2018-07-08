@@ -2,7 +2,7 @@
 
 > Archey X is a simple tool to display system information.
 
-![][masterBadge] [![GitHub release][latestBadge]][latest]
+[![][masterBadge]][master] [![GitLab release][latestBadge]][latest]
 
 ![][pythonVersion]
 
@@ -109,9 +109,10 @@ If you have any feedback, suggestions? Please, use the Issues, Pull requests, se
 <!-- Markdown: link & image dfn's -->
 [pythonVersion]: https://img.shields.io/badge/Python-%3E%3D_3.6-FAC826.svg?style=plastic&colorA=3D75AD&logoWidth=14
 [licenseBadge]: https://img.shields.io/badge/license-GPL--3.0-orange.svg?style=plastic
-[masterBadge]: https://img.shields.io/badge/master-v0.8--beta-778899.svg?style=plastic
-[latestBadge]: https://img.shields.io/badge/latest-v0.7.0-blue.svg?style=plastic
+[masterBadge]: https://img.shields.io/badge/master-v1.0--beta-778899.svg?style=plastic
+[latestBadge]: https://img.shields.io/badge/latest-v0.9.0-blue.svg?style=plastic
 [latest]: https://gitlab.com/iEFdev/Archey-X/tags/ "Tags"
+[master]: https://gitlab.com/iEFdev/Archey-X/ "Master"
 [dja]: https://github.com/djmelik/archey "Archey"
 [djm]: https://github.com/djmelik "Melik Manukyan"
 [vimeo]: https://vimeo.com/217440806 "Archey X (demo)"
