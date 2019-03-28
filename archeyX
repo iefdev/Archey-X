@@ -41,7 +41,7 @@ from time import time
 INFO = f'Archey X requires Python 3.6+ - Please upgrade...'
 
 # Version: use --help and --version
-VERSION = 'v1.0-beta-20190328 (March 28, 2019)'  # 10:56:10
+VERSION = 'v1.0-beta-20190328 (March 28, 2019)'  # 11:51:50
 COPYRIGHT = f'Copyright (c) {datetime.now().year} Eric F'
 
 # Settings
@@ -98,8 +98,8 @@ OSX_VERS = ('Tiger', 'Leopard', 'Snow Leopard', 'Lion', 'Mountain Lion', 'Maveri
 OSX_DICT = {f'10.{x}': y for x, y in enumerate(OSX_VERS, 4)}
 
 PM_DICT = {
-    'pacman': ['-Q'], 'emerge': ['-ep', 'world'], 'zypper': ['search', '--installed-only'],
-    'dnf': ['list', 'installed'], 'yum': ['list', 'installed'], 'dpkg': ['--get-selections'],
+    'pacman': ['-Q'], 'rpm': ['-qa'], 'emerge': ['-ep', 'world'],
+    'zypper': ['search', '--installed-only'], 'dpkg': ['--get-selections'],
 
     'port': ['installed'], 'fink': ['list', '-i'], 'brew': ['list']     # OS X/macOS
 }
@@ -346,10 +346,6 @@ class Packages(Utils):
     """Get the number of installed packages"""
     def __init__(self):
         packages = ''
-        if fExec('dnf') and fExec('yum'):   # ie. if Fedora, skip yum
-            del PM_DICT['yum']
-        elif fExec('yum'):
-            del PM_DICT['dnf']
 
         for pman in PM_DICT:
             if fExec(pman):
