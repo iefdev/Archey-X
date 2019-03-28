@@ -41,7 +41,7 @@ from time import time
 INFO = f'Archey X requires Python 3.6+ - Please upgrade...'
 
 # Version: use --help and --version
-VERSION = 'v1.0-beta-20180708 (July 08, 2018)'  # 04:28:45
+VERSION = 'v1.0-beta-20190328 (March 28, 2019)'  # 10:56:10
 COPYRIGHT = f'Copyright (c) {datetime.now().year} Eric F'
 
 # Settings
@@ -245,7 +245,7 @@ class Output(Utils):
         distro_full = sub('S[Uu]SE', 'SLES', distro_full)
 
         x_distro_names = {'name': distro_name, 'full': distro_full}
-        return sub('release | GNU/Linux|Linux |Enterprise |Server ', '', x_distro_names[name])
+        return sub('release | GNU/Linux|Linux | Linux|Enterprise |Server ', '', x_distro_names[name])
 
     def append(self, display):
         """append: preparing the output"""
