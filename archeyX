@@ -41,7 +41,7 @@ from time import time
 INFO = f'Archey X requires Python 3.6+ - Please upgrade...'
 
 # Version: use --help and --version
-VERSION = 'v1.0-beta-20190328 (March 28, 2019)'  # 11:51:50
+VERSION = 'v1.0-beta-20190401 (April 1, 2019)'  # 15:13:30
 COPYRIGHT = f'Copyright (c) {datetime.now().year} Eric F'
 
 # Settings
@@ -52,21 +52,22 @@ DISK_WARNING_THRESHOLD = 20     # default: 20 (% of diskspace left)
 # Dictionaries, lists and tuples
 # ------------------------------------------------------------
 COLOR_PAIRS = (
-    (33, 37), (34, 34), (37, 30), (36, 36),  # yellow/white, blue/blue, grey/grey, cyan/cyan
-    (34, 37), (31, 31), (37, 35), (32, 37),  # blue/white, red/red, white/purple, white/green
-    (32, 30), (32, 32), (34, 32),            # green/grey, green/green, blue/green
+    (33, 97), (34, 34), (37, 30), (36, 36),  # yellow/white, blue/blue, grey/grey, cyan/cyan
+    (34, 97), (31, 31), (97, 35), (97, 32),  # blue/white, red/red, white/purple, white/green
+    (37, 32), (32, 30), (32, 32), (34, 32),  # grey/green, green/grey, green/green, blue/green
 )
 
 COLOR_VARIES = ('\x1b[0;31m', '\x1b[0;32m', '\x1b[0;33m', '\x1b[5;31m', '\x1b[0m')
 COLOR_DICT = {f'color{c:02d}': (f'\x1b[0;{n}m', f'\x1b[1;{b}m')
-              for c, (n, b) in enumerate(COLOR_PAIRS)}
+              for c, (n, b) in enumerate(COLOR_PAIRS, 1)}
 
 DIST_DICT = {
-    'GNU/Linux': 'color00', 'Arch Linux': 'color01', 'Crunchbang': 'color02',
-    'Darwin': 'color03', 'Mac OS X': 'color03', 'Fedora': 'color04',
-    'RHEL': 'color05', 'Debian': 'color05', 'Ubuntu': 'color05',
-    'Gentoo': 'color06', 'LinuxMint': 'color07', 'SLES': 'color08',
-    'OpenSUSE': 'color09', 'CentOS': 'color10',
+    'GNU/Linux': 'color01', 'Arch': 'color02', 'Crunchbang': 'color03',
+    'Darwin': 'color04', 'Mac OS X': 'color04', 'Fedora': 'color05',
+    'Alpine': 'color05', 'Antergos': 'color05', 'elementary OS': 'color05',
+    'RHEL': 'color06', 'Debian': 'color06', 'Ubuntu': 'color06',
+    'Gentoo': 'color07', 'Linux Mint': 'color08', 'SLES': 'color09',
+    'Manjaro': 'color09', 'OpenSUSE': 'color11', 'CentOS': 'color12',
 }
 
 DE_DICT = {
@@ -241,11 +242,14 @@ class Output(Utils):
                     distro_name = sub('Red', 'RHEL', i.split(' ')[0].rstrip())
                     distro_full = i.split(' \\')[0].rstrip()
 
+        distro_name = sub(' Linux', '', distro_name)
         distro_full = sub('Red Hat', 'RHEL', distro_full)
         distro_full = sub('S[Uu]SE', 'SLES', distro_full)
 
         x_distro_names = {'name': distro_name, 'full': distro_full}
-        return sub('release | GNU/Linux|Linux | Linux|Enterprise |Server ', '', x_distro_names[name])
+        x_sub = sub('release | GNU/Linux|Linux |Enterprise |Server ', '', x_distro_names[name])
+
+        return x_distro_names[name] if distro_name == 'Linux Mint' else x_sub
 
     def append(self, display):
         """append: preparing the output"""
