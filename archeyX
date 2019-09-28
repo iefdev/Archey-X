@@ -41,7 +41,7 @@ from time import time
 INFO = f'Archey X requires Python 3.6+ - Please upgrade...'
 
 # Version: use --help and --version
-VERSION = 'v1.0-beta-20190726 (July 26, 2019)'  # 18:31:10
+VERSION = 'v1.0-beta-20190928 (Sept 28, 2019)'  # 11:51:10
 COPYRIGHT = f'Copyright (c) {datetime.now().year} Eric F'
 
 # Settings
@@ -283,11 +283,9 @@ class Distro(Output, Utils):
 class Kernel(Utils):
     """Get the kernel name"""
     def __init__(self):
-        if self.x_system('Darwin'):
-            kernel = f'{uname()[0]} {uname()[2]} {uname()[4]}'  # Darwin 12.3.4 x86_64
-            # kernel = sub('.*:+', '', uname()[3]).strip('REL.*')  # xnu-123...
-        else:
-            kernel = self.x_popen(['uname', '-r'])
+        xnu = f'{uname()[0]} {uname()[2]} {uname()[4]}'     # Darwin 12.3.4 x86_64
+        #xnu = sub('.*:+', '', uname()[3]).strip('REL.*')    # xnu-123...
+        kernel = xnu if self.x_system('Darwin') else self.x_popen(['uname', '-a'])
 
         self.key, self.value = 'Kernel', kernel
 
