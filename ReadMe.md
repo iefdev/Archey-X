@@ -2,14 +2,12 @@
 
 > Archey X is a simple tool to display system information.
 
-[![][masterBadge]][master] [![GitLab release][latestBadge]][latest]
+[![][masterBadge]][master] [![GitLab release][latestBadge]][latest] ![][pythonVersion]
 
-![][pythonVersion]
-
-This is a forked/ported version of the original script: [Archey][dja], by [djmelek][djm] - made to be X compatible with both OS X and misc GNU/Linux distributions - hence the name: Archey **X**. _(Previously an OS X port of Archey.)_ […»][about]
+This is a forked/ported version of the original script: [Archey][dja], by [djmelek][djm] - made to be X compatible with both OS X and misc GNU/Linux distributions - hence the name: Archey **X**.
 
 
-### Screenshots
+### Demo and Screenshots
 
 Here's a small demo you can watch at Vimeo.
 
@@ -30,10 +28,8 @@ _A few more Screenshots can be found in the [Wiki …»][scraps]._
 
 ## Installation
 
-Copy the file to `/usr/local/bin`, and give it permission to execute.
-
 ```bash
-sudo install -v -m 0755 archeyX /usr/local/bin
+sudo install -v -m 0755 -o 0 -g 0 archeyX /usr/local/bin
 ```
 
 _(make sure `/usr/local/bin` is in your `PATH`)_
@@ -50,14 +46,14 @@ To load at start. Add to your `.bashrc` _(or `.bash_profile`)_:
 [[ `type archeyX 2> /dev/null` && $UID != 0 ]] && archeyX
 ```
 
-> **Note:** When using `scp` over the network and logging into a machine with `archeyX` loading up... It _might_ cause an error about output. It's about being interactive or not. You can try/use one of these to surround it with:
+> **Note:** When using `scp` over the network and logging into a machine with `archeyX` loading up... It _might_ cause an error about output. It's about being interactive or not. You can try to use something like this:
 
 > ```bash
-> [ -z $PS1 ]
-> [ -v $PS1 ]  # bash 4.2+
-> [ -t 1 ]
-> [[ $- =~ i ]]
-> [[ $- == *i* ]]
+> # Load archey (if installed)
+> # If not running interactively, don't do anything
+> if [[ -n "$PS1" && $UID != 0 ]]; then
+>     [[ `type archeyX 2> /dev/null` ]] && archeyX
+> fi
 > ```
 
 
@@ -71,7 +67,8 @@ See [Settings and Colors][prefs] in the Wiki
 - [ ] Arch Linux
 - [x] Darwin/OS X
 - [x] Debian Jessie 8.3 (“may” work with other, like Mint, *buntu. `dpkg`)
-- [x] Fedora 23 (“may” work with CentOS and Red Hat. `dnf|yum`)
+- [x] CentOS 7
+- [x] Fedora 23
 
 _Please, report working distributions [here][iss1]._
 
@@ -107,7 +104,7 @@ If you have any feedback, suggestions? Please, use the Issues, Pull requests, se
 · Eric ([@iEFdev][twitter])
 
 <!-- Markdown: link & image dfn's -->
-[pythonVersion]: https://img.shields.io/badge/Python-%3E%3D_3.6-FAC826.svg?style=plastic&colorA=3D75AD&logoWidth=14
+[pythonVersion]: https://img.shields.io/badge/Python-%3E%3D_3.6-FAC826.svg?style=plastic&colorA=3D75AD
 [licenseBadge]: https://img.shields.io/badge/license-GPL--3.0-orange.svg?style=plastic
 [masterBadge]: https://img.shields.io/badge/master-v1.0--beta-778899.svg?style=plastic
 [latestBadge]: https://img.shields.io/badge/latest-v0.9.0-blue.svg?style=plastic
