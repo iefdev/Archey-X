@@ -2,9 +2,12 @@
 
 > Archey X is a simple tool to display system information.
 
-[![][masterBadge]][master] [![GitLab release][latestBadge]][latest] ![][pythonVersion]
+[![][masterBadge]][master] [![GitLab release][latestBadge]][latest]
 
-This is a forked/ported version of the original script: [Archey][dja], by [djmelek][djm] - made to be X compatible with both OS X and misc GNU/Linux distributions - hence the name: Archey **X**.
+![][pythonVersion]
+
+
+This is a forked and ported version of the original script: [Archey][dja], by [djmelek][djm] - made to be X compatible with both OS X and misc GNU/Linux distributions - hence the name: Archey **X**.
 
 
 ### Demo and Screenshots
@@ -13,11 +16,13 @@ Here's a small demo you can watch at Vimeo.
 
 [![][vimeo_poster]][vimeo]
 
+- - -
 
-v0.7.0-beta on OS X. (Terminal theme: [myTerm][myterm].)
+v0.7.0-beta on OS X.
 
 ![][scrap]
 
+- - -
 
 v0.X-beta _(early version)_ of Fedora and Debian in Vagrant boxes.
 
@@ -47,7 +52,7 @@ To load at start. Add to your `.bashrc` _(or `.bash_profile`)_:
 ```
 
 > **Note:** When using `scp` over the network and logging into a machine with `archeyX` loading up... It _might_ cause an error about output. It's about being interactive or not. You can try to use something like this:
-
+>
 > ```bash
 > # Load archey (if installed)
 > # If not running interactively, don't do anything
@@ -77,7 +82,16 @@ _Please, report working distributions [here][iss1]._
 
 ![][licenseBadge]
 
-See [Credits][credits] in the Wiki…
+Get version and copyright with:
+
+```bash
+#example
+$ archeyX -V
+archeyX v1.0-beta-20190928 (Sept 28, 2019)
+Copyright (c) 2019 Eric F
+```
+
+For the original author(s) and copyright, se [Archey][dja], by [djmelek][djm].
 
 
 ## Contributing
@@ -96,7 +110,10 @@ See [Credits][credits] in the Wiki…
 
 **Pylint**
 
+-	**[2019-09-28]** 9.79/10 (pylint 2.3.1, Python 3.7.4).
 -	**[2017-05-01]** 9.96/10 (pylint 1.7.1, Python 3.6.1).
+
+- - -
 
 
 If you have any feedback, suggestions? Please, use the Issues, Pull requests, send an email or a tweet.
