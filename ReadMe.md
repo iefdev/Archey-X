@@ -110,6 +110,7 @@ For the original author(s) and copyright, se [Archey][dja], by [djmelek][djm].
 
 **Pylint**
 
+-	**[2019-10-02]** 9.96/10 (pylint 2.3.1, Python 3.7.4).
 -	**[2019-09-28]** 9.79/10 (pylint 2.3.1, Python 3.7.4).
 -	**[2017-05-01]** 9.96/10 (pylint 1.7.1, Python 3.6.1).
 
