@@ -41,7 +41,7 @@ from time import time
 INFO = f'Archey X requires Python 3.6+ - Please upgrade...'
 
 # Version: use --help and --version
-VERSION = 'v1.0-beta-20190928 (Sept 28, 2019)'  # 11:51:10
+VERSION = 'v1.0-beta-20191002 (Oct 02, 2019)'  # 21:12:20
 COPYRIGHT = f'Copyright (c) {datetime.now().year} Eric F'
 
 # Settings
@@ -100,7 +100,7 @@ OSX_DICT = {f'10.{x}': y for x, y in enumerate(OSX_VERS, 4)}
 
 PM_DICT = {
     'pacman': ['-Q'], 'rpm': ['-qa'], 'apk': ['info'], 'dpkg': ['--get-selections'],
-     'emerge': ['-ep', 'world'], 'zypper': ['search', '--installed-only'],
+    'emerge': ['-ep', 'world'], 'zypper': ['search', '--installed-only'],
 
     'port': ['echo', 'installed'], 'fink': ['list', '-i'], 'brew': ['list']     # OS X/macOS
 }
@@ -144,7 +144,7 @@ if __name__ == "__main__":
 
 # Classes
 # ------------------------------------------------------------
-class Utils(object):
+class Utils():
     """Misc functions/tools"""
 
     @classmethod
@@ -156,7 +156,7 @@ class Utils(object):
     def x_system(self, system='Linux'):
         """x_system - Linux, Darwin etc"""
         brand = self.capitilize_name(platform).replace('2', '').strip()
-        return True if system == brand and brand != '' else False
+        return bool(system == brand and brand != '')
 
     def x_process(self):
         """x_process - get the processes to find name of WM/DE"""
@@ -183,7 +183,7 @@ class Utils(object):
             for rel in lines:
                 if match(search, rel.lower()):
                     return rel.replace('"', '').strip().split('=')[1]
-            return
+            return None
 
 
 class Output(Utils):
@@ -423,8 +423,7 @@ class Disk(Utils):
             pass1 = self.x_popen(list(chain(['df', '-HlPT', '--total'], *filesystems)))
             total = tuple(sub('%', '', t) for t in pass1.splitlines()[-1].split())
             disknr, size, used, avail, capacity = total[1:-1]
-            disk = self.x_popen(['df', '/boot']).splitlines()[1].split()[0]
-            disknr = disk.replace('/dev/', '')
+            disknr = self.x_popen(['df', '/boot']).splitlines()[1].split()[0].replace('/dev/', '')
         elif self.x_system('Darwin'):
             pass1 = self.x_popen(['df', '-HT', ','.join(FS_TYPES)])
             total = tuple(sub('(/dev/|%)', '', t) for t in pass1.splitlines()[1].split())
