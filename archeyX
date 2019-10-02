@@ -99,10 +99,10 @@ OSX_VERS = ('Tiger', 'Leopard', 'Snow Leopard', 'Lion', 'Mountain Lion', 'Maveri
 OSX_DICT = {f'10.{x}': y for x, y in enumerate(OSX_VERS, 4)}
 
 PM_DICT = {
-    'pacman': ['-Q'], 'rpm': ['-qa'], 'emerge': ['-ep', 'world'],
-    'zypper': ['search', '--installed-only'], 'dpkg': ['--get-selections'],
+    'pacman': ['-Q'], 'rpm': ['-qa'], 'apk': ['info'], 'dpkg': ['--get-selections'],
+     'emerge': ['-ep', 'world'], 'zypper': ['search', '--installed-only'],
 
-    'port': ['installed'], 'fink': ['list', '-i'], 'brew': ['list']     # OS X/macOS
+    'port': ['echo', 'installed'], 'fink': ['list', '-i'], 'brew': ['list']     # OS X/macOS
 }
 
 LABELS = ('User', 'Hostname', 'Distro', 'Kernel', 'Uptime', 'WindowManager',
