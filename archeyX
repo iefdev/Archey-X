@@ -295,14 +295,13 @@ class Uptime(Utils):
     def __init__(self):
         if self.x_system('Darwin'):
             boot_time = self.x_popen(['sysctl', '-n', 'kern.boottime'])
-            boot_time = boot_time.split()[3][:-1]
-            boot_time = int(round(time())) - int(boot_time)
+            boot_split = boot_time.split()[3][:-1]
+            uptime = int(round(time())) - int(boot_split)
         else:
             with open('/proc/uptime', 'r') as utime:
-                boot_time = utime.read().split('.')[0]
+                uptime = utime.read().split('.')[0]
 
-        uptime = f'{timedelta(seconds=int(boot_time))}'[:-3]
-        self.key, self.value = 'Uptime', uptime
+        self.key, self.value = 'Uptime', f'{timedelta(seconds=int(uptime))}'[:-3]
 
 
 class WindowManager(Utils):
