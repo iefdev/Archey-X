@@ -41,7 +41,7 @@ from time import time
 INFO = f'Archey X requires Python 3.6+ - Please upgrade...'
 
 # Version: use --help and --version
-VERSION = 'v1.0-beta-20191002 (Oct 02, 2019)'  # 21:12:20
+VERSION = 'v1.0-beta-20191028 (Oct 28, 2019)'  # 13:47:20
 COPYRIGHT = f'Copyright (c) {datetime.now().year} Eric F'
 
 # Settings
@@ -419,13 +419,13 @@ class Disk(Utils):
     def __init__(self):
         if self.x_system('Linux'):
             filesystems = tuple(zip(('-t',) * len(FS_TYPES), FS_TYPES))
-            pass1 = self.x_popen(list(chain(['df', '-HlPT', '--total'], *filesystems)))
-            total = tuple(sub('%', '', t) for t in pass1.splitlines()[-1].split())
+            df = self.x_popen(list(chain(['df', '-HlPT', '--total'], *filesystems)))
+            total = tuple(sub('%', '', t) for t in df.splitlines()[-1].split())
             disknr, size, used, avail, capacity = total[1:-1]
             disknr = self.x_popen(['df', '/boot']).splitlines()[1].split()[0].replace('/dev/', '')
         elif self.x_system('Darwin'):
-            pass1 = self.x_popen(['df', '-HT', ','.join(FS_TYPES)])
-            total = tuple(sub('(/dev/|%)', '', t) for t in pass1.splitlines()[1].split())
+            df = self.x_popen(['df', '-HT', ','.join(FS_TYPES)])
+            total = tuple(sub('(/dev/|%)', '', t) for t in df.splitlines()[1].split())
             disknr, size, used, avail, capacity = total[:-1]
 
         used_percent = int(capacity) if capacity else '-'
