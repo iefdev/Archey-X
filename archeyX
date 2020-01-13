@@ -41,8 +41,14 @@ from time import time
 INFO = f'Archey X requires Python 3.6+ - Please upgrade...'
 
 # Version: use --help and --version
-VERSION = 'v1.0-beta-20191028 (Oct 28, 2019)'  # 13:47:20
+VERSION = 'v1.0-beta-20200114'  # 09:51:40
 COPYRIGHT = f'Copyright (c) {datetime.now().year} Eric F'
+GPL_INFO = '''This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. This is free
+software, and you are welcome to redistribute it under certain
+conditions; see the GNU General Public License (GPLv3) for more details.'''
+
 
 # Settings
 DISK_WARNING = 1                # default: 1 (set 0 to disable)
@@ -117,7 +123,7 @@ FS_TYPES = ('apfs', 'btrfs', 'ext2', 'ext3', 'ext4', 'fat32', 'fuseblk', 'hfs', 
 
 # ArgumentParser - help/options
 # ------------------------------------------------------------
-__version__ = f'%(prog)s {VERSION}\n{COPYRIGHT}\v'
+__version__ = f'%(prog)s: {VERSION}, {COPYRIGHT}\n\n{GPL_INFO}\v'
 PARSER = ArgumentParser(prog='archeyX', formatter_class=RawDescriptionHelpFormatter,
                         add_help=False, conflict_handler='resolve')
 PARSER.add_argument('-h', '--help', action='help', help='Show this help message and exit')
