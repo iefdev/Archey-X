@@ -41,7 +41,7 @@ from time import time
 INFO = f'Archey X requires Python 3.6+ - Please upgrade...'
 
 # Version: use --help and --version
-VERSION = 'v1.0-beta-20200114'  # 09:51:40
+VERSION = 'v1.0-beta-20200118'  # 17:28:45
 COPYRIGHT = f'Copyright (c) {datetime.now().year} Eric F'
 GPL_INFO = '''This program is distributed in the hope that it will be useful, but
 WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -92,9 +92,9 @@ WM_DICT = {
     'wmfs': 'Wmfs', 'wmii': 'Wmii', 'xfwm4': 'Xfwm', 'xmonad': 'Xmonad',
 
     # OS X/macOS
-    'Amethyst': 'Amethyst', 'AppGrid': 'AppGrid', 'Cinch': 'Cinch', 'chunkwm': 'Chunkwm',
-    'Factory': 'Factory', 'Hammerspoon': 'Hammerspoon', 'Mizage': 'Mizage',
-    'Moom': 'Moom', 'Optimal Layout': 'Optimal Layout', 'Phoenix': 'Phoenix',
+    'Amethyst': 'Amethyst', 'AppGrid': 'AppGrid', 'Autumn': 'Autumn','Cinch': 'Cinch',
+    'chunkwm': 'Chunkwm', 'Factory': 'Factory', 'Hammerspoon': 'Hammerspoon',
+    'Mizage': 'Mizage', 'Moom': 'Moom', 'Optimal Layout': 'Optimal Layout', 'Phoenix': 'Phoenix',
     'ShiftIt': 'ShiftIt', 'SizeUp': 'SizeUp', 'Slate': 'Slate', 'Slicer': 'Slicer',
     'Spectacle': 'Spectacle', 'TylerWM': 'TylerWM', 'Xmonad': 'Xmonad'
 }
