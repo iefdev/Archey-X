@@ -78,15 +78,15 @@ DIST_DICT = {
 
 DE_DICT = {
     'cinnamon-sessio': 'Cinnamon', 'Finder': 'Finder', 'gnome-session': 'GNOME',
-    'ksmserver': 'KDE', 'lxsession': 'LXDE', 'mate-session': 'MATE',
+    'ksmserver': 'KDE', 'lxsession': 'LXDE', 'mate-session': 'MATE', 'mate-terminal': 'MATE',
     'xfce4-session': 'Xfce'
 }
 
 WM_DICT = {
     'awesome': 'Awesome', 'beryl': 'Beryl', 'blackbox': 'Blackbox', 'bspwm': 'Bspwm',
-    'compiz': 'Compiz', 'dwm': 'DWM', 'enlightenment': 'Enlightenment',
-    'fluxbox': 'Fluxbox', 'fvwm': 'FVWM', 'herbstluftwm': 'Herbstluftwm',
-    'i3': 'i3', 'icewm': 'IceWM', 'kwin': 'KWin', 'metacity': 'Metacity',
+    'caja': 'Caja', 'compiz': 'Compiz', 'dwm': 'DWM', 'enlightenment': 'Enlightenment',
+    'fluxbox': 'Fluxbox', 'fvwm': 'FVWM', 'herbstluftwm': 'Herbstluftwm', 'i3': 'i3',
+    'icewm': 'IceWM', 'kwin': 'KWin', 'nautilus': 'Nautilus', 'metacity': 'Metacity',
     'musca': 'Musca', 'nemo': 'Nemo', 'openbox': 'Openbox', 'pekwm': 'PekWM',
     'ratpoison': 'Ratpoison', 'scrotwm': 'ScrotWM', 'wmaker': 'Window Maker',
     'wmfs': 'Wmfs', 'wmii': 'Wmii', 'xfwm4': 'Xfwm', 'xmonad': 'Xmonad',
@@ -105,8 +105,8 @@ MACOS_NAMES = ('Cheetah', 'Puma', 'Jaguar', 'Panther', 'Tiger', 'Leopard', 'Snow
 
 MACOS10 = {f'10.{x}': y for x, y in enumerate(MACOS_NAMES[:16])}
 MACOS11 = {f'11.{x}': y for x, y in enumerate(MACOS_NAMES[16:])}
+
 MACOS_DICT = {**MACOS10, **MACOS11}
-print(MACOS_DICT)
 
 PM_DICT = {
     'pacman': ['-Q'], 'rpm': ['-qa'], 'apk': ['info'], 'dpkg': ['--get-selections'],
@@ -293,9 +293,9 @@ class Distro(Output, Utils):
 class Kernel(Utils):
     """Get the kernel name"""
     def __init__(self):
-        xnu = f'{uname()[0]} {uname()[2]} {uname()[4]}'     # Darwin 12.3.4 x86_64
-        #xnu = sub('.*:+', '', uname()[3]).strip('REL.*')    # xnu-123...
-        kernel = xnu if self.x_system('Darwin') else self.x_popen(['uname', '-a'])
+        uname_srm = xnu = f'{uname()[0]} {uname()[2]} {uname()[4]}' # Ex: Linux 5.x.x x86_64
+        #xnu = sub('.*:+', '', uname()[3]).strip('REL.*')           # xnu-123...
+        kernel = xnu if self.x_system('Darwin') else uname_srm
 
         self.key, self.value = 'Kernel', kernel
 
