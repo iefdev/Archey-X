@@ -69,11 +69,11 @@ See [Settings and Colors][prefs] in the Wiki
 
 ## Tested distros
 
-- [ ] Arch Linux
-- [x] Darwin/OS X
-- [x] Debian Jessie 8.3 (“may” work with other, like Mint, *buntu. `dpkg`)
-- [x] CentOS 7
-- [x] Fedora 23
+- [x] Arch Linux
+- [x] CentOS: 7.6.1810 (server)
+- [x] Debian: 8.3 (server), 10.4 (MATE)
+- [x] Fedora: 23 (Cinnamon)
+- [x] OS X/macOS: 10.7.5
 
 _Please, report working distributions [here][iss1]._
 
