@@ -41,7 +41,7 @@ from time import time
 INFO = f'Archey X requires Python 3.6+ - Please upgrade...'
 
 # Version: use --help and --version
-VERSION = 'v1.0-beta-20200118'  # 17:28:45
+VERSION = 'v1.0-beta-20200625'  # 04:28:45
 COPYRIGHT = f'Copyright (c) {datetime.now().year} Eric F'
 GPL_INFO = '''This program is distributed in the hope that it will be useful, but
 WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -99,10 +99,14 @@ WM_DICT = {
     'Spectacle': 'Spectacle', 'TylerWM': 'TylerWM', 'Xmonad': 'Xmonad'
 }
 
-OSX_VERS = ('Tiger', 'Leopard', 'Snow Leopard', 'Lion', 'Mountain Lion', 'Mavericks',
-            'Yosemite', 'El Capitan', 'Sierra', 'High Sierra', 'Mojave', 'Catalina')
+MACOS_NAMES = ('Cheetah', 'Puma', 'Jaguar', 'Panther', 'Tiger', 'Leopard', 'Snow Leopard', 'Lion',
+               'Mountain Lion', 'Mavericks', 'Yosemite', 'El Capitan', 'Sierra', 'High Sierra',
+               'Mojave', 'Catalina', 'Big Sur')
 
-OSX_DICT = {f'10.{x}': y for x, y in enumerate(OSX_VERS, 4)}
+MACOS10 = {f'10.{x}': y for x, y in enumerate(MACOS_NAMES[:16])}
+MACOS11 = {f'11.{x}': y for x, y in enumerate(MACOS_NAMES[16:])}
+MACOS_DICT = {**MACOS10, **MACOS11}
+print(MACOS_DICT)
 
 PM_DICT = {
     'pacman': ['-Q'], 'rpm': ['-qa'], 'apk': ['info'], 'dpkg': ['--get-selections'],
@@ -218,7 +222,7 @@ class Output(Utils):
 
             get_name = 'macOS' if vcomp(get_version[:-2]) >= vcomp('10.12') else get_name \
                        or get_name if vcomp(get_version[:-2]) <= vcomp('10.7') else 'OS X'
-            osx_name = OSX_DICT.get(get_version[:-2], osx_name)  # get fancy names
+            osx_name = MACOS_DICT.get(get_version[:-2], osx_name)  # get fancy names
 
             distro_name = 'Darwin'
             distro_full = f'{get_name} {get_version} ({osx_name})'
