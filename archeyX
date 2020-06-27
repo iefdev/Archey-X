@@ -41,7 +41,7 @@ from time import time
 INFO = f'Archey X requires Python 3.6+ - Please upgrade...'
 
 # Version: use --help and --version
-VERSION = 'v1.0-beta-20200627'  # 20:22:30
+VERSION = 'v1.0-beta-20200627'  # 21:57:30
 COPYRIGHT = f'Copyright (c) {datetime.now().year} Eric F'
 GPL_INFO = '''This program is distributed in the hope that it will be useful, but
 WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -92,7 +92,7 @@ WM_DICT = {
     'wmfs': 'Wmfs', 'wmii': 'Wmii', 'xfwm4': 'Xfwm', 'xmonad': 'Xmonad',
 
     # OS X/macOS
-    'Amethyst': 'Amethyst', 'AppGrid': 'AppGrid', 'Autumn': 'Autumn','Cinch': 'Cinch',
+    'Amethyst': 'Amethyst', 'AppGrid': 'AppGrid', 'Autumn': 'Autumn', 'Cinch': 'Cinch',
     'chunkwm': 'Chunkwm', 'Factory': 'Factory', 'Hammerspoon': 'Hammerspoon',
     'Mizage': 'Mizage', 'Moom': 'Moom', 'Optimal Layout': 'Optimal Layout', 'Phoenix': 'Phoenix',
     'ShiftIt': 'ShiftIt', 'SizeUp': 'SizeUp', 'Slate': 'Slate', 'Slicer': 'Slicer',
@@ -176,7 +176,6 @@ class Utils():
         elif self.x_system('Darwin'):
             procs = str(check_output(('ps', '-u', getuser(), '-o',
                                       'comm')).decode('utf-8').split('/')).replace('\\n', '')
-
         return procs if procs else None
 
     @classmethod
@@ -203,13 +202,13 @@ class Output(Utils):
 
     def __init__(self):
         """default to GNU/Linux if no distro"""
-        distro = self.x_distro('name').rstrip()
+        distro = self.x_distro().rstrip()
         self.distro = 'GNU/Linux' if distro not in DIST_DICT else distro
 
         brand_color = self.distro if BRAND not in DIST_DICT else BRAND
         self.color = DIST_DICT.get(brand_color, distro)
 
-    def x_distro(self, name):
+    def x_distro(self, name='name'):
         """x_distro: determing what distro is being used, both name and full name
         platform.linux_distribution() is not used. It's deprecated and flagged for removal
         """
@@ -289,7 +288,7 @@ class Distro(Output, Utils):
     """Display the Distro name"""
     def __init__(self):
         self.key, self.value = 'Distro', self.x_distro('full')
-        super().__init__()
+        #super().__init__()
 
 
 class Kernel(Utils):
@@ -322,8 +321,10 @@ class WindowManager(Utils):
     def __init__(self):
         window_manager = 'Quartz' if self.x_system('Darwin') else ''
 
+        procs = self.x_process()
+
         for key in WM_DICT:
-            if key in self.x_process():
+            if key in procs:
                 window_manager = WM_DICT[key]
                 break
 
@@ -333,10 +334,10 @@ class WindowManager(Utils):
 class DesktopEnvironment(Utils):
     """Get Desktop Environment"""
     def __init__(self):
-        desktop_enviroment = ''
+        desktop_enviroment, procs = '', self.x_process()
 
         for key in DE_DICT:
-            if key in self.x_process():
+            if key in procs:
                 desktop_enviroment = DE_DICT[key]
                 break
 
@@ -431,13 +432,13 @@ class Disk(Utils):
     def __init__(self):
         if self.x_system('Linux'):
             filesystems = tuple(zip(('-t',) * len(FS_TYPES), FS_TYPES))
-            df = self.x_popen(list(chain(['df', '-HlPT', '--total'], *filesystems)))
-            total = tuple(sub('%', '', t) for t in df.splitlines()[-1].split())
+            fs_types = self.x_popen(list(chain(['df', '-HlPT', '--total'], *filesystems)))
+            total = tuple(sub('%', '', t) for t in fs_types.splitlines()[-1].split())
             disknr, size, used, avail, capacity = total[1:-1]
             disknr = self.x_popen(['df', '/boot']).splitlines()[1].split()[0].replace('/dev/', '')
         elif self.x_system('Darwin'):
-            df = self.x_popen(['df', '-HT', ','.join(FS_TYPES)])
-            total = tuple(sub('(/dev/|%)', '', t) for t in df.splitlines()[1].split())
+            fs_types = self.x_popen(['df', '-HT', ','.join(FS_TYPES)])
+            total = tuple(sub('(/dev/|%)', '', t) for t in fs_types.splitlines()[1].split())
             disknr, size, used, avail, capacity = total[:-1]
 
         used_percent = int(capacity) if capacity else '-'
