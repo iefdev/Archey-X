@@ -41,7 +41,7 @@ from time import time
 INFO = f'Archey X requires Python 3.6+ - Please upgrade...'
 
 # Version: use --help and --version
-VERSION = 'v1.0-beta-20200625'  # 04:28:45
+VERSION = 'v1.0-beta-20200627'  # 20:22:30
 COPYRIGHT = f'Copyright (c) {datetime.now().year} Eric F'
 GPL_INFO = '''This program is distributed in the hope that it will be useful, but
 WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -56,7 +56,7 @@ DISK_WARNING_THRESHOLD = 20     # default: 20 (% of diskspace left)
 
 
 # Dictionaries, lists and tuples
-# ------------------------------------------------------------
+# --------------------------------
 COLOR_PAIRS = (
     (33, 97), (34, 34), (37, 30), (36, 36),  # yellow/white, blue/blue, grey/grey, cyan/cyan
     (34, 97), (31, 31), (97, 35), (97, 32),  # blue/white, red/red, white/purple, white/green
@@ -126,7 +126,7 @@ FS_TYPES = ('apfs', 'btrfs', 'ext2', 'ext3', 'ext4', 'fat32', 'fuseblk', 'hfs', 
 
 
 # ArgumentParser - help/options
-# ------------------------------------------------------------
+# --------------------------------
 __version__ = f'%(prog)s: {VERSION}, {COPYRIGHT}\n\n{GPL_INFO}\v'
 PARSER = ArgumentParser(prog='archeyX', formatter_class=RawDescriptionHelpFormatter,
                         add_help=False, conflict_handler='resolve')
@@ -153,7 +153,7 @@ if __name__ == "__main__":
 
 
 # Classes
-# ------------------------------------------------------------
+# --------------------------------
 class Utils():
     """Misc functions/tools"""
 
@@ -222,10 +222,12 @@ class Output(Utils):
 
             get_name = 'macOS' if vcomp(get_version[:-2]) >= vcomp('10.12') else get_name \
                        or get_name if vcomp(get_version[:-2]) <= vcomp('10.7') else 'OS X'
-            osx_name = MACOS_DICT.get(get_version[:-2], osx_name)  # get fancy names
 
-            distro_name = 'Darwin'
-            distro_full = f'{get_name} {get_version} ({osx_name})'
+            # Get the fancy name (ie Tiger, Leopard, Lion, etc)
+            # If not in the dict, display buildVersion instead
+            osx_name = MACOS_DICT.get(get_version[:-2], osx_name)
+
+            distro_name, distro_full = 'Darwin', f'{get_name} {get_version} ({osx_name})'
 
         # (*BSD... Hopefully at some point)
         # elif self.x_system('FreeBSD') or self.x_system('OpenBSD'):
