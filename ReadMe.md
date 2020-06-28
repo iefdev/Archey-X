@@ -87,8 +87,13 @@ Get version and copyright with:
 ```bash
 #example
 $ archeyX -V
-archeyX v1.0-beta-20190928 (Sept 28, 2019)
-Copyright (c) 2019 Eric F
+archeyX: v1.0-beta-20200627, Copyright (c) 2020 Eric F
+
+This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. This is free
+software, and you are welcome to redistribute it under certain
+conditions; see the GNU General Public License (GPLv3) for more details.
 ```
 
 For the original author(s) and copyright, se [Archey][dja], by [djmelek][djm].
@@ -117,8 +122,9 @@ For the original author(s) and copyright, se [Archey][dja], by [djmelek][djm].
 
 - - -
 
+ 
 
-If you have any feedback, suggestions? Please, use the Issues, Pull requests, send an email or a tweet.
+If you have any feedback, suggestions? Please, use the Issues, Merge Requests, send an email or a tweet.
 
 · Eric ([@iEFdev][twitter])
 
