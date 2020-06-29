@@ -37,6 +37,7 @@ from subprocess import check_output, PIPE, Popen
 from sys import platform
 from time import time
 
+
 # Inform about python3.6+ (force an SyntaxError)
 INFO = f'Archey X requires Python 3.6+ - Please upgrade...'
 
@@ -48,7 +49,6 @@ WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. This is free
 software, and you are welcome to redistribute it under certain
 conditions; see the GNU General Public License (GPLv3) for more details.'''
-
 
 # Settings
 DISK_WARNING = 1                # default: 1 (set 0 to disable)
@@ -319,14 +319,8 @@ class WindowManager(Utils):
     """Get the name of the Window Manager
     # Default WM's: OS X = Quartz, Linux = ''"""
     def __init__(self):
-        window_manager = 'Quartz' if self.x_system('Darwin') else ''
-
-        procs = self.x_process()
-
-        for key in WM_DICT:
-            if key in procs:
-                window_manager = WM_DICT[key]
-                break
+        window_manager, procs = 'Quartz' if self.x_system('Darwin') else '', self.x_process()
+        window_manager = [WM_DICT[k] for k in WM_DICT if k in procs][0]
 
         self.key, self.value = 'Window Manager', window_manager
 
@@ -335,11 +329,7 @@ class DesktopEnvironment(Utils):
     """Get Desktop Environment"""
     def __init__(self):
         desktop_enviroment, procs = '', self.x_process()
-
-        for key in DE_DICT:
-            if key in procs:
-                desktop_enviroment = DE_DICT[key]
-                break
+        desktop_enviroment = [DE_DICT[k] for k in DE_DICT if k in procs][0]
 
         self.key, self.value = 'Desktop Environment', desktop_enviroment
 
@@ -502,6 +492,7 @@ if OUT.distro == 'Darwin' and BRAND == 'Apple':
 {color[0]}      ##################        {results[16]}
 {color[0]}        ####      ####          {results[17]}
 \x1b[0m'''}
+
 
 # Display output
 if __name__ == "__main__":
