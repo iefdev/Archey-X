@@ -42,7 +42,7 @@ from time import time
 INFO = f'Archey X requires Python 3.6+ - Please upgrade...'
 
 # Version: use --help and --version
-VERSION = 'v1.0-beta-20200627'  # 21:57:30
+VERSION = 'v1.0-beta-20200707'  # 07:49:45
 COPYRIGHT = f'Copyright (c) {datetime.now().year} Eric F'
 GPL_INFO = '''This program is distributed in the hope that it will be useful, but
 WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -160,8 +160,7 @@ class Utils():
     @classmethod
     def x_popen(cls, cmd):
         """x_popen - less code and easier to use"""
-        get_cmd = Popen(cmd, stdout=PIPE).communicate()[0].decode('utf-8').rstrip('\n')
-        return get_cmd
+        return Popen(cmd, stdout=PIPE).communicate()[0].decode('utf-8').rstrip('\n')
 
     def x_system(self, system='Linux'):
         """x_system - Linux, Darwin etc"""
@@ -174,8 +173,8 @@ class Utils():
             procs = str(check_output(('ps', '-u', getuser(), '-o', 'comm',
                                       '--no-headers')).decode('utf8')).rstrip('\n').split('\n')
         elif self.x_system('Darwin'):
-            procs = str(check_output(('ps', '-u', getuser(), '-o',
-                                      'comm')).decode('utf-8').split('/')).replace('\\n', '')
+            procs = str(check_output(('ps', '-cu', getuser(), '-o',
+                                      'comm')).decode('utf-8')).rstrip('\n').split('\n')
         return procs if procs else None
 
     @classmethod
@@ -223,7 +222,7 @@ class Output(Utils):
                        or get_name if vcomp(get_version[:-2]) <= vcomp('10.7') else 'OS X'
 
             # Get the fancy name (ie Tiger, Leopard, Lion, etc)
-            # If not in the dict, display buildVersion instead
+            # If not in the dict, display -buildVersion instead
             osx_name = MACOS_DICT.get(get_version[:-2], osx_name)
 
             distro_name, distro_full = 'Darwin', f'{get_name} {get_version} ({osx_name})'
