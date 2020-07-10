@@ -170,11 +170,9 @@ class Utils():
     def x_process(self):
         """x_process - get the processes to find name of WM/DE"""
         if self.x_system('Linux'):
-            procs = str(check_output(('ps', '-u', getuser(), '-o', 'comm',
-                                      '--no-headers')).decode('utf8')).rstrip('\n').split('\n')
+            procs = self.x_popen(['ps', '-u', getuser(), '-o', 'comm', '--no-headers']).split('\n')
         elif self.x_system('Darwin'):
-            procs = str(check_output(('ps', '-cu', getuser(), '-o',
-                                      'comm')).decode('utf-8')).rstrip('\n').split('\n')
+            procs = self.x_popen(['ps', '-cu', getuser(), '-o', 'comm']).split('\n')
         return procs if procs else None
 
     @classmethod
