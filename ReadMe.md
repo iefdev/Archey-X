@@ -12,7 +12,7 @@ This is a forked and ported version of the original script: [Archey][dja], by [d
 
 ### Demo and Screenshots
 
-Here's a small demo you can watch at Vimeo.
+Here's a small demo you can watch at [Vimeo][vimeo].
 
 [![][vimeo_poster]][vimeo]
 
@@ -138,8 +138,8 @@ If you have any feedback, suggestions? Please, use the Issues, Merge Requests, s
 [dja]: https://github.com/djmelik/archey "Archey"
 [djm]: https://github.com/djmelik "Melik Manukyan"
 [vimeo]: https://vimeo.com/217440806 "Archey X (demo)"
-[vimeo_poster]: https://gitlab.com/iEFdev/Archey-X/raw/master/images/vimeo_poster.png "Archey X (demo)"
-[scrap]: https://gitlab.com/iEFdev/Archey-X/raw/master/images/screenshot.png "Screenshot of Archey X"
+[vimeo_poster]: https://gitlab.com/iEFdev/Archey-X/raw/main/images/vimeo_poster.png "Archey X (demo)"
+[scrap]: https://gitlab.com/iEFdev/Archey-X/raw/main/images/screenshot.png "Screenshot of Archey X"
 [scraps]: https://gitlab.com/iEFdev/Archey-X/wikis/Screenshots "More Screenshots"
 [x2]: https://gitlab.com/iEFdev/Archey-X/wikis/_Images/screenshot_x2.png "Screenshot(s) of Archey X"
 [myterm]: https://gitlab.com/iEFdev/myTerm "My Terminal theme"
