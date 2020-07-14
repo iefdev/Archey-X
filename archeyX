@@ -42,7 +42,7 @@ from time import time
 INFO = f'Archey X requires Python 3.6+ - Please upgrade...'
 
 # Version: use --help and --version
-VERSION = 'v1.0-beta-20200707'  # 07:49:45
+VERSION = 'v1.0-beta-20200714'  # 15:04:10
 COPYRIGHT = f'Copyright (c) {datetime.now().year} Eric F'
 GPL_INFO = '''This program is distributed in the hope that it will be useful, but
 WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -121,8 +121,8 @@ LABELS = ('User', 'Hostname', 'Distro', 'Kernel', 'Uptime', 'WindowManager',
 CLASSES = {x: x for x in LABELS}
 
 # List of filesystemes to be included in 'df'
-FS_TYPES = ('apfs', 'btrfs', 'ext2', 'ext3', 'ext4', 'fat32', 'fuseblk', 'hfs', 'jfs',
-            'lxfs', 'msdos', 'ntfs', 'reiserfs', 'simfs', 'tempfs', 'xfs', 'zfs')
+FS_TYPES = ('apfs', 'btrfs', 'ext2', 'ext3', 'ext4', 'fat32', 'f2fs', 'fuseblk', 'hfs', 'jfs',
+            'lxfs', 'msdos', 'nilfs2', 'ntfs', 'reiserfs', 'simfs', 'tempfs', 'xfs', 'zfs')
 
 
 # ArgumentParser - help/options
