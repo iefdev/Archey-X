@@ -48,7 +48,7 @@ To load at start. Add to your `.bashrc` _(or `.bash_profile`)_:
 
 ```bash
 # Load archeyX (if installed)
-[[ `type archeyX 2> /dev/null` && $UID != 0 ]] && archeyX
+[[ $(type archeyX 2> /dev/null) && ${UID} != 0 ]] && archeyX
 ```
 
 > **Note:** When using `scp` over the network and logging into a machine with `archeyX` loading up... It _might_ cause an error about output. It's about being interactive or not. You can try to use something like this:
@@ -56,8 +56,8 @@ To load at start. Add to your `.bashrc` _(or `.bash_profile`)_:
 > ```bash
 > # Load archey (if installed)
 > # If not running interactively, don't do anything
-> if [[ -n "$PS1" && $UID != 0 ]]; then
->     [[ `type archeyX 2> /dev/null` ]] && archeyX
+> if [[ -n "${PS1}" && ${UID} != 0 ]]; then
+>     [[ $(type archeyX 2> /dev/null) ]] && archeyX
 > fi
 > ```
 
@@ -71,7 +71,7 @@ See [Settings and Colors][prefs] in the Wiki
 
 - [x] Arch Linux
 - [x] CentOS: 7.6.1810 (server)
-- [x] Debian: 8.3 (server), 10.4 (MATE)
+- [x] Debian: 8.3 (server), 10.4 (MATE, Xfce)
 - [x] Fedora: 23 (Cinnamon)
 - [x] OS X/macOS: 10.7.5
 
@@ -85,7 +85,7 @@ _Please, report working distributions [here][iss1]._
 Get version and copyright with:
 
 ```bash
-#example
+# Example
 $ archeyX -V
 archeyX: v1.0-beta-20200627, Copyright (c) 2020 Eric F
 
