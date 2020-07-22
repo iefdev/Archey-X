@@ -42,7 +42,7 @@ from time import time
 INFO = f'Archey X requires Python 3.6+ - Please upgrade...'
 
 # Version: use --help and --version
-VERSION = 'v1.0-beta-20200714'  # 15:04:10
+VERSION = 'v1.0-beta-20200722'  # 09:41:55
 COPYRIGHT = f'Copyright (c) {datetime.now().year} Eric F'
 GPL_INFO = '''This program is distributed in the hope that it will be useful, but
 WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -103,7 +103,7 @@ MACOS_NAMES = ('Cheetah', 'Puma', 'Jaguar', 'Panther', 'Tiger', 'Leopard', 'Snow
                'Mountain Lion', 'Mavericks', 'Yosemite', 'El Capitan', 'Sierra', 'High Sierra',
                'Mojave', 'Catalina', 'Big Sur')
 
-MACOS10 = {f'10.{x}': y for x, y in enumerate(MACOS_NAMES[:16])}
+MACOS10 = {f'10.{x}': y for x, y in enumerate(MACOS_NAMES[:17])}
 MACOS11 = {f'11.{x}': y for x, y in enumerate(MACOS_NAMES[16:])}
 
 MACOS_DICT = {**MACOS10, **MACOS11}
