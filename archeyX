@@ -33,7 +33,7 @@ from math import ceil
 from os import getenv, path, uname
 from re import sub, match, compile as comp
 from socket import gethostname
-from subprocess import check_output, PIPE, Popen
+from subprocess import PIPE, Popen
 from sys import platform
 from time import time
 
@@ -42,7 +42,7 @@ from time import time
 INFO = f'Archey X requires Python 3.6+ - Please upgrade...'
 
 # Version: use --help and --version
-VERSION = 'v1.0-beta-20200722'  # 09:41:55
+VERSION = 'v1.0-beta-20200724'  # 13:21:10
 COPYRIGHT = f'Copyright (c) {datetime.now().year} Eric F'
 GPL_INFO = '''This program is distributed in the hope that it will be useful, but
 WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -272,19 +272,19 @@ class Output(Utils):
 class User(Utils):
     """Get the username"""
     def __init__(self):
-        self.key, self.value = 'User', getuser()
+        self.key, self.value = __class__.__name__, getuser()
 
 
 class Hostname(Utils):
     """Get the hostname"""
     def __init__(self):
-        self.key, self.value = 'Hostname', gethostname()
+        self.key, self.value = __class__.__name__, gethostname()
 
 
 class Distro(Output, Utils):
     """Display the Distro name"""
     def __init__(self):
-        self.key, self.value = 'Distro', self.x_distro('full')
+        self.key, self.value = __class__.__name__, self.x_distro('full')
         #super().__init__()
 
 
@@ -295,7 +295,7 @@ class Kernel(Utils):
         #xnu = sub('.*:+', '', uname()[3]).strip('REL.*')           # xnu-123...
         kernel = xnu if self.x_system('Darwin') else uname_srm
 
-        self.key, self.value = 'Kernel', kernel
+        self.key, self.value = __class__.__name__, kernel
 
 
 class Uptime(Utils):
@@ -309,7 +309,7 @@ class Uptime(Utils):
             with open('/proc/uptime', 'r') as utime:
                 uptime = utime.read().split('.')[0]
 
-        self.key, self.value = 'Uptime', f'{timedelta(seconds=int(uptime))}'[:-3]
+        self.key, self.value = __class__.__name__, f'{timedelta(seconds=int(uptime))}'[:-3]
 
 
 class WindowManager(Utils):
@@ -319,7 +319,7 @@ class WindowManager(Utils):
         window_manager, procs = 'Quartz' if self.x_system('Darwin') else '', self.x_process()
         window_manager = [WM_DICT[k] for k in WM_DICT if k in procs][0]
 
-        self.key, self.value = 'Window Manager', window_manager
+        self.key, self.value = sub('(.*)([A-Z]+)', '\\1 \\2', __class__.__name__), window_manager
 
 
 class DesktopEnvironment(Utils):
@@ -328,19 +328,19 @@ class DesktopEnvironment(Utils):
         desktop_enviroment, procs = '', self.x_process()
         desktop_enviroment = [DE_DICT[k] for k in DE_DICT if k in procs][0]
 
-        self.key, self.value = 'Desktop Environment', desktop_enviroment
+        self.key, self.value = sub('(.*)([A-Z]+)', '\\1 \\2', __class__.__name__), desktop_enviroment
 
 
 class Shell(Utils):
     """Shell name"""
     def __init__(self):
-        self.key, self.value = 'Shell', getenv('SHELL')
+        self.key, self.value = __class__.__name__, getenv('SHELL')
 
 
 class Terminal(Utils):
     """Terminal name"""
     def __init__(self):
-        self.key, self.value = 'Terminal', getenv('TERM')
+        self.key, self.value = __class__.__name__, getenv('TERM')
 
 
 class Packages(Utils):
@@ -357,7 +357,7 @@ class Packages(Utils):
 
         packages = 'n/a' if packages == '' else len(packages.rstrip('\n').split('\n'))
 
-        self.key, self.value = 'Packages', packages
+        self.key, self.value = __class__.__name__, packages
 
 
 class CPU(Utils):
@@ -371,7 +371,7 @@ class CPU(Utils):
             cpu = self.x_popen(['sysctl', '-n', 'machdep.cpu.brand_string'])
             cpu_info = sub('  +', ' ', cpu)
 
-        self.key, self.value = 'CPU', sub('model name\t: |CPU ', '', cpu_info).strip()
+        self.key, self.value = __class__.__name__, sub('model name\t: |CPU ', '', cpu_info).strip()
 
 
 class RAM(Utils):
@@ -409,7 +409,7 @@ class RAM(Utils):
         red, grn, clr = (COLOR_VARIES[0], COLOR_VARIES[1], COLOR_VARIES[-1])
         ram_display = f'{red}{used_ram}MB{clr}, {grn}{total_free}MB{clr} of {total_ram}GB'
 
-        self.key, self.value = 'RAM', ram_display
+        self.key, self.value = __class__.__name__, ram_display
 
 
 class Disk(Utils):
@@ -440,7 +440,7 @@ class Disk(Utils):
         disk_display = f'{col}{used}B{clr} ({capacity}%) of {size}B, ' \
                        f'{avail}B available ({disknr})'
 
-        self.key, self.value = 'Disk', disk_display
+        self.key, self.value = __class__.__name__, disk_display
 
 
 # Start output
