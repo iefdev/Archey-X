@@ -1,0 +1,10 @@
+[FORMAT]
+
+# Add a bit of headroom (pylint default: 100)
+max-line-length=105
+
+
+[MESSAGES CONTROL]
+
+# archeyX:1:0: C0103: Module name "archeyX" doesn't conform to snake_case naming style (invalid-name)
+disable=C0103
