@@ -55,7 +55,7 @@ To load at start. Add to your `.bashrc` _(or `.bash_profile`)_:
 [[ $(type archeyX 2> /dev/null) && ${UID} != 0 ]] && archeyX
 ```
 
-#### Only in interavcive mode
+#### Only in interactive mode
 
 If you have installed `archeyX` on a remote server, with an SSH key based setup. Transfering files to the remote with `scp` for example, will cause some errors. You can use `$-` to check for that:
 
@@ -139,7 +139,7 @@ If you have any feedback, suggestions? Please, use the Issues, Merge Requests, s
 <!-- Markdown: link & image dfn's -->
 [pythonVersion]: https://img.shields.io/badge/python->%3D_3.6-FFD343.svg?logo=python&logoColor=FFD343&labelColor=3D75AD&style=plastic
 [licenseBadge]: https://img.shields.io/badge/license-GPL--3.0--or--later-C00?style=plastic
-[masterBadge]: https://img.shields.io/badge/master-v0.99--yyyymmdd-778899.svg?logo=gitlab&style=plastic
+[masterBadge]: https://img.shields.io/badge/master-v0.99-778899.svg?logo=gitlab&style=plastic
 [latestBadge]: https://img.shields.io/badge/latest-v0.9.0-blue.svg?logo=gitlab&style=plastic
 [latest]: https://gitlab.com/iEFdev/Archey-X/tags/ "Tags"
 [master]: https://gitlab.com/iEFdev/Archey-X/ "Master"
