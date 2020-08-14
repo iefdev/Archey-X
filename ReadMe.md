@@ -7,7 +7,7 @@
 ![][pythonVersion]
 
 
-This is a forked and ported version of the original script: [Archey][dja], by [djmelek][djm] - made to be X compatible with both OS X and misc GNU/Linux distributions - hence the name: Archey **X**.
+This is a forked and ported version of the original script: [Archey][dja], by [djmelek][djm] - made to be X compatible with both OS X/macOS and misc GNU/Linux distributions – hence the name: Archey **X**.
 
 
 ### Demo and Screenshots
@@ -42,7 +42,11 @@ _(make sure `/usr/local/bin` is in your `PATH`)_
 
 ## Usage
 
-    archeyX
+```bash
+archeyX
+```
+
+#### Auto-load
 
 To load at start. Add to your `.bashrc` _(or `.bash_profile`)_:
 
@@ -51,16 +55,17 @@ To load at start. Add to your `.bashrc` _(or `.bash_profile`)_:
 [[ $(type archeyX 2> /dev/null) && ${UID} != 0 ]] && archeyX
 ```
 
-> **Note:** When using `scp` over the network and logging into a machine with `archeyX` loading up... It _might_ cause an error about output. It's about being interactive or not. You can try to use something like this:
->
-> ```bash
-> # Load archey (if installed)
-> # If not running interactively, don't do anything
-> if [[ -n "${PS1}" && ${UID} != 0 ]]; then
->     [[ $(type archeyX 2> /dev/null) ]] && archeyX
-> fi
-> ```
+#### Only in interavcive mode
 
+If you have installed `archeyX` on a remote server, with an SSH key based setup. Transfering files to the remote with `scp` for example, will cause some errors. You can use `$-` to check for that:
+
+```bash
+# Load archeyX (if installed)
+# If not running interactively, don't do anything
+if [[ $- == *i*  && ${UID} != 0 ]]; then
+    [[ $(type archeyX 2> /dev/null) ]] && archeyX
+fi
+```
 
 ## Settings and Colors
 
@@ -87,13 +92,15 @@ Get version and copyright with:
 ```bash
 # Example
 $ archeyX -V
-archeyX: v1.0-beta-20200627, Copyright (c) 2020 Eric F
+archeyX: v0.9.0, Copyright (c) 2020 Eric F
 
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. This is free
-software, and you are welcome to redistribute it under certain
-conditions; see the GNU General Public License (GPLv3) for more details.
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+more details.
+
+You should have received a copy of the GNU General Public License along
+with this program. If not, see <https://www.gnu.org/licenses/gpl-3.0.txt/>.
 ```
 
 For the original author(s) and copyright, se [Archey][dja], by [djmelek][djm].
@@ -130,10 +137,10 @@ If you have any feedback, suggestions? Please, use the Issues, Merge Requests, s
 · Eric ([@iEFdev][twitter])
 
 <!-- Markdown: link & image dfn's -->
-[pythonVersion]: https://img.shields.io/badge/Python-%3E%3D_3.6-FAC826.svg?style=plastic&colorA=3D75AD
-[licenseBadge]: https://img.shields.io/badge/license-GPL--3.0-orange.svg?style=plastic
-[masterBadge]: https://img.shields.io/badge/master-v1.0--beta-778899.svg?style=plastic
-[latestBadge]: https://img.shields.io/badge/latest-v0.9.0-blue.svg?style=plastic
+[pythonVersion]: https://img.shields.io/badge/python->%3D_3.6-FFD343.svg?logo=python&logoColor=FFD343&labelColor=3D75AD&style=plastic
+[licenseBadge]: https://img.shields.io/badge/license-GPL--3.0--or--later-C00?style=plastic
+[masterBadge]: https://img.shields.io/badge/master-v0.99--yyyymmdd-778899.svg?logo=gitlab&style=plastic
+[latestBadge]: https://img.shields.io/badge/latest-v0.9.0-blue.svg?logo=gitlab&style=plastic
 [latest]: https://gitlab.com/iEFdev/Archey-X/tags/ "Tags"
 [master]: https://gitlab.com/iEFdev/Archey-X/ "Master"
 [dja]: https://github.com/djmelik/archey "Archey"
