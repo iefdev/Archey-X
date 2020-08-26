@@ -3,15 +3,15 @@
 """/usr/local/bin/archeyX
 
 Description:
-   Archey X is a simple system information tool written in Python.
+  Archey X is a simple system information tool written in Python.
 
 Licence:
   Distributed under GPL-3.0-or-later (GNU General Public License v3 or later).
-  See LICENSE, or <https://www.gnu.org/licenses/gpl-3.0.html> for the full license text.
+  See LICENSE, or <https://www.gnu.org/licenses/gpl-3.0.html>.
 
 Author notes:
-  This is a is a forked and ported version of the original script: Archey, by Melik Manukyan.
-  It's made to be cross platform and able to auto detect different distros.
+  This is a forked/ported version of the original script: Archey, by Melik Manukyan.
+  It's made to be cross platform, and able to auto detect different distros.
 
 Original author(s) and copyright:
   (c) 2010 Melik Manukyan <melik@archlinux.us>
@@ -42,7 +42,7 @@ from time import time
 INFO = f'Archey X requires Python 3.6+ - Please upgrade...'
 
 # Version: use --help and --version
-VERSION = 'v0.99-20200814'  # 06:23:45
+VERSION = 'v0.99-20200826'
 COPYRIGHT = f'Copyright (c) {datetime.now().year} Eric F'
 GPL_INFO = '''This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
@@ -78,8 +78,8 @@ DIST_DICT = {
 
 DE_DICT = {
     'cinnamon-sessio': 'Cinnamon', 'Finder': 'Finder', 'gnome-session': 'GNOME',
-    'ksmserver': 'KDE', 'lxsession': 'LXDE', 'mate-session': 'MATE', 'mate-terminal': 'MATE',
-    'xfce4-session': 'Xfce'
+    'ksmserver': 'KDE', 'lxsession': 'LXDE', 'mate-session': 'MATE',
+    'mate-terminal': 'MATE', 'xfce4-session': 'Xfce'
 }
 
 WM_DICT = {
@@ -94,14 +94,14 @@ WM_DICT = {
     # OS X/macOS
     'Amethyst': 'Amethyst', 'AppGrid': 'AppGrid', 'Autumn': 'Autumn', 'Cinch': 'Cinch',
     'chunkwm': 'Chunkwm', 'Factory': 'Factory', 'Hammerspoon': 'Hammerspoon',
-    'Mizage': 'Mizage', 'Moom': 'Moom', 'Optimal Layout': 'Optimal Layout', 'Phoenix': 'Phoenix',
-    'ShiftIt': 'ShiftIt', 'SizeUp': 'SizeUp', 'Slate': 'Slate', 'Slicer': 'Slicer',
-    'Spectacle': 'Spectacle', 'TylerWM': 'TylerWM', 'Xmonad': 'Xmonad'
+    'Mizage': 'Mizage', 'Moom': 'Moom', 'Optimal Layout': 'Optimal Layout',
+    'Phoenix': 'Phoenix', 'ShiftIt': 'ShiftIt', 'SizeUp': 'SizeUp', 'Slate': 'Slate',
+    'Slicer': 'Slicer', 'Spectacle': 'Spectacle', 'TylerWM': 'TylerWM', 'Xmonad': 'Xmonad'
 }
 
-MACOS_NAMES = ('Cheetah', 'Puma', 'Jaguar', 'Panther', 'Tiger', 'Leopard', 'Snow Leopard', 'Lion',
-               'Mountain Lion', 'Mavericks', 'Yosemite', 'El Capitan', 'Sierra', 'High Sierra',
-               'Mojave', 'Catalina', 'Big Sur')
+MACOS_NAMES = ('Cheetah', 'Puma', 'Jaguar', 'Panther', 'Tiger', 'Leopard', 'Snow Leopard',
+               'Lion', 'Mountain Lion', 'Mavericks', 'Yosemite', 'El Capitan', 'Sierra',
+               'High Sierra', 'Mojave', 'Catalina', 'Big Sur')
 
 MACOS10 = {f'10.{x}': y for x, y in enumerate(MACOS_NAMES[:17])}
 MACOS11 = {f'11.{x}': y for x, y in enumerate(MACOS_NAMES[16:])}
@@ -313,22 +313,21 @@ class Uptime(Utils):
 
 
 class WindowManager(Utils):
-    """Get the name of the Window Manager
-    # Default WM's: OS X = Quartz, Linux = ''"""
+    """Get the name of the Window Manager"""
     def __init__(self):
-        window_manager, procs = 'Quartz' if self.x_system('Darwin') else '', self.x_process()
-        window_manager = [WM_DICT[k] for k in WM_DICT if k in procs][0]
+        wm_value, procs = 'Quartz' if self.x_system('Darwin') else '', self.x_process()
+        wm_value = [WM_DICT[k] for k in WM_DICT if k in procs][0]
 
-        self.key, self.value = sub('(.*)([A-Z]+)', '\\1 \\2', __class__.__name__), window_manager
+        self.key, self.value = sub('(.*)([A-Z]+)', '\\1 \\2', __class__.__name__), wm_value
 
 
 class DesktopEnvironment(Utils):
     """Get Desktop Environment"""
     def __init__(self):
-        desktop_enviroment, procs = '', self.x_process()
-        desktop_enviroment = [DE_DICT[k] for k in DE_DICT if k in procs][0]
+        de_value, procs = '', self.x_process()
+        de_value = [DE_DICT[k] for k in DE_DICT if k in procs][0]
 
-        self.key, self.value = sub('(.*)([A-Z]+)', '\\1 \\2', __class__.__name__), desktop_enviroment
+        self.key, self.value = sub('(.*)([A-Z]+)', '\\1 \\2', __class__.__name__), de_value
 
 
 class Shell(Utils):
@@ -414,8 +413,7 @@ class RAM(Utils):
 
 class Disk(Utils):
     """Calculate the disk usage and format to display
-    # disk_vars: used, capacity, size, available, disknr
-    # Display: used (%) of total, N available (disk)"""
+    # Disk: used (%) of total, N available (disk)"""
     def __init__(self):
         if self.x_system('Linux'):
             filesystems = tuple(zip(('-t',) * len(FS_TYPES), FS_TYPES))
