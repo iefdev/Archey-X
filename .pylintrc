@@ -1,7 +1,6 @@
 [FORMAT]
 
-# Add a bit of headroom (pylint default: 100)
-max-line-length=105
+max-line-length=100
 
 
 [MESSAGES CONTROL]
