@@ -42,7 +42,7 @@ from time import time
 INFO = f'Archey X requires Python 3.6+ - Please upgrade...'
 
 # Version: use --help and --version
-VERSION = 'v0.99-20200826'
+VERSION = 'v0.99-20230821'
 COPYRIGHT = f'Copyright (c) {datetime.now().year} Eric F'
 GPL_INFO = '''This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
@@ -71,9 +71,9 @@ DIST_DICT = {
     'GNU/Linux': 'color01', 'Arch': 'color02', 'Crunchbang': 'color03',
     'Darwin': 'color04', 'Mac OS X': 'color04', 'Fedora': 'color05',
     'Alpine': 'color05', 'Antergos': 'color05', 'elementary OS': 'color05',
-    'RHEL': 'color06', 'Debian': 'color06', 'Ubuntu': 'color06',
-    'Gentoo': 'color07', 'Linux Mint': 'color08', 'SLES': 'color09',
-    'Manjaro': 'color09', 'OpenSUSE': 'color11', 'CentOS': 'color12',
+    'RHEL': 'color06', 'Debian': 'color06', 'Ubuntu': 'color06', 'Gentoo': 'color07',
+    'Linux Mint': 'color08', 'SLES': 'color09', 'Manjaro': 'color09',
+    'OpenSUSE': 'color11', 'Rocky': 'color11', 'Alma': 'color12', 'CentOS': 'color12',
 }
 
 DE_DICT = {
@@ -99,9 +99,9 @@ WM_DICT = {
     'Slicer': 'Slicer', 'Spectacle': 'Spectacle', 'TylerWM': 'TylerWM', 'Xmonad': 'Xmonad'
 }
 
-MACOS_NAMES = ('Cheetah', 'Puma', 'Jaguar', 'Panther', 'Tiger', 'Leopard', 'Snow Leopard',
-               'Lion', 'Mountain Lion', 'Mavericks', 'Yosemite', 'El Capitan', 'Sierra',
-               'High Sierra', 'Mojave', 'Catalina', 'Big Sur')
+MACOS_NAMES = ('Cheetah', 'Puma', 'Jaguar', 'Panther', 'Tiger', 'Leopard', 'Snow Leopard', 'Lion',
+               'Mountain Lion', 'Mavericks', 'Yosemite', 'El Capitan', 'Sierra', 'High Sierra',
+               'Mojave', 'Catalina', 'Big Sur', 'Monterey', 'Ventura', 'Sonoma')
 
 MACOS10 = {f'10.{x}': y for x, y in enumerate(MACOS_NAMES[:17])}
 MACOS11 = {f'11.{x}': y for x, y in enumerate(MACOS_NAMES[16:])}
@@ -109,8 +109,9 @@ MACOS11 = {f'11.{x}': y for x, y in enumerate(MACOS_NAMES[16:])}
 MACOS_DICT = {**MACOS10, **MACOS11}
 
 PM_DICT = {
-    'pacman': ['-Q'], 'rpm': ['-qa'], 'apk': ['info'], 'dpkg': ['--get-selections'],
-    'emerge': ['-ep', 'world'], 'zypper': ['search', '--installed-only'],
+    'pacman': ['-Q'], 'dnf': ['rq', '--installed', '-Cq'], 'rpm': ['-qa'],
+    'apk': ['info'], 'dpkg': ['--get-selections'], 'emerge': ['-ep', 'world'],
+    'zypper': ['search', '--installed-only'],
 
     'port': ['echo', 'installed'], 'fink': ['list', '-i'], 'brew': ['list']     # OS X/macOS
 }
@@ -346,6 +347,9 @@ class Packages(Utils):
     """Get the number of installed packages"""
     def __init__(self):
         packages = ''
+
+        # Remove rpm if dnf is installed, to avoid double runs
+        PM_DICT.pop('rpm') if 'dnf' in PM_DICT else False
 
         for pman in PM_DICT:
             if fExec(pman):
