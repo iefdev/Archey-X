@@ -34,8 +34,8 @@ from os import getenv, path, uname
 from re import sub, match, compile as comp
 from socket import gethostname
 from subprocess import PIPE, Popen
-from sys import platform
 from time import time
+import sys
 
 
 # Inform about python3.6+ (force an SyntaxError)
@@ -165,7 +165,7 @@ class Utils():
 
     def x_system(self, system='Linux'):
         """x_system - Linux, Darwin etc"""
-        brand = self.capitilize_name(platform).replace('2', '').strip()
+        brand = self.capitilize_name(sys.platform).replace('2', '').strip()
         return bool(system == brand and brand != '')
 
     def x_process(self):
@@ -208,7 +208,7 @@ class Output(Utils):
 
     def x_distro(self, name='name'):
         """x_distro: determing what distro is being used, both name and full name
-        platform.linux_distribution() is not used. It's deprecated and flagged for removal
+        sys.platform.linux_distribution() is not used. It's deprecated and flagged for removal
         """
         distro_name = distro_full = '' if self.x_system('Darwin') else 'GNU/Linux'
 
@@ -273,19 +273,19 @@ class Output(Utils):
 class User(Utils):
     """Get the username"""
     def __init__(self):
-        self.key, self.value = __class__.__name__, getuser()
+        self.key, self.value = self.__class__.__name__, getuser()
 
 
 class Hostname(Utils):
     """Get the hostname"""
     def __init__(self):
-        self.key, self.value = __class__.__name__, gethostname()
+        self.key, self.value = self.__class__.__name__, gethostname()
 
 
 class Distro(Output, Utils):
     """Display the Distro name"""
     def __init__(self):
-        self.key, self.value = __class__.__name__, self.x_distro('full')
+        self.key, self.value = self.__class__.__name__, self.x_distro('full')
         #super().__init__()
 
 
@@ -296,7 +296,7 @@ class Kernel(Utils):
         #xnu = sub('.*:+', '', uname()[3]).strip('REL.*')           # xnu-123...
         kernel = xnu if self.x_system('Darwin') else uname_srm
 
-        self.key, self.value = __class__.__name__, kernel
+        self.key, self.value = self.__class__.__name__, kernel
 
 
 class Uptime(Utils):
@@ -310,7 +310,7 @@ class Uptime(Utils):
             with open('/proc/uptime', 'r') as utime:
                 uptime = utime.read().split('.')[0]
 
-        self.key, self.value = __class__.__name__, f'{timedelta(seconds=int(uptime))}'[:-3]
+        self.key, self.value = self.__class__.__name__, f'{timedelta(seconds=int(uptime))}'[:-3]
 
 
 class WindowManager(Utils):
@@ -319,7 +319,7 @@ class WindowManager(Utils):
         wm_value, procs = 'Quartz' if self.x_system('Darwin') else '', self.x_process()
         wm_value = [WM_DICT[k] for k in WM_DICT if k in procs][0]
 
-        self.key, self.value = sub('(.*)([A-Z]+)', '\\1 \\2', __class__.__name__), wm_value
+        self.key, self.value = sub('(.*)([A-Z]+)', '\\1 \\2', self.__class__.__name__), wm_value
 
 
 class DesktopEnvironment(Utils):
@@ -328,19 +328,19 @@ class DesktopEnvironment(Utils):
         de_value, procs = '', self.x_process()
         de_value = [DE_DICT[k] for k in DE_DICT if k in procs][0]
 
-        self.key, self.value = sub('(.*)([A-Z]+)', '\\1 \\2', __class__.__name__), de_value
+        self.key, self.value = sub('(.*)([A-Z]+)', '\\1 \\2', self.__class__.__name__), de_value
 
 
 class Shell(Utils):
     """Shell name"""
     def __init__(self):
-        self.key, self.value = __class__.__name__, getenv('SHELL')
+        self.key, self.value = self.__class__.__name__, getenv('SHELL')
 
 
 class Terminal(Utils):
     """Terminal name"""
     def __init__(self):
-        self.key, self.value = __class__.__name__, getenv('TERM')
+        self.key, self.value = self.__class__.__name__, getenv('TERM')
 
 
 class Packages(Utils):
@@ -360,7 +360,7 @@ class Packages(Utils):
 
         packages = 'n/a' if packages == '' else len(packages.rstrip('\n').split('\n'))
 
-        self.key, self.value = __class__.__name__, packages
+        self.key, self.value = self.__class__.__name__, packages
 
 
 class CPU(Utils):
@@ -374,7 +374,7 @@ class CPU(Utils):
             cpu = self.x_popen(['sysctl', '-n', 'machdep.cpu.brand_string'])
             cpu_info = sub('  +', ' ', cpu)
 
-        self.key, self.value = __class__.__name__, sub('model name\t: |CPU ', '', cpu_info).strip()
+        self.key, self.value = self.__class__.__name__, sub('model name\t: |CPU ', '', cpu_info).strip()
 
 
 class RAM(Utils):
@@ -412,7 +412,7 @@ class RAM(Utils):
         red, grn, clr = (COLOR_VARIES[0], COLOR_VARIES[1], COLOR_VARIES[-1])
         ram_display = f'{red}{used_ram}MB{clr}, {grn}{total_free}MB{clr} of {total_ram}GB'
 
-        self.key, self.value = __class__.__name__, ram_display
+        self.key, self.value = self.__class__.__name__, ram_display
 
 
 class Disk(Utils):
@@ -442,7 +442,7 @@ class Disk(Utils):
         disk_display = f'{col}{used}B{clr} ({capacity}%) of {size}B, ' \
                        f'{avail}B available ({disknr})'
 
-        self.key, self.value = __class__.__name__, disk_display
+        self.key, self.value = self.__class__.__name__, disk_display
 
 
 # Start output
@@ -498,6 +498,6 @@ if __name__ == "__main__":
     for x in LABELS:
         OUT.append(vars()[CLASSES[x]]())
     print(OUT.output())
-    exit(0)
+    sys.exit(0)
 else:
-    exit(1)
+    sys.exit(1)
