@@ -2,7 +2,7 @@
 
 > Archey X is a simple tool to display system information.
 
-[![][masterBadge]][master] [![GitLab release][latestBadge]][latest]
+[![][masterBadge]][main] [![GitLab release][latestBadge]][latest]
 
 ![][pythonVersion]
 
@@ -138,12 +138,12 @@ If you have any feedback, suggestions? Please, use the Issues, Merge Requests, s
 · Eric ([@iefdev][x])
 
 <!-- Markdown: link & image dfn's -->
-[pythonVersion]: https://img.shields.io/badge/python->%3D_3.6-FFD343.svg?logo=python&logoColor=FFD343&labelColor=3D75AD&style=plastic
+[pythonVersion]: https://img.shields.io/badge/python-3.6+-FFD343.svg?logo=python&logoColor=FFD343&labelColor=3D75AD&style=plastic
 [licenseBadge]: https://img.shields.io/badge/license-GPL--3.0--or--later-C00?style=plastic
 [masterBadge]: https://img.shields.io/badge/master-v0.99-778899.svg?logo=gitlab&style=plastic
-[latestBadge]: https://img.shields.io/badge/latest-v0.9.0-blue.svg?logo=gitlab&style=plastic
-[latest]: https://gitlab.com/iefdev/Archey-X/tags/ "Tags"
-[master]: https://gitlab.com/iefdev/Archey-X/ "Master"
+[latestBadge]: https://img.shields.io/badge/latest-v0.9.1-blue.svg?logo=gitlab&style=plastic
+[latest]: https://gitlab.com/iefdev/Archey-X/tags/ "Latest tag/release"
+[main]: https://gitlab.com/iefdev/Archey-X/ "main branch"
 [dja]: https://github.com/djmelik/archey "Archey"
 [djm]: https://github.com/djmelik "Melik Manukyan"
 [vimeo]: https://vimeo.com/217440806 "Archey X (demo)"
