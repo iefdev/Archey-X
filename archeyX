@@ -26,7 +26,6 @@ Original author(s) and copyright:
 from argparse import ArgumentParser, RawDescriptionHelpFormatter
 from datetime import datetime, timedelta
 from distutils.spawn import find_executable as fExec
-from distutils.version import StrictVersion as vcomp
 from getpass import getuser
 from itertools import chain
 from math import ceil
@@ -38,7 +37,9 @@ from time import time
 import sys
 
 
-# Inform about python3.6+ (force an SyntaxError)
+# @todo: Implement some sort of raise error for versioncheck
+#		It will bump to 3.10 soon.
+# Inform about python3.10+ (force an SyntaxError)
 INFO = f'Archey X requires Python 3.6+ - Please upgrade...'
 
 # Version: use --help and --version
@@ -388,10 +389,6 @@ class RAM(Utils):
             total_ram = round(float(ram[1]) / 1000, 2)
             used_ram = int(ram[2])
             total_free = int(ram[3]) + int(ram[5])
-            # If <= 3.3.9, we need to add some parts
-            if vcomp(self.x_popen(['free', '-V']).split()[-1]) <= vcomp('3.3.9'):
-                used_ram = used_ram - int(ram[5]) - int(ram[6])
-                total_free = total_free + int(ram[6])
         elif self.is_platform('Darwin'):
             mem_size = self.x_popen(['sysctl', '-n', 'hw.memsize'])
             total_ram = int(mem_size) / 1073741824
@@ -402,7 +399,7 @@ class RAM(Utils):
             for row in range(1, len(get_memory) - 7):
                 row = get_memory[row].replace('down', '').splitlines()[0].strip().split()
                 mem[(row[0])] = int(row[1]) * 4000
-            # [note] Using 4000 (eg 4096) makes it sum up exactly as in Activity Monitor
+            # @note: Using 4000 (eg 4096) makes it sum up exactly as in Activity Monitor
 
             used_ram = ceil((mem['wired'] + mem['active'] +
                              mem['inactive']) / 1048576 / 10.0) * 10
