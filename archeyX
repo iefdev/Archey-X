@@ -165,16 +165,15 @@ class Utils():
         """x_popen - less code and easier to use"""
         return Popen(cmd, stdout=PIPE).communicate()[0].decode('utf-8').rstrip('\n')
 
-    def x_system(self, system='Linux'):
-        """x_system - Linux, Darwin etc"""
-        brand = self.capitilize_name(sys.platform).replace('2', '').strip()
-        return bool(system == brand and brand != '')
+    def is_platform(self, platform: str ='linux') -> bool:
+        """is_platform - Linux, Darwin, etc"""
+        return platform.lower() in sys.platform
 
     def x_process(self):
         """x_process - get the processes to find name of WM/DE"""
-        if self.x_system('Linux'):
+        if self.is_platform('Linux'):
             procs = self.x_popen(['ps', '-u', getuser(), '-o', 'comm', '--no-headers']).split('\n')
-        elif self.x_system('Darwin'):
+        elif self.is_platform('Darwin'):
             procs = self.x_popen(['ps', '-cu', getuser(), '-o', 'comm']).split('\n')
         return procs if procs else None
 
@@ -200,7 +199,7 @@ class Output(Utils):
     results = []
     results.extend([''] * (18 - len(LABELS)))
 
-    def __init__(self):
+    def __init__(self) -> None:
         """default to GNU/Linux if no distro"""
         distro = self.x_distro().rstrip()
         self.distro = 'GNU/Linux' if distro not in DIST_DICT else distro
@@ -208,13 +207,13 @@ class Output(Utils):
         brand_color = self.distro if BRAND not in DIST_DICT else BRAND
         self.color = DIST_DICT.get(brand_color, distro)
 
-    def x_distro(self, name='name'):
+    def x_distro(self, name: str ='name'):
         """x_distro: determing what distro is being used, both name and full name
         sys.platform.linux_distribution() is not used. It's deprecated and flagged for removal
         """
-        distro_name = distro_full = '' if self.x_system('Darwin') else 'GNU/Linux'
+        distro_name = distro_full = '' if self.is_platform('Darwin') else 'GNU/Linux'
 
-        if self.x_system('Darwin'):
+        if self.is_platform('Darwin'):
             get_name = self.x_popen(['sw_vers', '-productName'])
             get_version = self.x_popen(['sw_vers', '-productVersion'])
             osx_name = self.x_popen(['sw_vers', '-buildVersion'])
@@ -229,10 +228,10 @@ class Output(Utils):
             distro_name, distro_full = 'Darwin', f'{get_name} {get_version} ({osx_name})'
 
         # (*BSD... Hopefully at some point)
-        # elif self.x_system('FreeBSD') or self.x_system('OpenBSD'):
-        #     distro = distro_full = self.x_system()
+        # elif self.is_platform('FreeBSD') or self.is_platform('OpenBSD'):
+        #     distro = distro_full = self.is_platform()
 
-        elif self.x_system('Linux'):
+        elif self.is_platform('Linux'):
             rel_files = ('/etc/os-release', '/usr/lib/os-release',  # in case of missing symlink
                          '/etc/lsb-release', '/etc/issue')
 
@@ -274,37 +273,37 @@ class Output(Utils):
 
 class User(Utils):
     """Get the username"""
-    def __init__(self):
+    def __init__(self) -> None:
         self.key, self.value = self.__class__.__name__, getuser()
 
 
 class Hostname(Utils):
     """Get the hostname"""
-    def __init__(self):
+    def __init__(self) -> None:
         self.key, self.value = self.__class__.__name__, gethostname()
 
 
 class Distro(Output, Utils):
     """Display the Distro name"""
-    def __init__(self):
+    def __init__(self) -> None:
         self.key, self.value = self.__class__.__name__, self.x_distro('full')
         #super().__init__()
 
 
 class Kernel(Utils):
     """Get the kernel name"""
-    def __init__(self):
+    def __init__(self) -> None:
         uname_srm = xnu = f'{uname()[0]} {uname()[2]} {uname()[4]}' # Ex: Linux 5.x.x x86_64
         #xnu = sub('.*:+', '', uname()[3]).strip('REL.*')           # xnu-123...
-        kernel = xnu if self.x_system('Darwin') else uname_srm
+        kernel = xnu if self.is_platform('Darwin') else uname_srm
 
         self.key, self.value = self.__class__.__name__, kernel
 
 
 class Uptime(Utils):
     """Uptime: N day(s), HH:MM"""
-    def __init__(self):
-        if self.x_system('Darwin'):
+    def __init__(self) -> None:
+        if self.is_platform('Darwin'):
             boot_time = self.x_popen(['sysctl', '-n', 'kern.boottime'])
             boot_split = boot_time.split()[3][:-1]
             uptime = int(round(time())) - int(boot_split)
@@ -317,8 +316,8 @@ class Uptime(Utils):
 
 class WindowManager(Utils):
     """Get the name of the Window Manager"""
-    def __init__(self):
-        wm_value, procs = 'Quartz' if self.x_system('Darwin') else '', self.x_process()
+    def __init__(self) -> None:
+        wm_value, procs = 'Quartz' if self.is_platform('Darwin') else '', self.x_process()
         wm_value = [WM_DICT[k] for k in WM_DICT if k in procs][0]
 
         self.key, self.value = sub('(.*)([A-Z]+)', '\\1 \\2', self.__class__.__name__), wm_value
@@ -326,7 +325,7 @@ class WindowManager(Utils):
 
 class DesktopEnvironment(Utils):
     """Get Desktop Environment"""
-    def __init__(self):
+    def __init__(self) -> None:
         de_value, procs = '', self.x_process()
         de_value = [DE_DICT[k] for k in DE_DICT if k in procs][0]
 
@@ -335,19 +334,19 @@ class DesktopEnvironment(Utils):
 
 class Shell(Utils):
     """Shell name"""
-    def __init__(self):
+    def __init__(self) -> None:
         self.key, self.value = self.__class__.__name__, getenv('SHELL')
 
 
 class Terminal(Utils):
     """Terminal name"""
-    def __init__(self):
+    def __init__(self) -> None:
         self.key, self.value = self.__class__.__name__, getenv('TERM')
 
 
 class Packages(Utils):
     """Get the number of installed packages"""
-    def __init__(self):
+    def __init__(self) -> None:
         packages = ''
 
         # Remove rpm if dnf is installed, to avoid double runs
@@ -367,12 +366,12 @@ class Packages(Utils):
 
 class CPU(Utils):
     """Display the CPU information"""
-    def __init__(self):
+    def __init__(self) -> None:
         cpu_info = 'n/a'
-        if self.x_system('Linux'):
+        if self.is_platform('Linux'):
             with open('/proc/cpuinfo') as cpu:
                 cpu_info = sub('  +', ' ', cpu.readlines()[4])
-        elif self.x_system('Darwin'):
+        elif self.is_platform('Darwin'):
             cpu = self.x_popen(['sysctl', '-n', 'machdep.cpu.brand_string'])
             cpu_info = sub('  +', ' ', cpu)
 
@@ -382,8 +381,8 @@ class CPU(Utils):
 class RAM(Utils):
     """Calculate the RAM usage and format to display
     # RAM: usedMB, freeMB of totalGB"""
-    def __init__(self):
-        if self.x_system('Linux'):
+    def __init__(self) -> None:
+        if self.is_platform('Linux'):
             raminfo = self.x_popen(['free', '-m', '--si']).split('\n')
             ram = ''.join(filter(comp('M').search, raminfo)).split()
             total_ram = round(float(ram[1]) / 1000, 2)
@@ -393,7 +392,7 @@ class RAM(Utils):
             if vcomp(self.x_popen(['free', '-V']).split()[-1]) <= vcomp('3.3.9'):
                 used_ram = used_ram - int(ram[5]) - int(ram[6])
                 total_free = total_free + int(ram[6])
-        elif self.x_system('Darwin'):
+        elif self.is_platform('Darwin'):
             mem_size = self.x_popen(['sysctl', '-n', 'hw.memsize'])
             total_ram = int(mem_size) / 1073741824
 
@@ -420,14 +419,14 @@ class RAM(Utils):
 class Disk(Utils):
     """Calculate the disk usage and format to display
     # Disk: used (%) of total, N available (disk)"""
-    def __init__(self):
-        if self.x_system('Linux'):
+    def __init__(self) -> None:
+        if self.is_platform('Linux'):
             filesystems = tuple(zip(('-t',) * len(FS_TYPES), FS_TYPES))
             fs_types = self.x_popen(list(chain(['df', '-HlPT', '--total'], *filesystems)))
             total = tuple(sub('%', '', t) for t in fs_types.splitlines()[-1].split())
             disknr, size, used, avail, capacity = total[1:-1]
             disknr = self.x_popen(['df', '/boot']).splitlines()[1].split()[0].replace('/dev/', '')
-        elif self.x_system('Darwin'):
+        elif self.is_platform('Darwin'):
             fs_types = self.x_popen(['df', '-HT', ','.join(FS_TYPES)])
             total = tuple(sub('(/dev/|%)', '', t) for t in fs_types.splitlines()[1].split())
             disknr, size, used, avail, capacity = total[:-1]
