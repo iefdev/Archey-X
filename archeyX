@@ -42,7 +42,7 @@ import sys
 INFO = f'Archey X requires Python 3.6+ - Please upgrade...'
 
 # Version: use --help and --version
-VERSION = 'v0.9.1'
+VERSION = 'v0.99-20230821'
 COPYRIGHT = f'Copyright (c) {datetime.now().year} Eric F'
 GPL_INFO = '''This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
@@ -99,12 +99,14 @@ WM_DICT = {
     'Slicer': 'Slicer', 'Spectacle': 'Spectacle', 'TylerWM': 'TylerWM', 'Xmonad': 'Xmonad'
 }
 
-MACOS_NAMES = ('Cheetah', 'Puma', 'Jaguar', 'Panther', 'Tiger', 'Leopard', 'Snow Leopard', 'Lion',
-               'Mountain Lion', 'Mavericks', 'Yosemite', 'El Capitan', 'Sierra', 'High Sierra',
-               'Mojave', 'Catalina', 'Big Sur', 'Monterey', 'Ventura', 'Sonoma')
+MACOS_NAMES = (
+    'Cheetah', 'Puma', 'Jaguar', 'Panther', 'Tiger', 'Leopard', 'Snow Leopard',
+    'Lion', 'Mountain Lion', 'Mavericks', 'Yosemite', 'El Capitan', 'Sierra',
+    'High Sierra', 'Mojave', 'Catalina', 'Big Sur', 'Monterey', 'Ventura',
+    'Sonoma', 'Sequoia')
 
 MACOS10 = {f'10.{x}': y for x, y in enumerate(MACOS_NAMES[:17])}
-MACOS11 = {f'11.{x}': y for x, y in enumerate(MACOS_NAMES[16:])}
+MACOS11 = {f'{11+x}.*': y for x, y in enumerate(MACOS_NAMES[16:])}
 
 MACOS_DICT = {**MACOS10, **MACOS11}
 
