@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-
-"""/usr/local/bin/archeyX
+"""
+/usr/local/bin/archeyX
 
 Description:
   Archey X is a simple system information tool written in Python.
@@ -29,9 +29,9 @@ from distutils.spawn import find_executable as fExec
 from getpass import getuser
 from itertools import chain
 from math import ceil
-from os import getenv, path, uname
+from os import getenv, uname
 from platform import freedesktop_os_release as os_release
-from re import sub, match, compile as comp
+from re import sub, compile as comp
 from socket import gethostname
 from subprocess import PIPE, Popen
 from time import time
@@ -53,23 +53,23 @@ more details.\n\nYou should have received a copy of the GNU General Public Licen
 along\nwith this program. If not, see <https://www.gnu.org/licenses/>.'''
 
 # Settings
-DISK_WARNING = 1                # default: 1 (set 0 to disable)
-DISK_WARNING_THRESHOLD = 20     # default: 20 (% of diskspace left)
+DISK_WARNING: int = 1                # default: 1 (set 0 to disable)
+DISK_WARNING_THRESHOLD: int = 20     # default: 20 (% of diskspace left)
 
 
 # Dictionaries, lists and tuples
 # --------------------------------
-COLOR_PAIRS = (
+COLOR_PAIRS: tuple = (
     (33, 97), (34, 34), (37, 30), (36, 36),  # yellow/white, blue/blue, grey/grey, cyan/cyan
     (34, 97), (31, 31), (97, 35), (97, 32),  # blue/white, red/red, white/purple, white/green
     (37, 32), (32, 30), (32, 32), (34, 32),  # grey/green, green/grey, green/green, blue/green
 )
 
-COLOR_VARIES = ('\x1b[0;31m', '\x1b[0;32m', '\x1b[0;33m', '\x1b[5;31m', '\x1b[0m')
-COLOR_DICT = {f'color{c:02d}': (f'\x1b[0;{n}m', f'\x1b[1;{b}m')
-              for c, (n, b) in enumerate(COLOR_PAIRS, 1)}
+COLOR_VARIES: tuple = ('\x1b[0;31m', '\x1b[0;32m', '\x1b[0;33m', '\x1b[5;31m', '\x1b[0m')
+COLOR_DICT: dict = {f'color{c:02d}': (f'\x1b[0;{n}m', f'\x1b[1;{b}m')
+                    for c, (n, b) in enumerate(COLOR_PAIRS, 1)}
 
-DIST_DICT = {
+DIST_DICT: dict = {
     'GNU/Linux': 'color01', 'Arch': 'color02', 'Crunchbang': 'color03',
     'Darwin': 'color04', 'Mac OS X': 'color04', 'Fedora': 'color05',
     'Alpine': 'color05', 'Antergos': 'color05', 'elementary OS': 'color05',
@@ -78,13 +78,13 @@ DIST_DICT = {
     'OpenSUSE': 'color11', 'Rocky': 'color11', 'Alma': 'color12', 'CentOS': 'color12',
 }
 
-DE_DICT = {
+DE_DICT: dict = {
     'cinnamon-sessio': 'Cinnamon', 'Finder': 'Finder', 'gnome-session': 'GNOME',
     'ksmserver': 'KDE', 'lxsession': 'LXDE', 'mate-session': 'MATE',
     'mate-terminal': 'MATE', 'xfce4-session': 'Xfce'
 }
 
-WM_DICT = {
+WM_DICT: dict = {
     'awesome': 'Awesome', 'beryl': 'Beryl', 'blackbox': 'Blackbox', 'bspwm': 'Bspwm',
     'caja': 'Caja', 'compiz': 'Compiz', 'dwm': 'DWM', 'enlightenment': 'Enlightenment',
     'fluxbox': 'Fluxbox', 'fvwm': 'FVWM', 'herbstluftwm': 'Herbstluftwm', 'i3': 'i3',
@@ -101,18 +101,18 @@ WM_DICT = {
     'Slicer': 'Slicer', 'Spectacle': 'Spectacle', 'TylerWM': 'TylerWM', 'Xmonad': 'Xmonad'
 }
 
-MACOS_NAMES = (
+MACOS_NAMES: tuple = (
     'Cheetah', 'Puma', 'Jaguar', 'Panther', 'Tiger', 'Leopard', 'Snow Leopard',
     'Lion', 'Mountain Lion', 'Mavericks', 'Yosemite', 'El Capitan', 'Sierra',
     'High Sierra', 'Mojave', 'Catalina', 'Big Sur', 'Monterey', 'Ventura',
     'Sonoma', 'Sequoia')
 
-MACOS10 = {f'10.{x}': y for x, y in enumerate(MACOS_NAMES[:17])}
-MACOS11 = {f'{11+x}.*': y for x, y in enumerate(MACOS_NAMES[16:])}
+MACOS10: dict = {f'10.{x}': y for x, y in enumerate(MACOS_NAMES[:17])}
+MACOS11: dict = {f'{11+x}.*': y for x, y in enumerate(MACOS_NAMES[16:])}
 
-MACOS_DICT = {**MACOS10, **MACOS11}
+MACOS_DICT: dict = {**MACOS10, **MACOS11}
 
-PM_DICT = {
+PM_DICT: dict = {
     'pacman': ['-Q'], 'dnf': ['rq', '--installed', '-Cq'], 'rpm': ['-qa'],
     'apk': ['info'], 'dpkg': ['--get-selections'], 'emerge': ['-ep', 'world'],
     'zypper': ['search', '--installed-only'],
@@ -120,14 +120,17 @@ PM_DICT = {
     'port': ['echo', 'installed'], 'fink': ['list', '-i'], 'brew': ['list']     # OS X/macOS
 }
 
-LABELS = ('User', 'Hostname', 'Distro', 'Kernel', 'Uptime', 'WindowManager',
-          'DesktopEnvironment', 'Shell', 'Terminal', 'Packages', 'CPU', 'RAM', 'Disk')
+LABELS: tuple = (
+    'User', 'Hostname', 'Distro', 'Kernel', 'Uptime', 'WindowManager',
+    'DesktopEnvironment', 'Shell', 'Terminal', 'Packages', 'CPU', 'RAM', 'Disk')
 
-CLASSES = {x: x for x in LABELS}
+CLASSES: dict = {x: x for x in LABELS}
 
 # List of filesystemes to be included in 'df'
-FS_TYPES = ('apfs', 'btrfs', 'ext2', 'ext3', 'ext4', 'fat32', 'f2fs', 'fuseblk', 'hfs', 'jfs',
-            'lxfs', 'msdos', 'nilfs2', 'ntfs', 'reiserfs', 'simfs', 'tempfs', 'xfs', 'zfs')
+FS_TYPES: tuple = (
+    'apfs', 'btrfs', 'ext2', 'ext3', 'ext4', 'fat32', 'f2fs', 'fuseblk',
+    'hfs', 'jfs', 'lxfs', 'msdos', 'nilfs2', 'ntfs', 'reiserfs', 'simfs',
+    'tempfs', 'xfs', 'zfs')
 
 
 # ArgumentParser - help/options
@@ -163,15 +166,15 @@ class Utils():
     """Misc functions/tools"""
 
     @classmethod
-    def x_popen(cls, cmd):
+    def x_popen(cls, cmd: list) -> str:
         """x_popen - less code and easier to use"""
         return Popen(cmd, stdout=PIPE).communicate()[0].decode('utf-8').rstrip('\n')
 
-    def is_platform(self, platform: str ='linux') -> bool:
+    def is_platform(self, platform: str = 'linux') -> bool:
         """is_platform - Linux, Darwin, etc"""
         return platform.lower() in sys.platform
 
-    def x_process(self):
+    def x_process(self) -> list:
         """x_process - get the processes to find name of WM/DE"""
         if self.is_platform('Linux'):
             procs = self.x_popen(['ps', '-u', getuser(), '-o', 'comm', '--no-headers']).split('\n')
@@ -193,7 +196,7 @@ class Output(Utils):
         brand_color = self.distro if BRAND not in DIST_DICT else BRAND
         self.color = DIST_DICT.get(brand_color, distro)
 
-    def x_distro(self, name: str ='name'):
+    def x_distro(self, name: str = 'name') -> str:
         """x_distro: determing what distro is being used, both name and name"""
         distro_name = distro_full = '' if self.is_platform('Darwin') else 'GNU/Linux'
 
@@ -203,8 +206,8 @@ class Output(Utils):
             get_version = self.x_popen(['sw_vers', '-productVersion'])
             osx_name = self.x_popen(['sw_vers', '-buildVersion'])
 
-            get_name = 'macOS' if vcomp(get_version[:-2]) >= vcomp('10.12') else get_name \
-                       or get_name if vcomp(get_version[:-2]) <= vcomp('10.7') else 'OS X'
+            get_name = 'macOS' if float(get_version[:-2]) >= float('10.12') else get_name \
+                       or get_name if float(get_version[:-2]) <= float('10.7') else 'OS X'
 
             # Get the fancy name (ie Tiger, Leopard, Lion, etc)
             # If not in the dict, display -buildVersion instead
@@ -228,7 +231,7 @@ class Output(Utils):
 
         return x_distro_names[name] if distro_name == 'Linux Mint' else x_sub
 
-    def append(self, display):
+    def append(self, display: str) -> str:
         """append: preparing the output"""
         self.results.append(f'{COLOR_DICT[self.color][1]}{display.key}: '
                             f'{COLOR_VARIES[-1]}{display.value}')
@@ -316,7 +319,7 @@ class Packages(Utils):
         packages = ''
 
         # Remove rpm if dnf is installed, to avoid double runs
-        PM_DICT.pop('rpm') if 'dnf' in PM_DICT else False
+        PM_DICT.pop('rpm') if 'dnf' in PM_DICT else ''
 
         for pman in PM_DICT:
             if fExec(pman):
