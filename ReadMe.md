@@ -138,7 +138,7 @@ If you have any feedback, suggestions? Please, use the Issues, Merge Requests, s
 · Eric ([@iefdev][x])
 
 <!-- Markdown: link & image dfn's -->
-[pythonVersion]: https://img.shields.io/badge/python-3.6+-FFD343.svg?logo=python&logoColor=FFD343&labelColor=3D75AD&style=plastic
+[pythonVersion]: https://img.shields.io/badge/python-3.10+-FFD343.svg?logo=python&logoColor=FFD343&labelColor=3D75AD&style=plastic
 [licenseBadge]: https://img.shields.io/badge/license-GPL--3.0--or--later-C00?style=plastic
 [masterBadge]: https://img.shields.io/badge/main-v0.99-778899.svg?logo=gitlab&style=plastic
 [latestBadge]: https://img.shields.io/badge/latest-v0.9.1-blue.svg?logo=gitlab&style=plastic
