@@ -39,7 +39,7 @@ import sys
 
 
 # @todo: Implement some sort of raise error for versioncheck
-#		It will bump to 3.10 soon.
+# It will bump to 3.10 soon.
 # Inform about python3.10+ (force an SyntaxError)
 INFO = f'Archey X requires Python 3.6+ - Please upgrade...'
 
@@ -108,7 +108,7 @@ MACOS_NAMES: tuple = (
     'Sonoma', 'Sequoia')
 
 MACOS10: dict = {f'10.{x}': y for x, y in enumerate(MACOS_NAMES[:17])}
-MACOS11: dict = {f'{11+x}.*': y for x, y in enumerate(MACOS_NAMES[16:])}
+MACOS11: dict = {f'{11+x}': y for x, y in enumerate(MACOS_NAMES[16:])}
 
 MACOS_DICT: dict = {**MACOS10, **MACOS11}
 
@@ -203,15 +203,18 @@ class Output(Utils):
         if self.is_platform('Darwin'):
             # @todo:: Check platform.mac_os(), to move away from popen
             get_name = self.x_popen(['sw_vers', '-productName'])
-            get_version = self.x_popen(['sw_vers', '-productVersion'])
+            get_version = _gv = self.x_popen(['sw_vers', '-productVersion'])
             osx_name = self.x_popen(['sw_vers', '-buildVersion'])
 
             get_name = 'macOS' if float(get_version[:-2]) >= float('10.12') else get_name \
                        or get_name if float(get_version[:-2]) <= float('10.7') else 'OS X'
 
+            # 10.7, 10.8, etc - and then: 11, 12, 13, etc
+            get_version = _gv[:2] if int(_gv[:2]) > 10 else _gv[:-2]
+
             # Get the fancy name (ie Tiger, Leopard, Lion, etc)
             # If not in the dict, display -buildVersion instead
-            osx_name = MACOS_DICT.get(get_version[:-2], osx_name)
+            osx_name = MACOS_DICT.get(get_version, osx_name)
 
             distro_name, distro_full = 'Darwin', f'{get_name} {get_version} ({osx_name})'
 
