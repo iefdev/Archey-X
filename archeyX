@@ -31,7 +31,7 @@ from itertools import chain
 from math import ceil
 from os import getenv, uname
 from platform import freedesktop_os_release as os_release
-from re import sub, compile as comp
+from re import sub
 from socket import gethostname
 from subprocess import PIPE, Popen
 from time import time
@@ -44,7 +44,7 @@ import sys
 INFO = f'Archey X requires Python 3.6+ - Please upgrade...'
 
 # Version: use --help and --version
-VERSION = 'v0.99-20230821'
+VERSION = 'v0.99-20240621'
 COPYRIGHT = f'Copyright (c) {datetime.now().year} Eric F'
 GPL_INFO = '''This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
@@ -356,10 +356,9 @@ class RAM(Utils):
     def __init__(self) -> None:
         if self.is_platform('Linux'):
             raminfo = self.x_popen(['free', '-m', '--si']).split('\n')
-            ram = ''.join(filter(comp('M').search, raminfo)).split()
-            total_ram = round(float(ram[1]) / 1000, 2)
-            used_ram = int(ram[2])
-            total_free = int(ram[3]) + int(ram[5])
+            ram = raminfo[1].split()[1:]
+            total_ram = f'{float(int(ram[0]) / 1000):.1f}'
+            used_ram, free_ram = int(ram[1]), int(ram[2]) + int(ram[4])
         elif self.is_platform('Darwin'):
             mem_size = self.x_popen(['sysctl', '-n', 'hw.memsize'])
             total_ram = int(mem_size) / 1073741824
@@ -374,12 +373,12 @@ class RAM(Utils):
 
             used_ram = ceil((mem['wired'] + mem['active'] +
                              mem['inactive']) / 1048576 / 10.0) * 10
-            total_free = ceil((mem['free'] + mem['speculative']) / 1048576 / 10.0) * 10
+            free_ram = ceil((mem['free'] + mem['speculative']) / 1048576 / 10.0) * 10
         else:
-            used_ram = total_ram = total_free = '-'
+            used_ram = free_ram = total_ram = '-'
 
         red, grn, clr = (COLOR_VARIES[0], COLOR_VARIES[1], COLOR_VARIES[-1])
-        ram_display = f'{red}{used_ram}MB{clr}, {grn}{total_free}MB{clr} of {total_ram}GB'
+        ram_display = f'{red}{used_ram}MB{clr}, {grn}{free_ram}MB{clr} of {total_ram}GB'
 
         self.key, self.value = self.__class__.__name__, ram_display
 
